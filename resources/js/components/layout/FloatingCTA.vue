@@ -1,7 +1,7 @@
 <script setup lang="ts">
     defineProps<{ href?: string; label?: string }>()
     </script>
-    
+
     <template>
       <div class="fixed bottom-4 left-0 right-0 z-30 md:hidden px-4">
         <a
@@ -12,4 +12,3 @@
         </a>
       </div>
     </template>
-    

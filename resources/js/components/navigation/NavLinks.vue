@@ -1,13 +1,10 @@
 <script setup lang="ts">
     const links = [
-      { label: 'Inicio', href: '/' },
-      { label: 'Impulsa tu negocio', href: '/impulsa-tu-negocio' },
-      { label: 'Impulsat', href: '/impulsat' },
+      { label: 'Servicios', href: '/' },
       { label: 'Sucursales', href: '/sucursales' },
-      { label: 'FAQs', href: '/faqs' },
     ]
     </script>
-    
+
     <template>
       <nav class="flex gap-6">
         <a
@@ -20,4 +17,3 @@
         </a>
       </nav>
     </template>
-    
