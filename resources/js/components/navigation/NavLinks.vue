@@ -2,7 +2,7 @@
     const links = [
       { label: 'Inicio', href: '/' },
       { label: 'Impulsa tu negocio', href: '/impulsa-tu-negocio' },
-      { label: 'Impulsa.t', href: '/impulsat' },
+      { label: 'Impulsat', href: '/impulsat' },
       { label: 'Sucursales', href: '/sucursales' },
       { label: 'FAQs', href: '/faqs' },
     ]
