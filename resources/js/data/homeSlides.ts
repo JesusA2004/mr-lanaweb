@@ -1,10 +1,32 @@
-import type { Slide } from '@/components/home/HeroCarousel.vue'
+export type SlideTone = 'white' | 'accent' | 'muted'
+
+export type SlideTextPart = {
+  text: string
+  tone: SlideTone
+  bold?: boolean
+  breakAfter?: boolean
+}
+
+export type SlideOverlay = {
+  titleParts: SlideTextPart[]
+  subtitleParts: SlideTextPart[]
+  ctaLabel: string
+  ctaHref: string
+}
+
+export type Slide = {
+  id: string
+  desktopSrc: string
+  mobileSrc: string
+  alt: string
+  overlay: SlideOverlay
+}
 
 export const homeSlides: Slide[] = [
   {
     id: 's1',
     desktopSrc: '/img/home/Slider-1.jpg',
-    mobileSrc: '/img/home/Slider-1.jpg',
+    mobileSrc: '/img/home/Slider-mobile1.jpg',
     alt: 'Mr Lana - Negocio',
     overlay: {
       titleParts: [
@@ -24,7 +46,7 @@ export const homeSlides: Slide[] = [
   {
     id: 's2',
     desktopSrc: '/img/home/Slider-2.jpg',
-    mobileSrc: '/img/home/Slider-2.jpg',
+    mobileSrc: '/img/home/Slider-mobile2.jpg',
     alt: 'Mr Lana - Vacaciones',
     overlay: {
       titleParts: [
@@ -46,14 +68,14 @@ export const homeSlides: Slide[] = [
     alt: 'Mr Lana - Comadres',
     overlay: {
       titleParts: [
-        { text: '¿Qué tal unas ', tone: 'white', bold: true },
-        { text: 'vacaciones?', tone: 'accent', bold: true, breakAfter: true },
+        { text: 'Crédito ', tone: 'white', bold: true },
+        { text: 'Comadres', tone: 'accent', bold: true, breakAfter: true },
       ],
       subtitleParts: [
-        { text: 'O ese celular que quieres… ', tone: 'muted', bold: true },
-        { text: 'fácil y rápido', tone: 'white', bold: true },
+        { text: 'Más que amigas… ', tone: 'muted', bold: true },
+        { text: 'Comadres financieras', tone: 'white', bold: true },
       ],
-      ctaLabel: 'Solicitar Ahora',
+      ctaLabel: 'Solicitar',
       ctaHref: '/impulsat',
     },
   },
