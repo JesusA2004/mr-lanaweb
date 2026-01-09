@@ -6,9 +6,11 @@
         overlay: SlideOverlay
     }>()
     
+    // Colores para span de texto en CTA
     const toneClass = (tone: string) => {
         if (tone === 'accent') return 'text-emerald-500'
         if (tone === 'muted') return 'text-white/85'
+        if (tone === 'black') return 'text-black'
         return 'text-white'
     }
 </script>
@@ -16,7 +18,7 @@
 <template>
     <!-- Contenedor -->
     <div class="w-full rounded-xl bg-black/20 p-4 backdrop-blur-sm
-    sm:rounded-2xl sm:p-5 md:w-[440px] md:p-7">
+    sm:rounded-2xl sm:p-5 md:w-[350px] md:p-7">
         <!-- Titulo -->
         <div class="text-lg font-extrabold leading-snug
         sm:text-xl md:text-3xl md:leading-tight" >
@@ -38,10 +40,11 @@
         </div>
     
         <!-- Boton -->
-        <Link :href="overlay.ctaHref" class="mt-4 inline-flex w-full items-center justify-center 
-        rounded-full bg-black px-4 py-2.5 text-sm font-extrabold tracking-wide text-white
-        shadow-sm transition hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]
-        sm:px-5 sm:py-3 sm:text-base md:mt-5 md:w-auto md:px-6 md:py-3 md:text-lg">
+        <Link :href="overlay.ctaHref" class="mt-4 inline-flex w-full items-center 
+        justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-extrabold 
+        tracking-wide text-white shadow-sm transition hover:opacity-90 
+        hover:scale-[1.02] active:scale-[0.98] sm:px-5 sm:py-3 sm:text-base md:mt-2 
+        md:w-auto md:px-8 md:py-5 md:text-lg">
             {{ overlay.ctaLabel }}
         </Link>
     </div>

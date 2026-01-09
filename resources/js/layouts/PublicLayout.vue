@@ -16,7 +16,6 @@
         </main>
     
         <Footer />
-    
         <FloatingCTA href="#solicitar" label="Solicitar Ahora" />
       </div>
     </template>

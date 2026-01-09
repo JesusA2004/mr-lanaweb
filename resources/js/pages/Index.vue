@@ -23,7 +23,7 @@
         <AppPromoModal />
         <ProductsPromoModal />
 
-        <!-- HERO: FULL WIDTH (sin Container) -->
+        <!-- HERO: FULL WIDTH -->
         <HeroCarousel :slides="homeSlides" :autoplayMs="9000" :pauseAfterInteractMs="8000" />
 
         <!-- BANNERS/SECCIONES FULL WIDTH (los 3 artes del home + app banner, etc) -->

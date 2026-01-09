@@ -83,7 +83,7 @@
                 <div v-for="s in slides" :key="s.id" class="relative w-full shrink-0">
                     <div class="relative w-full overflow-hidden">
                         <!-- Alturas responsivas (mobile más “compacto” para encuadrar mejor) -->
-                        <div class="h-[330px] sm:h-[460px] md:h-[330px] lg:h-[460px] xl:h-[530px]">
+                        <div class="h-[330px] sm:h-[460px] md:h-[330px] lg:h-[460px] xl:h-[530px] 2xl:h-[750px]">
                             <picture class="block h-full w-full">
                                 <source media="(min-width: 768px)" :srcset="s.desktopSrc" />
                                 <img :src="s.mobileSrc" :alt="s.alt" class="h-full w-full object-cover"
@@ -93,17 +93,19 @@
             
                         <!-- OVERLAY DESKTOP (logo del slider) -->
                         <div class="absolute inset-0 z-20 hidden md:flex items-start">
-                            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-6">
+                            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-0">
                                 <!-- Logo izquierda (desktop) -->
-                                <div class="shrink-0">
+                                <div class="shrink-0 -mt-20">
                                     <Logo />
                                 </div>
                 
                                 <!-- CTA derecha -->
                                 <div class="mt-20 max-w-[560px] lg:mt-20">
-                                    <div class=" animate-in fade-in duration-500
+                                    <div class="animate-in fade-in duration-500
                                     slide-in-from-bottom-6 md:slide-in-from-right-2
-                                    md:translate-y-70 lg:translate-y-14 xl:translate-y-20">
+                                    md:translate-y-5 lg:translate-y-14 xl:translate-y-20
+                                    md:scale-[0.78] lg:scale-100 xl:scale-105
+                                    origin-top-right">
                                         <PrimaryCTA :overlay="s.overlay" />
                                     </div>
                                 </div>
@@ -116,7 +118,7 @@
                             <div class="absolute inset-x-0 bottom-0 pb-0">
                                 <div class="mx-auto w-full max-w-7xl px-4">
                                     <div class="mx-auto max-w-[220px] animate-in fade-in duration-500 slide-in-from-bottom-4
-                                    scale-[0.92] sm:scale-100 translate-x-30">
+                                    scale-[0.82] sm:scale-100 translate-x-30">
                                         <PrimaryCTA :overlay="s.overlay" />
                                     </div>
                                 </div>
@@ -127,16 +129,15 @@
             </div>
         
             <!-- CONTROLES DESKTOP -->
-            <button type="button" class="absolute left-4 top-1/2 z-30 hidden -translate-y-1/2 rounded-full bg-black/40 
-            px-3 py-2 text-white backdrop-blur-sm transition hover:bg-black/55 hover:scale-[1.03] active:scale-[0.98] md:block"
-            @click="prev" aria-label="Anterior" >
+            <button type="button" class="absolute left-6 top-1/2 z-30 hidden -translate-y-1/2
+            text-black text-5xl font-light transition hover:text-black hover:scale-[1.4]
+            active:scale-[0.96] md:block" @click="prev"aria-label="Anterior">
                 ‹
             </button>
 
-            <button type="button" class="absolute right-4 top-1/2 z-30 hidden -translate-y-1/2 rounded-full 
-            bg-black/40 px-3 py-2 text-white backdrop-blur-sm transition
-            hover:bg-black/55 hover:scale-[1.03] active:scale-[0.98] md:block"
-            @click="next" aria-label="Siguiente" >
+            <button type="button" class="absolute right-6 top-1/2 z-30 hidden -translate-y-1/2
+            text-black text-5xl font-light transition hover:text-black hover:scale-[1.4]
+            active:scale-[0.96] md:block" @click="next" aria-label="Siguiente">
                 ›
             </button>
         
