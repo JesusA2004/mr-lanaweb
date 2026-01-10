@@ -25,9 +25,7 @@
         if (href.startsWith('#')) emit('cta', href)
     }
 
-    /* -------------------------------------------------------
-     * Scroll reveal (sin librerías)
-     * ------------------------------------------------------*/
+    // Scroll reveal (sin librerías)
     const inView = ref<Record<string, boolean>>({})
     let io: IntersectionObserver | null = null
 
@@ -65,20 +63,18 @@
         ].join(' ')
     }
 
-    /**
-     * ALTURA FIJA GLOBAL (los 3 iguales)
-     */
+    // ALTURA FIJA GLOBAL (los 3 iguales)
     const bannerHeightClass =
-      'h-[240px] sm:h-[320px] md:h-[400px] lg:h-[460px] xl:h-[520px] 2xl:h-[600px]'
+        'h-[220px] sm:h-[320px] md:h-[340px] lg:h-[460px] xl:h-[560px] 2xl:h-[750px]'
 
-    // Texto blanco (más grande y bien proporcionado)
+    // Texto 
     const kickerClass =
         [
-            'text-white font-extrabold tracking-tight',
+            'text-black font-extrabold tracking-tight',
             'leading-[1.12] md:leading-[1.10] xl:leading-[1.06]',
             'drop-shadow-[0_14px_28px_rgba(0,0,0,0.60)]',
-            'text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] 2xl:text-[38px]',
-            'max-w-[18rem] sm:max-w-[28rem] md:max-w-[36rem] lg:max-w-[42rem] xl:max-w-[48rem] 2xl:max-w-[56rem]',
+            'text-[18px] sm:text-[20px] md:text-[26px] lg:text-[34px] xl:text-[44px] 2xl:text-[56px]',
+            'max-w-[16rem] sm:max-w-[30rem] md:max-w-[40rem] lg:max-w-[46rem] xl:max-w-[54rem] 2xl:max-w-[62rem]',
         ].join(' ')
 
     // Botón
@@ -86,16 +82,14 @@
         [
             'cta-glow relative inline-flex items-center justify-center rounded-full',
             'bg-black text-white',
-            'px-6 py-3 text-[13px]',
-            'sm:px-7 sm:py-3.5 sm:text-[15px]',
-            'md:px-8 md:py-4 md:text-[16px]',
-            'lg:px-10 lg:py-[18px] lg:text-[18px]',
-            'xl:px-11 xl:py-5 xl:text-[19px]',
-            '2xl:px-12 2xl:py-[22px] 2xl:text-[20px]',
+            'px-5 py-2.5 text-[18px]',
+            'sm:px-7 sm:py-3 sm:text-[22px]',
+            'md:px-9 md:py-4 md:text-[25px]',
+            'lg:px-11 lg:py-5 lg:text-[30px]',
+            'xl:px-14 xl:py-6 xl:text-[35px]',
+            '2xl:px-16 2xl:py-7 2xl:text-[40px]',
             'font-extrabold tracking-wide',
-            'shadow-[0_18px_44px_rgba(0,0,0,0.32)]',
             'transition-[box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
-            'hover:shadow-[0_26px_66px_rgba(0,0,0,0.40)]',
             'hover:-translate-y-[1px]',
             'hover:opacity-95',
             'active:translate-y-0 active:scale-[0.99]',
@@ -109,33 +103,38 @@
                 <!-- Reveal wrapper -->
                 <div :data-banner-id="b.id" class="w-full" :class="revealClass(b.id)">
                     <!-- Banner frame (sin bordes redondos) -->
-                    <div class="banner-frame group relative w-full bg-white">
+                    <div class="banner-frame group relative w-full bg-white overflow-hidden">
                         <!-- Altura fija -->
                         <div :class="['relative w-full', bannerHeightClass]">
-                            <!-- Imagen base -->
-                            <picture class="block h-full w-full">
-                                <source :srcset="b.mobileSrc" media="(max-width: 768px)" />
-                                <img :src="b.desktopSrc" :alt="b.alt"
-                                class="banner-img block h-full w-full object-cover select-none"
-                                loading="lazy"  draggable="false" />
-                            </picture>
+                            <div class="media-layer absolute inset-0">
+                                <!-- Imagen base -->
+                                <picture class="block h-full w-full">
+                                    <source :srcset="b.mobileSrc" media="(max-width: 768px)" />
+                                    <img :src="b.desktopSrc" :alt="b.alt"
+                                    :class="['banner-img block h-full w-full select-none',
+                                        b.overlaySrc ? 'object-contain object-right' : 'object-cover object-center']"
+                                    loading="lazy"  draggable="false" />
+                                </picture>
+                            
+                                <!-- Overlay (solo banner-1) -->
+                                <img v-if="b.overlaySrc" :src="b.overlaySrc"
+                                class="pointer-events-none absolute inset-0 z-10 h-full 
+                                w-full object-cover select-none" draggable="false"/>
 
-                            <!-- Overlay (solo banner-1) -->
-                            <img v-if="b.overlaySrc" :src="b.overlaySrc"
-                            class="pointer-events-none absolute inset-0 z-10 h-full w-full
-                            object-cover select-none" draggable="false"/>
+                            </div>
 
                             <!-- Texto + CTA -->
-                            <div v-if="b.ctaLabel && b.ctaHref" class="absolute inset-0 z-20
-                            flex items-end">
-                                <div class="w-full px-5 pb-6 sm:px-10 sm:pb-8 md:px-12 md:pb-10
-                                lg:px-14 lg:pb-12 xl:px-16 xl:pb-14 2xl:px-20 2xl:pb-16">
+                            <div v-if="b.ctaLabel && b.ctaHref"
+                            :class="['absolute inset-0 z-20 flex',b.overlaySrc ? 'items-end' : 'items-center']">
+                            <div :class="['w-full px-5 sm:px-10 md:px-12 lg:px-14 xl:px-16 2xl:px-20',
+                            b.overlaySrc ? 'pb-6 sm:pb-8 md:pb-10 lg:pb-12 xl:pb-10 2xl:pb-12'
+                            : 'py-6 sm:py-8 md:py-10 lg:py-12 xl:py-14 2xl:py-16 translate-y-6 sm:translate-y-10 md:translate-y-12 lg:translate-y-14']">
                                     <div class="mx-auto w-full max-w-7xl">
-                                        <!-- Texto blanco separado (no se “encima” del logo) -->
+                                        <!-- Texto separado (no se “encima” del logo) -->
                                         <div v-if="b.kickerParts?.length" class="mb-4 sm:mb-5 md:mb-6 lg:mb-7">
                                             <p :class="kickerClass">
                                                 <template v-for="(p, idx) in b.kickerParts" :key="idx">
-                                                    <span v-if="p.highlight" class="text-emerald-300">
+                                                    <span v-if="p.highlight" class="text-white">
                                                         {{ p.text }}
                                                     </span>
                                                     <span v-else>{{ p.text }}</span>
@@ -170,7 +169,7 @@
                     </div>
 
                     <!-- Espacio blanco entre banners -->
-                    <div class="w-full bg-white h-10 sm:h-12 md:h-14 lg:h-16" />
+                    <div class="w-full bg-white h-8 sm:h-4 md:h-8 lg:h-10 xl:h-16 2xl:16" />
                 </div>
             </div>
         </div>
@@ -189,11 +188,12 @@
             filter: saturate(1.04) contrast(1.03);
         }
 
-        .banner-img {
+        .media-layer {
             transition: transform 700ms cubic-bezier(.22,1,.36,1);
+            transform-origin: center;
         }
-
-        .banner-frame:hover .banner-img {
+        
+        .banner-frame:hover .media-layer {
             transform: scale(1.015);
         }
 

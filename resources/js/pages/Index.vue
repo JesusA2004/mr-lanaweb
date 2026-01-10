@@ -12,11 +12,11 @@
      * Scroll suave a anclas desde PromoBanners
      */
     function onBannerCta(href?: string) {
-      if (!href) return
-      if (!href.startsWith('#')) return
+        if (!href) return
+        if (!href.startsWith('#')) return
 
-      const el = globalThis.document?.querySelector(href)
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const el = globalThis.document?.querySelector(href)
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
 </script>
 

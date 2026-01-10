@@ -8,19 +8,14 @@ export type HomeBanner = {
     desktopSrc: string
     mobileSrc: string
     alt: string
-
     // CTA (solo botón)
     ctaLabel?: string
     ctaHref?: string
-
     // Texto blanco arriba del botón (en partes para resaltar palabras)
-
     kickerParts?: KickerPart[]
-
     // Overlay PNG encima (solo banner-1)
     overlaySrc?: string
-
-    // Separación extra si la necesitas
+    // Separación extra
     className?: string
 }
 
@@ -34,10 +29,10 @@ export const homeBanners: HomeBanner[] = [
         ctaHref: '#solicitar',
         overlaySrc: '/img/banner/banner-1-degree-text.png',
         kickerParts: [
-            { text: 'Crédito ' },
+            { text: 'Obtén un crédito ' },
             { text: 'DIARIO', highlight: true },
             { text: ' o ' },
-            { text: 'semanal', highlight: true },
+            { text: 'Semanal', highlight: true },
             { text: ' para tu negocio' },
         ],
     },
@@ -49,8 +44,8 @@ export const homeBanners: HomeBanner[] = [
         ctaLabel: 'Obténlo Ahora',
         ctaHref: '#solicitar',
         kickerParts: [
-            { text: 'Para eso que quieres… y para ' },
-            { text: 'lo que viene', highlight: true },
+            { text: 'Crédito para aquello que más deseas...' },
+            { text: ' o quieres', highlight: true },
         ],
     },
     {

@@ -15,7 +15,6 @@
           <slot />
         </main>
 
-        <!-- <Footer /> -->
-        <FloatingCTA href="#solicitar" label="Solicitar Ahora" />
+        <Footer />
       </div>
     </template>
