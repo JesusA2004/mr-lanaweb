@@ -2,6 +2,7 @@
     import PublicLayout from '@/layouts/PublicLayout.vue'
     import HeroCarousel from '@/components/home/HeroCarousel.vue'
     import PromoBanners from '@/components/home/PromoBanners.vue'
+    import AppDownloadBanner from '@/components/home/AppDownloadBanner.vue'
     import AppPromoModal from '@/components/home/AppPromoModal.vue'
     import ProductsPromoModal from '@/components/home/ProductsPromoModal.vue'
 
@@ -33,5 +34,13 @@
 
         <!-- PROMO BANNERS -->
         <PromoBanners :banners="homeBanners" @cta="onBannerCta" />
+
+        <div class="py-8 sm:py-10 md:py-12">
+            <AppDownloadBanner
+                appStoreUrl="#"
+                playStoreUrl="#"
+            />
+        </div>
+
     </PublicLayout>
 </template>
