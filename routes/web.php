@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VacancyApplicationController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -22,5 +23,8 @@ Route::get('/sucursales', function () {
 Route::get('/faqs', function () {
     return Inertia::render('Faqs'); 
 })->name('faqs');
+
+Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
+  ->name('vacancies.apply');
 
 
