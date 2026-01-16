@@ -44,9 +44,10 @@
                     <!-- BOTÓN BOLSA (móvil) -->
                     <button type="button" @click="$emit('openVacancies')"
                     class="group relative inline-flex items-center justify-center
-                    rounded-full bg-black/90 px-4 py-2
-                    text-[11px] font-extrabold tracking-widest text-white
-                    shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition hover:bg-black
+                    rounded-full bg-sky-100 px-4 py-2
+                    text-[11px] font-extrabold tracking-widest text-black
+                    shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition hover:bg-sky-300
+                    hover:text-white
                     hover:shadow-[0_14px_35px_rgba(0,0,0,0.30)]
                     hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]
                     focus-visible:outline-none focus-visible:ring-2
@@ -78,36 +79,25 @@
                 <!-- IMPORTANTE: si no quieres logo en desktop, no lo pintamos.
                     Este ml-auto empuja TODO a la derecha. -->
                 <div class="ml-auto flex items-center gap-3">
-                <NavLinks class="shrink-0" variant="desktop" :active="activeKey" />
+                    <NavLinks class="shrink-0" variant="desktop" :active="activeKey" />
 
-                <!-- Botón bolsa desktop -->
-                <button
-                    type="button"
-                    @click="$emit('openVacancies')"
-                    class="
-                    group relative inline-flex items-center justify-center
-                    rounded-full bg-black px-6 py-2
-                    text-xs font-extrabold tracking-widest text-white
-                    shadow-[0_12px_30px_rgba(0,0,0,0.22)]
-                    transition
-                    hover:shadow-[0_16px_40px_rgba(0,0,0,0.28)]
-                    hover:-translate-y-[1px]
-                    active:translate-y-0 active:scale-[0.98]
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/80
-                    focus-visible:ring-offset-2 focus-visible:ring-offset-white/10
-                    "
-                >
-                    <span class="relative z-10">BOLSA DE TRABAJO</span>
+                    <!-- Botón bolsa desktop -->
+                    <button type="button" @click="$emit('openVacancies')"
+                        class=" group relative inline-flex items-center justify-center
+                        rounded-full bg-sky-100 px-6 py-5
+                        text-xs font-extrabold tracking-widest text-black
+                        shadow-[0_12px_30px_rgba(0,0,0,0.22)] transition
+                        hover:shadow-[0_16px_40px_rgba(0,0,0,0.28)]
+                        hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/80
+                        focus-visible:ring-offset-2 focus-visible:ring-offset-white/10
+                        2xl:w-[200px] 2xl:text-xs">
+                        <span class="relative z-10">BOLSA DE TRABAJO</span>
 
-                    <span
-                    class="
-                        pointer-events-none absolute inset-0 -z-10 rounded-full
-                        opacity-0 blur-md transition-opacity duration-300
-                        group-hover:opacity-40
-                    "
-                    style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.45), transparent 55%)"
-                    />
-                </button>
+                        <span class=" pointer-events-none absolute inset-0 -z-10 rounded-full
+                        opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40"
+                        style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.45), transparent 55%)"/>
+                    </button>
                 </div>
             </div>
         </div>

@@ -8,15 +8,12 @@ export type HomeBanner = {
     desktopSrc: string
     mobileSrc: string
     alt: string
-    // CTA (solo botón)
     ctaLabel?: string
     ctaHref?: string
-    // Texto blanco arriba del botón (en partes para resaltar palabras)
     kickerParts?: KickerPart[]
-    // Overlay PNG encima (solo banner-1)
-    overlaySrc?: string
-    // Separación extra
     className?: string
+    align?: 'left' | 'right'
+    contentTranslate?: string
 }
 
 export const homeBanners: HomeBanner[] = [
@@ -27,6 +24,8 @@ export const homeBanners: HomeBanner[] = [
         alt: 'Obtén un crédito diario o semanal',
         ctaLabel: 'Obténlo Ahora',
         ctaHref: '#solicitar',
+        align: 'right',
+        contentTranslate: 'translate-y-25 md:translate-y-5 lg:translate-y-5',
         kickerParts: [
             { text: 'Obtén un crédito ' },
             { text: 'DIARIO', highlight: true },
@@ -42,9 +41,13 @@ export const homeBanners: HomeBanner[] = [
         alt: 'Crédito para lo que deseas',
         ctaLabel: 'Obténlo Ahora',
         ctaHref: '#solicitar',
+        align: 'left',
+        contentTranslate: 'translate-y-20 md:translate-y-5',
         kickerParts: [
-            { text: 'Crédito para aquello que más deseas...' },
-            { text: ' o quieres', highlight: true },
+            { text: 'Crédito para aquello que más' },
+            { text: ' deseas', highlight: true },
+            { text: ' o ' },
+            { text: 'quieres', highlight: true },
         ],
     },
     {
@@ -54,10 +57,8 @@ export const homeBanners: HomeBanner[] = [
         alt: 'Crédito Comadres',
         ctaLabel: 'Solicita ahora',
         ctaHref: '#solicitar',
-        kickerParts: [
-            { text: 'Crédito ' },
-            { text: 'Comadres', highlight: true },
-            { text: ': rápido, claro y sin vueltas' },
-        ],
+        align: 'left',
+        contentTranslate: 'translate-y-35 sm:translate-y-50 md:translate-y-30 lg:translate-y-40 xl:translate-y-60 2xl:translate-y-80',
+        kickerParts: [],
     },
 ]

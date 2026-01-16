@@ -75,14 +75,12 @@
         const active = isActive(key, href)
         return [
             'group relative inline-flex items-center gap-2',
-            'px-1 py-1.5',
+            'px-1 py-1.5 text-neutral',
             //  TAMAÑO para MD
             'text-[10px] sm:text-[11px] md:text-xs lg:text-sm',
             //  TRACKING
             'tracking-[0.18em] md:tracking-[0.20em] lg:tracking-[0.22em]',
             'font-black uppercase',
-            //  NEGRO MÁS MARCADO + SOMBRA OSCURA (no blanca)
-            'text-black drop-shadow-[0_1px_1px_rgba(0,0,0,0.45)]',
             'transition-all duration-200',
             'hover:-translate-y-[1px]',
             active ? 'opacity-100' : 'opacity-90 hover:opacity-100',
@@ -119,8 +117,10 @@
 
 <template>
     <!-- DESKTOP -->
-    <nav v-if="variant === 'desktop'" class="flex items-center gap-6">
-        <Link v-for="l in links" :key="l.href" :href="l.href"
+    <nav v-if="variant === 'desktop'" class="relative flex items-center gap-8
+    rounded-full px-6 py-3 bg-sky-100 backdrop-blur-md
+    shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-white/60">
+        <Link  v-for="l in links" :key="l.href" :href="l.href"
         :class="desktopLinkClass(l.key, l.href)">
             <span :class="desktopIconClass(l.key, l.href)" v-html="l.icon" />
             <span class="relative">
@@ -132,7 +132,7 @@
 
     <!-- MOBILE -->
     <nav v-else class="space-y-2">
-        <Link v-for="l in links" :key="`m-${l.href}`" :href="l.href"
+        <Link  v-for="l in links" :key="`m-${l.href}`" :href="l.href"
         :class="mobileItemClass()" @click="onNavigate?.()">
             <span class="h-5 w-5" v-html="l.icon" />
             <span class="flex-1">{{ l.label }}</span>

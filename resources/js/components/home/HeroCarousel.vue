@@ -1,9 +1,8 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
     import type { Slide } from '@/data/homeSlides'
-    import Logo from '@/components/ui/Logo.vue'
     import PrimaryCTA from '@/components/home/PrimaryCTA.vue'
-    
+
     const props = withDefaults(
         defineProps<{
             slides: Slide[]
@@ -12,44 +11,44 @@
         }>(),
         { autoplayMs: 9000, pauseAfterInteractMs: 8000 }
     )
-    
+
     const slides = computed(() => props.slides || [])
     const idx = ref(0)
-    
+
     let timer: number | null = null
     let resumeTimer: number | null = null
-    
+
     const clamp = (n: number) => {
         const len = slides.value.length
         if (!len) return 0
         return ((n % len) + len) % len
     }
-    
+
     const start = () => {
         if (timer) window.clearInterval(timer)
         if (!slides.value.length) return
         timer = window.setInterval(() => (idx.value = clamp(idx.value + 1)), props.autoplayMs)
     }
-    
+
     const pauseAndResume = () => {
         if (timer) window.clearInterval(timer)
         if (resumeTimer) window.clearTimeout(resumeTimer)
         resumeTimer = window.setTimeout(start, props.pauseAfterInteractMs)
     }
-    
+
     const go = (n: number) => {
         idx.value = clamp(n)
         pauseAndResume()
     }
     const next = () => go(idx.value + 1)
     const prev = () => go(idx.value - 1)
-    
+
     onMounted(start)
     onBeforeUnmount(() => {
         if (timer) window.clearInterval(timer)
         if (resumeTimer) window.clearTimeout(resumeTimer)
     })
-    
+
     // Swipe
     const touchX = ref<number | null>(null)
     const onTouchStart = (e: TouchEvent) => (touchX.value = e.touches[0]?.clientX ?? null)
@@ -62,18 +61,12 @@
         if (Math.abs(dx) < 35) return
         dx < 0 ? next() : prev()
     }
-    
-    /**
-     * Ajuste de encuadre por slide para móvil:
-     * (evita que se “vuele” el logo importante)
-     */
+
     const objectPos = (slideId: string) => {
-        if (slideId === 's2') return 'center left'     // vacaciones: deja más aire a la izquierda
-        if (slideId === 's3') return 'center'          // comadres: centrado
-        return 'center'                                // s1 default
+        return 'center'
     }
 </script>
-    
+
 <template>
     <section class="relative w-full overflow-hidden" @touchstart.passive="onTouchStart" @touchend.passive="onTouchEnd" >
         <div class="relative">
@@ -82,38 +75,42 @@
             :style="{ transform: `translateX(-${idx * 100}%)` }">
                 <div v-for="s in slides" :key="s.id" class="relative w-full shrink-0">
                     <div class="relative w-full overflow-hidden">
-                        <!-- Alturas responsivas (mobile más “compacto” para encuadrar mejor) -->
-                        <div class="h-[330px] sm:h-[460px] md:h-[330px] lg:h-[460px] xl:h-[530px] 2xl:h-[750px]">
+                        <!-- Alturas responsivas -->
+                        <div class="h-[320px] sm:h-[380px] md:h-[500px] lg:h-[550px] xl:h-[530px] 2xl:h-[650px]">
                             <picture class="block h-full w-full">
-                                <source media="(min-width: 768px)" :srcset="s.desktopSrc" />
+                                <source media="(min-width: 1280px)" :srcset="s.desktopSrc" />
                                 <img :src="s.mobileSrc" :alt="s.alt" class="h-full w-full object-cover"
                                 :style="{ objectPosition: objectPos(s.id) }" draggable="false" />
                             </picture>
                         </div>
-            
+
                         <!-- OVERLAY DESKTOP -->
                         <div class="absolute inset-0 z-20 hidden md:flex items-start">
                             <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-0">
                                 <!-- CTA derecha -->
                                 <div class="mt-20 max-w-[560px] lg:mt-20">
                                     <div class="animate-in fade-in duration-500
-                                    slide-in-from-bottom-6 md:slide-in-from-right-2
-                                    md:translate-y-5 lg:translate-y-14 xl:translate-y-20
-                                    md:scale-[0.78] lg:scale-100 xl:scale-105
+                                    slide-in-from-bottom-6 translate-x-50
+                                    md:translate-x-95
+                                    md:translate-y-40 lg:translate-y-55
+                                    lg:translate-x-120
+                                    2xl:translate-x-200
+                                    2xl:translate-y-80
                                     origin-top-right">
                                         <PrimaryCTA :overlay="s.overlay" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-            
+
                         <!-- OVERLAY MOBILE -->
                         <div class="absolute inset-10 z-20 md:hidden">
                             <!-- CTA abajo -->
                             <div class="absolute inset-x-0 bottom-0 pb-0">
                                 <div class="mx-auto w-full max-w-7xl px-4">
-                                    <div class="mx-auto max-w-[220px] animate-in fade-in duration-500 slide-in-from-bottom-4
-                                    scale-[0.82] sm:scale-100 translate-x-30">
+                                    <div class="mx-auto max-w-[220px] animate-in fade-in duration-500
+                                    slide-in-from-bottom-4 scale-[0.82] sm:translate-y-10
+                                    translate-x-30 translate-y-10">
                                         <PrimaryCTA :overlay="s.overlay" />
                                     </div>
                                 </div>
@@ -122,7 +119,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- CONTROLES DESKTOP -->
             <button type="button" class="absolute left-6 top-1/2 z-30 hidden -translate-y-1/2
             text-black text-5xl font-light transition hover:text-black hover:scale-[1.4]
@@ -135,7 +132,7 @@
             active:scale-[0.96] md:block" @click="next" aria-label="Siguiente">
                 ›
             </button>
-        
+
             <!-- DOTS -->
             <div class="absolute bottom-4 left-0 right-0 z-30 flex items-center justify-center gap-2">
                 <button v-for="(_, i) in slides" :key="`dot-${i}`" type="button"
@@ -147,4 +144,3 @@
         </div>
     </section>
 </template>
-    

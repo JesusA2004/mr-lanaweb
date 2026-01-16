@@ -37,7 +37,7 @@ export const homeSlides: Slide[] = [
             subtitleParts: [
                 { text: 'Obtén un crédito para tu ', tone: 'muted', bold: true },
                 { text: 'negocio', tone: 'muted', bold: true },
-                { text: ' fácil y rápido', tone: 'white', bold: true },
+                { text: ' fácil y rápido', tone: 'black', bold: true },
             ],
             ctaLabel: 'Solicitar Ahora',
             ctaHref: '/impulsa-tu-negocio',
@@ -56,7 +56,7 @@ export const homeSlides: Slide[] = [
             ],
             subtitleParts: [
                 { text: 'O ese celular que quieres esto y más… ', tone: 'muted', bold: true},
-                { text: 'fácil y rápido', tone: 'white', bold: true },
+                { text: 'fácil y rápido', tone: 'black', bold: true },
             ],
             ctaLabel: 'Solicitar Ahora',
             ctaHref: '/impulsat',
