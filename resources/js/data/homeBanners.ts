@@ -22,12 +22,11 @@ export type HomeBanner = {
 export const homeBanners: HomeBanner[] = [
     {
         id: 'banner-1',
-        desktopSrc: '/img/banner/banner-1.webp',
-        mobileSrc: '/img/banner/banner-1.webp',
+        desktopSrc: '/img/banner/banner-1.jfif',
+        mobileSrc: '/img/banner/bannerMobile1.jfif',
         alt: 'Obtén un crédito diario o semanal',
         ctaLabel: 'Obténlo Ahora',
         ctaHref: '#solicitar',
-        overlaySrc: '/img/banner/banner-1-degree-text.png',
         kickerParts: [
             { text: 'Obtén un crédito ' },
             { text: 'DIARIO', highlight: true },
@@ -38,8 +37,8 @@ export const homeBanners: HomeBanner[] = [
     },
     {
         id: 'banner-2',
-        desktopSrc: '/img/banner/banner-2.jpg',
-        mobileSrc: '/img/banner/banner-2.jpg',
+        desktopSrc: '/img/banner/banner-2.jfif',
+        mobileSrc: '/img/banner/bannerMobile2.jfif',
         alt: 'Crédito para lo que deseas',
         ctaLabel: 'Obténlo Ahora',
         ctaHref: '#solicitar',
@@ -50,8 +49,8 @@ export const homeBanners: HomeBanner[] = [
     },
     {
         id: 'banner-3',
-        desktopSrc: '/img/banner/banner-3.jpg',
-        mobileSrc: '/img/banner/banner-3.jpg',
+        desktopSrc: '/img/banner/banner-3.jfif',
+        mobileSrc: '/img/banner/bannerMobile3.jfif',
         alt: 'Crédito Comadres',
         ctaLabel: 'Solicita ahora',
         ctaHref: '#solicitar',

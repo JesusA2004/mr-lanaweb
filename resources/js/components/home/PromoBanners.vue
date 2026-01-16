@@ -115,11 +115,6 @@
                                         b.overlaySrc ? 'object-contain object-right' : 'object-cover object-center']"
                                     loading="lazy"  draggable="false" />
                                 </picture>
-                            
-                                <!-- Overlay (solo banner-1) -->
-                                <img v-if="b.overlaySrc" :src="b.overlaySrc"
-                                class="pointer-events-none absolute inset-0 z-10 h-full 
-                                w-full object-cover select-none" draggable="false"/>
 
                             </div>
 

@@ -25,8 +25,8 @@ export type Slide = {
 export const homeSlides: Slide[] = [
     {
         id: 's1',
-        desktopSrc: '/img/home/Slider-1.jpg',
-        mobileSrc: '/img/home/Slider-mobile1.jpg',
+        desktopSrc: '/img/home/Slider-1.jfif',
+        mobileSrc: '/img/home/Slider-mobile1.jfif',
         alt: 'Mr Lana - Negocio',
         overlay: {
             titleParts: [
@@ -45,8 +45,8 @@ export const homeSlides: Slide[] = [
     },
     {
         id: 's2',
-        desktopSrc: '/img/home/Slider-2.jpg',
-        mobileSrc: '/img/home/Slider-mobile2.jpg',
+        desktopSrc: '/img/home/Slider-2.jfif',
+        mobileSrc: '/img/home/Slider-mobile2.jfif',
         alt: 'Mr Lana - Vacaciones',
         overlay: {
             titleParts: [
@@ -64,8 +64,8 @@ export const homeSlides: Slide[] = [
     },
     {
         id: 's3',
-        desktopSrc: '/img/home/Slider-3.jpg',
-        mobileSrc: '/img/home/Slider-3.jpg',
+        desktopSrc: '/img/home/Slider-3.jfif',
+        mobileSrc: '/img/home/Slider-mobile3.jfif',
         alt: 'Mr Lana - Comadres',
         overlay: {
             titleParts: [

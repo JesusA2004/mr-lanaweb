@@ -91,14 +91,9 @@
                             </picture>
                         </div>
             
-                        <!-- OVERLAY DESKTOP (logo del slider) -->
+                        <!-- OVERLAY DESKTOP -->
                         <div class="absolute inset-0 z-20 hidden md:flex items-start">
                             <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-0">
-                                <!-- Logo izquierda (desktop) -->
-                                <div class="shrink-0 -mt-20">
-                                    <Logo />
-                                </div>
-                
                                 <!-- CTA derecha -->
                                 <div class="mt-20 max-w-[560px] lg:mt-20">
                                     <div class="animate-in fade-in duration-500
@@ -112,7 +107,7 @@
                             </div>
                         </div>
             
-                        <!-- OVERLAY MOBILE (NO logo aquí; el logo vive en Navbar móvil) -->
+                        <!-- OVERLAY MOBILE -->
                         <div class="absolute inset-10 z-20 md:hidden">
                             <!-- CTA abajo -->
                             <div class="absolute inset-x-0 bottom-0 pb-0">
