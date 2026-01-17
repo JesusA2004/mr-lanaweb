@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, onMounted, onUnmounted } from 'vue'
     import Navbar from '@/components/navigation/Navbar.vue'
     import Footer from '@/components/navigation/Footer.vue'
     import VacanciesHub from '@/components/vacancies/VacanciesHub.vue'
@@ -14,6 +14,25 @@
     function closeVacancies() {
         vacanciesOpen.value = false
     }
+
+    // Escuchar eventos del navbar
+    function handleNavbarOpenVacancies() {
+        openVacancies()
+    }
+
+    // Escuchar eventos globales desde ImpulsaNegocio
+    function handleGlobalOpenVacancies() {
+        openVacancies()
+    }
+
+    onMounted(() => {
+        // Escuchar eventos globales
+        window.addEventListener('open-vacancies-global', handleGlobalOpenVacancies)
+    })
+
+    onUnmounted(() => {
+        window.removeEventListener('open-vacancies-global', handleGlobalOpenVacancies)
+    })
 </script>
     
 <template>

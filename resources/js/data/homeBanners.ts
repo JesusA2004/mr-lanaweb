@@ -28,8 +28,6 @@ export const homeBanners: HomeBanner[] = [
         contentTranslate: 'translate-y-25 md:translate-y-5 lg:translate-y-5',
         kickerParts: [
             { text: 'Obtén un crédito ' },
-            { text: 'DIARIO', highlight: true },
-            { text: ' o ' },
             { text: 'Semanal', highlight: true },
             { text: ' para tu negocio' },
         ],
