@@ -1,63 +1,214 @@
 export type Branch = {
-    id: string
-    zone: 'Centro' | 'Golfo' | 'Norte' | 'Bajio' | 'Sureste' | 'Occidente'
-    name: string
-    city: string
-    state: string
-    address: string
-    phones?: string[]
-    mapUrl?: string
-  }
-  
-  export const zones = [
-    { key: 'Centro', label: 'Zona Centro' },
-    { key: 'Golfo', label: 'Zona Golfo' },
-    { key: 'Norte', label: 'Zona Norte' },
-    { key: 'Bajio', label: 'Zona Bajío' },
-    { key: 'Sureste', label: 'Zona Sureste' },
-    { key: 'Occidente', label: 'Zona Occidente' },
-  ] as const
-  
-  export const branches: Branch[] = [
-    {
-      id: 'cvaca-centro',
-      zone: 'Centro',
-      name: 'Cuernavaca Centro',
-      city: 'Cuernavaca',
-      state: 'Morelos',
-      address: 'Centro, Cuernavaca, Mor.',
-      phones: ['777 000 0000'],
-      mapUrl: 'https://maps.google.com',
-    },
-    {
-      id: 'cdmx',
-      zone: 'Centro',
-      name: 'CDMX',
-      city: 'Ciudad de México',
-      state: 'CDMX',
-      address: 'CDMX',
-      phones: ['55 0000 0000'],
-      mapUrl: 'https://maps.google.com',
-    },
-    {
-      id: 'veracruz',
-      zone: 'Golfo',
-      name: 'Veracruz',
-      city: 'Veracruz',
-      state: 'Veracruz',
-      address: 'Veracruz, Ver.',
-      phones: ['229 000 0000'],
-      mapUrl: 'https://maps.google.com',
-    },
-    {
-      id: 'monterrey',
-      zone: 'Norte',
-      name: 'Monterrey',
-      city: 'Monterrey',
-      state: 'Nuevo León',
-      address: 'Monterrey, N.L.',
-      phones: ['81 0000 0000'],
-      mapUrl: 'https://maps.google.com',
-    },
-  ]
-  
+  id: string
+  zone: 'Centro' | 'Golfo' | 'Norte' | 'Bajio' | 'Sureste' | 'Occidente'
+  name: string
+  city: string
+  state: string
+  address: string
+  phones?: string[]
+  mapUrl?: string
+}
+
+export const zones = [
+  { key: 'Centro', label: 'Zona Centro' },
+  { key: 'Golfo', label: 'Zona Golfo' },
+  { key: 'Norte', label: 'Zona Norte' },
+  { key: 'Bajio', label: 'Zona Bajío' },
+  { key: 'Sureste', label: 'Zona Sureste' },
+  { key: 'Occidente', label: 'Zona Occidente' },
+] as const
+
+export const branches: Branch[] = [
+  {
+    id: 'cvaca-centro',
+    zone: 'Centro',
+    name: 'Cuernavaca Centro',
+    city: 'Cuernavaca',
+    state: 'Morelos',
+    address: 'Centro, Cuernavaca, Mor.',
+    phones: ['777 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+
+  {
+    id: 'aguascalientes',
+    zone: 'Bajio',
+    name: 'Aguascalientes',
+    city: 'Aguascalientes',
+    state: 'Aguascalientes',
+    address: 'Aguascalientes, Ags.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'atlixco',
+    zone: 'Centro',
+    name: 'Atlixco',
+    city: 'Atlixco',
+    state: 'Puebla',
+    address: 'Atlixco, Pue.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'atlacomulco',
+    zone: 'Centro',
+    name: 'Atlacomulco',
+    city: 'Atlacomulco',
+    state: 'Estado de México',
+    address: 'Atlacomulco, Edo. Méx.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'cordoba',
+    zone: 'Golfo',
+    name: 'Córdoba',
+    city: 'Córdoba',
+    state: 'Veracruz',
+    address: 'Córdoba, Ver.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'huamantla',
+    zone: 'Centro',
+    name: 'Huamantla',
+    city: 'Huamantla',
+    state: 'Tlaxcala',
+    address: 'Huamantla, Tlax.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'ixtlahuaca',
+    zone: 'Centro',
+    name: 'Ixtlahuaca',
+    city: 'Ixtlahuaca',
+    state: 'Estado de México',
+    address: 'Ixtlahuaca, Edo. Méx.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'miacatlan',
+    zone: 'Centro',
+    name: 'Miacatlán',
+    city: 'Miacatlán',
+    state: 'Morelos',
+    address: 'Miacatlán, Mor.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'orizaba',
+    zone: 'Golfo',
+    name: 'Orizaba',
+    city: 'Orizaba',
+    state: 'Veracruz',
+    address: 'Orizaba, Ver.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'pachuca',
+    zone: 'Centro',
+    name: 'Pachuca',
+    city: 'Pachuca',
+    state: 'Hidalgo',
+    address: 'Pachuca, Hgo.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'san-luis-potosi',
+    zone: 'Bajio',
+    name: 'San Luis Potosí',
+    city: 'San Luis Potosí',
+    state: 'San Luis Potosí',
+    address: 'San Luis Potosí, S.L.P.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'san-juan-del-rio',
+    zone: 'Bajio',
+    name: 'San Juan del Río',
+    city: 'San Juan del Río',
+    state: 'Querétaro',
+    address: 'San Juan del Río, Qro.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'tenango',
+    zone: 'Centro',
+    name: 'Tenango',
+    city: 'Tenango',
+    state: 'Estado de México',
+    address: 'Tenango, Edo. Méx.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'tlaxcala',
+    zone: 'Centro',
+    name: 'Tlaxcala',
+    city: 'Tlaxcala',
+    state: 'Tlaxcala',
+    address: 'Tlaxcala, Tlax.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'tula',
+    zone: 'Centro',
+    name: 'Tula',
+    city: 'Tula',
+    state: 'Hidalgo',
+    address: 'Tula, Hgo.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'tulancingo',
+    zone: 'Centro',
+    name: 'Tulancingo',
+    city: 'Tulancingo',
+    state: 'Hidalgo',
+    address: 'Tulancingo, Hgo.',
+    phones: ['000 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+
+  {
+    id: 'cdmx',
+    zone: 'Centro',
+    name: 'CDMX',
+    city: 'Ciudad de México',
+    state: 'CDMX',
+    address: 'CDMX',
+    phones: ['55 0000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'veracruz',
+    zone: 'Golfo',
+    name: 'Veracruz',
+    city: 'Veracruz',
+    state: 'Veracruz',
+    address: 'Veracruz, Ver.',
+    phones: ['229 000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+  {
+    id: 'monterrey',
+    zone: 'Norte',
+    name: 'Monterrey',
+    city: 'Monterrey',
+    state: 'Nuevo León',
+    address: 'Monterrey, N.L.',
+    phones: ['81 0000 0000'],
+    mapUrl: 'https://maps.google.com',
+  },
+]

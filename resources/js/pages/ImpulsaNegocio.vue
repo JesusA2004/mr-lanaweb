@@ -1,11 +1,13 @@
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3'
+    import { onMounted, ref } from 'vue'
     import PublicLayout from '@/layouts/PublicLayout.vue'
     import Container from '@/components/ui/Container.vue'
     import StepBanner from '@/components/impulsaN/StepBanner.vue'
     import PanelCredit from '@/components/impulsaN/PanelCredit.vue'
     import BannerAppStore from '@/components/home/AppDownloadBanner.vue'
     import LoanRequestForm from '@/components/forms/LoanRequestForm.vue'
+    import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
     import { branches } from '@/data/sucursales'
     import { credits } from '@/data/credits'
     
@@ -54,11 +56,35 @@
     ]
     
     const weeklyCredits = credits.filter(credit => credit.schedule === 'Semanal')
-    
-    function onSubmit(payload: any) {
-        console.log('submit impulsa negocio', payload)
-        // Aquí iría la lógica para enviar el formulario
+        
+        // Modal
+    const openModal = ref(false)
+
+    function openBusinessModal() {
+        openModal.value = true
     }
+
+    function closeBusinessModal() {
+        openModal.value = false
+
+        // Limpia el query param para que si refrescan no se vuelva a abrir
+        const url = new URL(window.location.href)
+        url.searchParams.delete('solicitar')
+        window.history.replaceState({}, '', url.toString())
+        }
+
+        function onSubmit(payload: any) {
+        console.log('submit impulsa negocio', payload)
+        // Aquí conectas tu endpoint (Inertia post / axios / fetch)
+        closeBusinessModal()
+        }
+
+        onMounted(() => {
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('solicitar') === '1') {
+            openBusinessModal()
+        }
+    })
 
     
 </script>
@@ -66,6 +92,13 @@
     <template>
         <Head title="Impulsa tu negocio | Mr Lana" />
         <PublicLayout>
+            <!-- MODAL -->
+            <BusinessLoanRequestModal
+                :open="openModal"
+                :branches="branches"
+                @close="closeBusinessModal"
+                @submit="onSubmit"
+            />
             <!-- Banner Superior -->
             <div class="relative">
                 <img src="/img/business-banner-1.jpg" class="hidden md:block w-full h-auto" alt="Banner negocio desktop"/>
@@ -164,18 +197,22 @@
                         </div>
                     </div>
             
-                    <!-- Llamado a la acción -->
+                    <!-- Llamado a la acción (también abre el modal si quieres) -->
                     <div class="text-center mt-12 md:mt-16">
-                        <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                            ¿Ya sabes cuál te conviene?
-                        </h3>
-                        <a
-                            href="#solicitar"
-                            class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full hover:opacity-90 transition-opacity shadow-lg"
-                        >
-                            Solicita tu préstamo
-                            <img src="/img/icons/whats-icon.svg" class="ml-3 w-6 h-6" alt="WhatsApp" />
-                        </a>
+                    <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                        ¿Ya sabes cuál te conviene?
+                    </h3>
+
+                    <button
+                        type="button"
+                        @click="openBusinessModal"
+                        class="inline-flex items-center justify-center px-7 py-4 sm:px-8 sm:py-4
+                            bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full
+                            hover:opacity-90 transition-opacity shadow-lg"
+                    >
+                        Solicita tu préstamo
+                        <img src="/img/icons/whats-icon.svg" class="ml-3 w-6 h-6" alt="WhatsApp" />
+                    </button>
                     </div>
                 </Container>
             </div>

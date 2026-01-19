@@ -23,13 +23,16 @@ export const homeBanners: HomeBanner[] = [
         mobileSrc: '/img/banner/bannerMobile1.jfif',
         alt: 'Obtén un crédito diario o semanal',
         ctaLabel: 'Obténlo Ahora',
-        ctaHref: '#solicitar',
+
+        // redirige y abre modal al llegar
+        ctaHref: '/impulsa-tu-negocio?solicitar=1',
+
         align: 'right',
         contentTranslate: 'translate-y-25 md:translate-y-5 lg:translate-y-5',
         kickerParts: [
-            { text: 'Obtén un crédito ' },
-            { text: 'Semanal', highlight: true },
-            { text: ' para tu negocio' },
+        { text: 'Obtén un crédito ' },
+        { text: 'Semanal', highlight: true },
+        { text: ' para tu negocio' },
         ],
     },
     {
