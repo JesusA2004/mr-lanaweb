@@ -110,18 +110,12 @@
 
                         <!-- OVERLAY MOBILE -->
                         <div class="absolute inset-0 z-20 md:hidden pointer-events-none">
-                        <!-- QUITA el gradiente, ensucia y no resuelve el tamaño -->
-                        <!-- <div class="absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-t ..."/> -->
-
-                        <!-- CTA: subido un poco para no tapar tanto -->
-                        <div
-                            class="absolute inset-x-0 bottom-0 pointer-events-auto px-3
-                                [padding-bottom:calc(env(safe-area-inset-bottom)+10px)]"
-                        >
-                            <div class="mx-auto w-[min(88vw,220px)]">
-                            <PrimaryCTA :overlay="s.overlay" :compact="true" />
+                            <div class="absolute inset-x-0 bottom-0 pointer-events-auto px-3
+                                [padding-bottom:calc(env(safe-area-inset-bottom)+10px)]">
+                                <div class="mx-auto w-[min(88vw,220px)]">
+                                <PrimaryCTA :overlay="s.overlay" :compact="true" />
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                     </div>
