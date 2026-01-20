@@ -89,9 +89,31 @@
                                 />
                             </picture>
                         </div>
+                        <!-- OVERLAY DESKTOP -->
+                        <div class="absolute inset-0 z-20 hidden md:flex items-start">
+                            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-0">
+                                <!-- CTA derecha -->
+                                <div class="mt-20 max-w-[560px] lg:mt-20">
+                                    <div class="animate-in fade-in duration-500
+                                    slide-in-from-bottom-6 translate-x-50
+                                    md:translate-x-95
+                                    md:translate-y-40 lg:translate-y-55
+                                    lg:translate-x-120
+                                    2xl:translate-x-200
+                                    2xl:translate-y-80
+                                    origin-top-right">
+                                        <PrimaryCTA :overlay="s.overlay" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                       <!-- OVERLAY MOBILE -->
+                        <!-- OVERLAY MOBILE -->
                         <div class="absolute inset-0 z-20 md:hidden pointer-events-none">
+                        <!-- QUITA el gradiente, ensucia y no resuelve el tamaño -->
+                        <!-- <div class="absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-t ..."/> -->
+
+                        <!-- CTA: subido un poco para no tapar tanto -->
                         <div
                             class="absolute inset-x-0 bottom-0 pointer-events-auto px-3
                                 [padding-bottom:calc(env(safe-area-inset-bottom)+10px)]"
