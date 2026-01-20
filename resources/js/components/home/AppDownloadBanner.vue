@@ -5,14 +5,14 @@
       playStoreUrl?: string
       className?: string
     }
-    
+
     const props = withDefaults(defineProps<Props>(), {
       appStoreUrl: '#',
       playStoreUrl: '#',
       className: '',
     })
     </script>
-    
+
     <template>
       <section :class="['w-full bg-white', props.className]">
         <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8">
@@ -35,7 +35,7 @@
               class="absolute inset-0 w-full h-full object-contain select-none"
               draggable="false"
             />
-    
+
             <!-- CTAs: dentro del recorte SIEMPRE -->
             <div
               class="
@@ -49,26 +49,6 @@
                 flex flex-col gap-2 sm:gap-3
               "
             >
-              <!-- App Store -->
-              <a
-                :href="props.appStoreUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Abrir App Store"
-                class="inline-flex rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black/20"
-              >
-                <img
-                  src="/img/bannerApp/btn-dw-app-store.svg"
-                  alt="Download on the App Store"
-                  class="
-                    object-contain select-none h-auto
-                    w-[clamp(150px,22vw,300px)]
-                    max-w-[calc(100%-12px)]
-                  "
-                  draggable="false"
-                />
-              </a>
-    
               <!-- Google Play -->
               <a
                 :href="props.playStoreUrl"
@@ -93,4 +73,3 @@
         </div>
       </section>
     </template>
-    
