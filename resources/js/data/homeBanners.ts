@@ -41,7 +41,8 @@ export const homeBanners: HomeBanner[] = [
         mobileSrc: '/img/banner/bannerMobile2.jfif',
         alt: 'Crédito para lo que deseas',
         ctaLabel: 'Obténlo Ahora',
-        ctaHref: '#solicitar',
+        // redirige y abre modal al llegar
+        ctaHref: '/impulsat?solicitar=1',
         align: 'left',
         contentTranslate: 'translate-y-20 md:translate-y-5',
         kickerParts: [

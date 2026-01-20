@@ -186,16 +186,8 @@ export const faqs: FaqItem[] = [
   },
   {
     id: 31,
-    question: "31. ¿Qué puedo revisar en mi App Mobile?",
-    answer: [
-      "Como cliente Mr. Lana puedes ingresar a tu App Mobile en donde podrás revisar:",
-      "Contratos de crédito activos",
-      "Saldo actual por contrato",
-      "Gestor que atiende su crédito",
-      "Historial de pagos realizados",
-      "Realizar pagos a tu crédito",
-      "Perfil de cliente",
-      "Estado de cuenta"
-    ]
+    question: "31. ¿Puedo solicitar un préstamo por la app de clientes?",
+    answer: 
+      "No. La app de clientes sirve únicamente para monitorear el comportamiento de tus créditos actuales, así como el historial de créditos con nosotros. Es una herramienta de control y consulta para el cliente."
   }
 ]
