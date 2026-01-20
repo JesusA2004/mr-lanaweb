@@ -9,7 +9,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/impulsa-tu-negocio', function () {
-    return Inertia::render('ImpulsaNegocio'); 
+    return Inertia::render('ImpulsaNegocio');
 })->name('impulsaNegocio');
 
 Route::get('/impulsat', function () {
@@ -17,12 +17,21 @@ Route::get('/impulsat', function () {
 })->name('impulsat');
 
 Route::get('/sucursales', function () {
-    return Inertia::render('Sucursales'); 
+    return Inertia::render('Sucursales');
 })->name('sucursales');
 
 Route::get('/faqs', function () {
-    return Inertia::render('Faqs'); 
+    return Inertia::render('Faqs');
 })->name('faqs');
+
+Route::get('/aviso-de-privacidad', function () {
+    return Inertia::render('AvisoPrivacidad');
+})->name('avisoPrivacidad');
+
+Route::get('/terminos-y-condiciones', function () {
+    return Inertia::render('Terminos');
+})->name('Terminos');
+
 
 Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
   ->name('vacancies.apply');

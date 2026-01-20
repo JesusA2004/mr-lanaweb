@@ -7,16 +7,16 @@
       },
       {
         name: 'Instagram',
-        href: 'https://www.instagram.com/mrlana.mx/',
+        href: 'https://www.instagram.com/mr.lana_mx/',
         icon: '/img/icons/logo-ig.png',
       },
     ]
     </script>
-    
+
     <template>
       <div>
         <p class="text-sm font-semibold tracking-wide">Síguenos en</p>
-    
+
         <div class="mt-3 flex flex-wrap gap-3">
           <a
             v-for="l in links"
@@ -39,4 +39,3 @@
         </div>
       </div>
     </template>
-    
