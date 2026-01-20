@@ -74,17 +74,6 @@
                 <div class="mt-5 border-t border-black/10 pt-3 text-center text-xs font-medium text-slate-700">
                 © {{ year }} Mr. Lana. Todos los derechos reservados.
                 </div>
-
-                <!-- Ovejita móvil -->
-                <div class="pointer-events-none absolute bottom-2 right-2">
-                    <div class="relative w-[92px] opacity-95">
-                        <img src="/img/footer/bg-whaticket-mobile.png"
-                        class="w-full drop-shadow-sm" loading="lazy"/>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <slot name="whaticket-mobile" />
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -149,17 +138,6 @@
                             </a>
                         </div>
                     </section>
-
-                    <!-- Ovejita: NO mini; escala y NO empuja el layout -->
-                    <aside class="col-span-12 flex justify-end pt-2">
-                        <div class="relative w-[260px] xl:w-[320px] 2xl:w-[360px]">
-                            <img src="/img/footer/bg-whabutton.png"
-                            class="w-full drop-shadow-sm" loading="lazy"/>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <slot name="whaticket" />
-                            </div>
-                        </div>
-                    </aside>
                 </div>
             </div>
         </div>
