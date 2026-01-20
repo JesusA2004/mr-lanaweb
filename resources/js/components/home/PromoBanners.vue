@@ -64,32 +64,33 @@
     }
 
     // Texto
-    const kickerClass =
-        [
-            'text-black font-extrabold tracking-tight',
-            'leading-[1.12] md:leading-[1.10] xl:leading-[1.06]',
-            'drop-shadow-[0_14px_28px_rgba(0,0,0,0.60)]',
-            'text-[18px] sm:text-[25px] md:text-[25px] lg:text-[34px] xl:text-[44px] 2xl:text-[56px]',
-            'max-w-[16rem] sm:max-w-[20rem] md:max-w-[20rem] lg:max-w-[25rem] xl:max-w-[35rem] 2xl:max-w-[36rem]',
-        ].join(' ')
+    const kickerClass = [
+    'text-black font-extrabold tracking-tight',
+    'leading-[1.12] md:leading-[1.10] xl:leading-[1.06]',
+    'drop-shadow-[0_14px_28px_rgba(0,0,0,0.60)]',
+    // mobile más chico, desktop igual
+    'text-[15px] sm:text-[18px] md:text-[25px] lg:text-[34px] xl:text-[44px] 2xl:text-[56px]',
+    'max-w-[14rem] sm:max-w-[16rem] md:max-w-[20rem] lg:max-w-[25rem] xl:max-w-[35rem] 2xl:max-w-[36rem]',
+    ].join(' ')
 
     // Botón
-    const ctaClass =
-        [
-            'cta-glow relative inline-flex rounded-full',
-            'bg-black text-white',
-            'px-5 py-2.5 text-[18px]',
-            'sm:px-7 sm:py-3 sm:text-[22px]',
-            'md:px-9 md:py-4 md:text-[22px]',
-            'lg:px-11 lg:py-5 lg:text-[30px]',
-            'xl:px-14 xl:py-6 xl:text-[35px]',
-            '2xl:px-16 2xl:py-7 2xl:text-[40px]',
-            'font-extrabold tracking-wide',
-            'transition-[box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
-            'hover:-translate-y-[1px]',
-            'hover:opacity-95',
-            'active:translate-y-0 active:scale-[0.99]',
-        ].join(' ')
+    const ctaClass = [
+    'cta-glow relative inline-flex rounded-full',
+    'bg-black text-white',
+    // mobile compacto
+    'px-4 py-2 text-[14px]',
+    'sm:px-5 sm:py-2.5 sm:text-[16px]',
+    // desktop igual que tenías
+    'md:px-9 md:py-4 md:text-[22px]',
+    'lg:px-11 lg:py-5 lg:text-[30px]',
+    'xl:px-14 xl:py-6 xl:text-[35px]',
+    '2xl:px-16 2xl:py-7 2xl:text-[40px]',
+    'font-extrabold tracking-wide',
+    'transition-[box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
+    'hover:-translate-y-[1px]',
+    'hover:opacity-95',
+    'active:translate-y-0 active:scale-[0.99]',
+    ].join(' ')
 </script>
 
 <template>
@@ -117,40 +118,63 @@
 
                             <!-- Texto + CTA -->
                             <div v-if="b.ctaLabel && b.ctaHref"
-                            :class="['absolute inset-0 z-20 flex']">
-                                <div :class="['w-full px-5 sm:px-10 md:px-12 lg:px-14 xl:px-16 2xl:px-20','py-6 sm:py-8 md:py-10 lg:py-12 xl:py-14 2xl:py-16 translate-y-6 sm:translate-y-10 md:translate-y-12 lg:translate-y-14']">
-                                    <div :class="['mx-auto w-full max-w-7xl flex flex-col',b.id === 'banner-1'
+                            class="absolute inset-0 z-20 flex items-end md:items-start">
+                            <div class=" w-full
+                                px-4 sm:px-6 md:px-12 lg:px-14 xl:px-16 2xl:px-20
+                                /* MOBILE: padding compacto y pegado abajo */
+                                pb-3 pt-3
+                                [padding-bottom:calc(env(safe-area-inset-bottom)+12px)]
+                                /* DESKTOP: tu comportamiento original */
+                                md:py-10 lg:py-12 xl:py-14 2xl:py-16
+                                md:translate-y-12 lg:translate-y-14
+                                "
+                            >
+                                <div
+                                class="mx-auto w-full max-w-7xl flex flex-col"
+                                :class="[
+                                    b.id === 'banner-1'
                                     ? 'items-end text-right md:items-start md:text-left'
-                                    : 'items-start text-left', b.contentTranslate ?? '']">
-                                        <!-- Texto separado -->
-                                        <div v-if="b.kickerParts?.length" class="mb-4 sm:mb-5 md:mb-6 lg:mb-7">
-                                            <p :class="kickerClass">
-                                                <template v-for="(p, idx) in b.kickerParts" :key="idx">
-                                                    <span v-if="p.highlight" class="text-white">
-                                                        {{ p.text }}
-                                                    </span>
-                                                    <span v-else>{{ p.text }}</span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                        <!-- CTA -->
-                                        <div class="flex">
-                                            <button v-if="b.ctaHref.startsWith('#')" type="button"
-                                            @click="onCtaClick(b.ctaHref)" :class="ctaClass">
-                                                <span class="relative z-10">{{ b.ctaLabel }}</span>
-                                                <span class="glow pointer-events-none absolute inset-0
-                                                -z-10 rounded-full opacity-0 blur-lg"
-                                                style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.60), transparent 62%)"/>
-                                            </button>
-                                            <Link v-else :href="b.ctaHref" :class="ctaClass">
-                                                <span class="relative z-10">{{ b.ctaLabel }}</span>
-                                                <span class="glow pointer-events-none absolute inset-0
-                                                -z-10 rounded-full opacity-0 blur-lg"
-                                                style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.60), transparent 62%)"/>
-                                            </Link>
-                                        </div>
-                                    </div>
+                                    : 'items-start text-left',
+
+                                    /* MOBILE: IGNORA contentTranslate (porque rompe) */
+                                    'md:' + (b.contentTranslate ?? '').replaceAll(' ', ' md:')
+                                ]"
+                                >
+                                <!-- Texto -->
+                                <div v-if="b.kickerParts?.length" class="mb-2 sm:mb-3 md:mb-6 lg:mb-7">
+                                    <p :class="kickerClass">
+                                    <template v-for="(p, idx) in b.kickerParts" :key="idx">
+                                        <span v-if="p.highlight" class="text-white">{{ p.text }}</span>
+                                        <span v-else>{{ p.text }}</span>
+                                    </template>
+                                    </p>
                                 </div>
+
+                                <!-- CTA -->
+                                <div class="flex">
+                                    <button
+                                    v-if="b.ctaHref.startsWith('#')"
+                                    type="button"
+                                    @click="onCtaClick(b.ctaHref)"
+                                    :class="ctaClass"
+                                    >
+                                    <span class="relative z-10">{{ b.ctaLabel }}</span>
+                                    <span
+                                        class="glow pointer-events-none absolute inset-0 -z-10 rounded-full opacity-0 blur-lg"
+                                        style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.60), transparent 62%)"
+                                    />
+                                    </button>
+
+                                    <Link v-else :href="b.ctaHref" :class="ctaClass">
+                                    <span class="relative z-10">{{ b.ctaLabel }}</span>
+                                    <span
+                                        class="glow pointer-events-none absolute inset-0 -z-10 rounded-full opacity-0 blur-lg"
+                                        style="background: radial-gradient(circle at 30% 30%, rgba(29,193,162,.60), transparent 62%)"
+                                    />
+                                    </Link>
+                                </div>
+                                </div>
+                            </div>
                             </div>
 
                             <!-- Shine overlay (hover) -->

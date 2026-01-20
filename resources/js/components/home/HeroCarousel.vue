@@ -75,47 +75,33 @@
             :style="{ transform: `translateX(-${idx * 100}%)` }">
                 <div v-for="s in slides" :key="s.id" class="relative w-full shrink-0">
                     <div class="relative w-full overflow-hidden">
-                        <!-- Alturas responsivas -->
-                        <div class="h-[320px] sm:h-[380px] md:h-[500px] lg:h-[550px] xl:h-[530px] 2xl:h-[650px]">
-                            <picture class="block h-full w-full">
+                        <!-- MOBILE: altura automática (no recorte, no bandas). MD+: alturas como antes -->
+                        <div class="relative w-full h-auto md:h-[500px] lg:h-[550px] xl:h-[530px] 2xl:h-[650px]">
+                            <picture class="block w-full">
                                 <source media="(min-width: 1280px)" :srcset="s.desktopSrc" />
-                                <img :src="s.mobileSrc" :alt="s.alt" class="h-full w-full object-cover"
-                                :style="{ objectPosition: objectPos(s.id) }" draggable="false" />
+                                <!-- MOBILE: imagen completa -->
+                                <img
+                                :src="s.mobileSrc"
+                                :alt="s.alt"
+                                class="block w-full h-auto object-contain md:h-full md:object-cover"
+                                :style="{ objectPosition: objectPos(s.id) }"
+                                draggable="false"
+                                />
                             </picture>
                         </div>
 
-                        <!-- OVERLAY DESKTOP -->
-                        <div class="absolute inset-0 z-20 hidden md:flex items-start">
-                            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-0">
-                                <!-- CTA derecha -->
-                                <div class="mt-20 max-w-[560px] lg:mt-20">
-                                    <div class="animate-in fade-in duration-500
-                                    slide-in-from-bottom-6 translate-x-50
-                                    md:translate-x-95
-                                    md:translate-y-40 lg:translate-y-55
-                                    lg:translate-x-120
-                                    2xl:translate-x-200
-                                    2xl:translate-y-80
-                                    origin-top-right">
-                                        <PrimaryCTA :overlay="s.overlay" />
-                                    </div>
-                                </div>
+                       <!-- OVERLAY MOBILE -->
+                        <div class="absolute inset-0 z-20 md:hidden pointer-events-none">
+                        <div
+                            class="absolute inset-x-0 bottom-0 pointer-events-auto px-3
+                                [padding-bottom:calc(env(safe-area-inset-bottom)+10px)]"
+                        >
+                            <div class="mx-auto w-[min(88vw,220px)]">
+                            <PrimaryCTA :overlay="s.overlay" :compact="true" />
                             </div>
+                        </div>
                         </div>
 
-                        <!-- OVERLAY MOBILE -->
-                        <div class="absolute inset-10 z-20 md:hidden">
-                            <!-- CTA abajo -->
-                            <div class="absolute inset-x-0 bottom-0 pb-0">
-                                <div class="mx-auto w-full max-w-7xl px-4">
-                                    <div class="mx-auto max-w-[220px] animate-in fade-in duration-500
-                                    slide-in-from-bottom-4 scale-[0.82] sm:translate-y-10
-                                    translate-x-30 translate-y-10">
-                                        <PrimaryCTA :overlay="s.overlay" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -134,12 +120,17 @@
             </button>
 
             <!-- DOTS -->
-            <div class="absolute bottom-4 left-0 right-0 z-30 flex items-center justify-center gap-2">
-                <button v-for="(_, i) in slides" :key="`dot-${i}`" type="button"
-                class="h-2.5 w-2.5 rounded-full transition-all duration-200"
-                :class="i === idx ? 'bg-black/70 scale-110' : 'bg-black/25 hover:bg-black/40 hover:scale-105'"
-                @click="go(i)"
-                :aria-label="`Ir al slide ${i + 1}`"/>
+            <div class="absolute left-0 right-0 z-30 flex items-center justify-center gap-2
+            bottom-[calc(env(safe-area-inset-bottom)+8px)] md:bottom-4">
+                <button
+                    v-for="(_, i) in slides"
+                    :key="`dot-${i}`"
+                    type="button"
+                    class="h-2.5 w-2.5 rounded-full transition-all duration-200"
+                    :class="i === idx ? 'bg-black/70 scale-110' : 'bg-black/25 hover:bg-black/40 hover:scale-105'"
+                    @click="go(i)"
+                    :aria-label="`Ir al slide ${i + 1}`"
+                />
             </div>
         </div>
     </section>
