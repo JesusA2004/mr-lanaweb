@@ -1,318 +1,457 @@
 <script setup lang="ts">
-    import { Head } from '@inertiajs/vue3'
-    import { onMounted, ref } from 'vue'
-    import PublicLayout from '@/layouts/PublicLayout.vue'
-    import Container from '@/components/ui/Container.vue'
-    import StepBanner from '@/components/impulsaN/StepBanner.vue'
-    import PanelCredit from '@/components/impulsaN/PanelCredit.vue'
-    import BannerAppStore from '@/components/home/AppDownloadBanner.vue'
-    import LoanRequestForm from '@/components/forms/LoanRequestForm.vue'
-    import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
-    import { branches } from '@/data/sucursales'
-    import { credits } from '@/data/credits'
-    
-    function handleOpenVacancies() {
-        // Emitir evento global que PublicLayout puede escuchar
-        window.dispatchEvent(new CustomEvent('open-vacancies-global'))
-    }
-    
-    const steps = [
-        {
-            stepTitle: '1. Documentación',
-            stepSubtitle: 'Entregar al gestor de crédito tus documentos',
-            src: '/img/icons/icon-doc.png',
-            alt: 'documentos'
-        },
-        {
-            stepTitle: '2. Formato',
-            stepSubtitle: 'Llena los formatos de crédito Mr. lana.',
-            src: '/img/icons/icon-pencil.png',
-            alt: 'lapiz'
-        },
-        {
-            stepTitle: '3. Acepta la propuesta',
-            stepSubtitle: 'Grabamos un pequeño video solicitando tu crédito, donde se aprecia tu negocio.',
-            src: '/img/icons/icon-video.png',
-            alt: 'video'
-        },
-        {
-            stepTitle: '4. Evaluación de tu video.',
-            stepSubtitle: 'En 15 minutos te notificamos si tu crédito ha sido autorizado o rechazado.',
-            src: '/img/icons/icon-time.png',
-            alt: 'tiempo'
-        },
-        {
-            stepTitle: '5. Gestor de crédito',
-            stepSubtitle: 'Realizaremos una grabación de desembolso de crédito.',
-            src: '/img/icons/icon-money.png',
-            alt: 'dinero'
-        },
-        {
-            stepTitle: '6. Recibe tu dinero.',
-            stepSubtitle: 'Disfruta e invierte tu crédito y haz crecer tu negocio.',
-            src: '/img/icons/icon-invest.png',
-            alt: 'inversión'
-        }
-    ]
-    
-    const weeklyCredits = credits.filter(credit => credit.schedule === 'Semanal')
-        
-        // Modal
-    const openModal = ref(false)
+import { Head } from '@inertiajs/vue3'
+import { computed, onMounted, ref } from 'vue'
+import PublicLayout from '@/layouts/PublicLayout.vue'
+import Container from '@/components/ui/Container.vue'
+import StepBanner from '@/components/impulsaN/StepBanner.vue'
+import BannerAppStore from '@/components/home/AppDownloadBanner.vue'
+import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
+import SegmentTabs, { type SegmentTabItem } from '@/components/ui/SegmentTabs.vue'
+import { branches } from '@/data/sucursales'
+import { credits } from '@/data/credits'
 
-    function openBusinessModal() {
-        openModal.value = true
-    }
+function handleOpenVacancies() {
+  window.dispatchEvent(new CustomEvent('open-vacancies-global'))
+}
 
-    function closeBusinessModal() {
-        openModal.value = false
+const steps = [
+  { stepTitle: '1. Documentación', stepSubtitle: 'Entregar al gestor de crédito tus documentos', src: '/img/icons/icon-doc.png', alt: 'documentos' },
+  { stepTitle: '2. Formato', stepSubtitle: 'Llena los formatos de crédito Mr. lana.', src: '/img/icons/icon-pencil.png', alt: 'lapiz' },
+  { stepTitle: '3. Acepta la propuesta', stepSubtitle: 'Grabamos un pequeño video solicitando tu crédito, donde se aprecia tu negocio.', src: '/img/icons/icon-video.png', alt: 'video' },
+  { stepTitle: '4. Evaluación de tu video.', stepSubtitle: 'En 15 minutos te notificamos si tu crédito ha sido autorizado o rechazado.', src: '/img/icons/icon-time.png', alt: 'tiempo' },
+  { stepTitle: '5. Gestor de crédito', stepSubtitle: 'Realizaremos una grabación de desembolso de crédito.', src: '/img/icons/icon-money.png', alt: 'dinero' },
+  { stepTitle: '6. Recibe tu dinero.', stepSubtitle: 'Disfruta e invierte tu crédito y haz crecer tu negocio.', src: '/img/icons/icon-invest.png', alt: 'inversión' },
+]
 
-        // Limpia el query param para que si refrescan no se vuelva a abrir
-        const url = new URL(window.location.href)
-        url.searchParams.delete('solicitar')
-        window.history.replaceState({}, '', url.toString())
-        }
+/* =========================================================
+  Modal BusinessLoanRequestModal + query param
+  ========================================================= */
+const openModal = ref(false)
 
-        function onSubmit(payload: any) {
-        console.log('submit impulsa negocio', payload)
-        // Aquí conectas tu endpoint (Inertia post / axios / fetch)
-        closeBusinessModal()
-        }
+function openBusinessModal() {
+  openModal.value = true
+}
 
-        onMounted(() => {
-        const params = new URLSearchParams(window.location.search)
-        if (params.get('solicitar') === '1') {
-            openBusinessModal()
-        }
-    })
+function closeBusinessModal() {
+  openModal.value = false
+  const url = new URL(window.location.href)
+  url.searchParams.delete('solicitar')
+  window.history.replaceState({}, '', url.toString())
+}
 
-    
+function onSubmit(payload: any) {
+  console.log('submit impulsa negocio', payload)
+  closeBusinessModal()
+}
+
+onMounted(() => {
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('solicitar') === '1') openBusinessModal()
+})
+
+/* =========================================================
+  WhatsApp (mismo que Impulsa.t)
+  ========================================================= */
+function openWhatsApp() {
+  window.open('https://wa.me/5217774225973', '_blank')
+}
+
+/* =========================================================
+  Créditos (Tabs estilo Impulsa.t)
+  ========================================================= */
+type AnyCredit = any
+
+const weeklyCredits = computed<AnyCredit[]>(() => credits.filter((c: AnyCredit) => c.schedule === 'Semanal'))
+
+const activeCredit = ref<string>('')
+
+onMounted(() => {
+  if (!activeCredit.value && weeklyCredits.value.length) {
+    activeCredit.value = String(weeklyCredits.value[0].id ?? weeklyCredits.value[0].modalId ?? '0')
+  }
+})
+
+const creditTabs = computed<SegmentTabItem[]>(() =>
+  weeklyCredits.value.map((c: AnyCredit, idx: number) => ({
+    key: String(c.id ?? c.modalId ?? idx),
+    label: String(c.payments ?? `Plan ${idx + 1}`),
+    iconSrc: c.icon,
+    iconAlt: c.alt ?? String(c.payments ?? `Plan ${idx + 1}`),
+  }))
+)
+
+const currentCredit = computed<AnyCredit | null>(() => {
+  const key = activeCredit.value
+  const found = weeklyCredits.value.find((c: AnyCredit, idx: number) => String(c.id ?? c.modalId ?? idx) === key)
+  return found ?? weeklyCredits.value[0] ?? null
+})
+
+/* =========================================================
+  SOLO CAMBIO: información según imágenes S12/S16/S20/S24
+  ========================================================= */
+const weeklyOverridesByPlan: Record<
+  string,
+  {
+    esquema: string
+    plazo: string
+    montoInicial: string
+    montoMinimo: string
+    montoMaximo: string
+    poliza: string
+    multa: string
+    aumento: string
+    costos: string
+    cat: string
+  }
+> = {
+  '12': {
+    esquema: 'Semanal',
+    plazo: '12 pagos',
+    montoInicial: '$3,000.00, $4,000.00, $5,000.00',
+    montoMinimo: '$3,000.00',
+    montoMaximo: '$25,000.00',
+    poliza: '$100',
+    multa: '$12.50 por cada $1000',
+    aumento: '$1,000.00 cada ciclo, de acuerdo a política de aumentos',
+    costos: 'No Aplica',
+    cat: '2105.39%',
+  },
+  '16': {
+    esquema: 'Semanal',
+    plazo: '12 pagos',
+    montoInicial: '$5,000.00',
+    montoMinimo: '$5,000.00',
+    montoMaximo: '$25,000.00',
+    poliza: '$100',
+    multa: '$12.50 por cada $1000',
+    aumento: '$1,000.00 cada ciclo, de acuerdo a política de aumentos',
+    costos: 'No Aplica',
+    cat: '2105.39%',
+  },
+  '20': {
+    esquema: 'Semanal',
+    plazo: '12 pagos',
+    montoInicial: '$10,000.00',
+    montoMinimo: '$10,000.00',
+    montoMaximo: '$50,000.00',
+    poliza: '$100',
+    multa: '$12.50 por cada $1000',
+    aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
+    costos: 'No Aplica',
+    cat: '2015.39%',
+  },
+  '24': {
+    esquema: 'Semanal',
+    plazo: '12 pagos',
+    montoInicial: '$10,000.00',
+    montoMinimo: '$10,000.00',
+    montoMaximo: '$50,000.00',
+    poliza: '$100',
+    multa: '$12.50 por cada $1000',
+    aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
+    costos: 'No Aplica',
+    cat: '2105.39%',
+  },
+}
+
+function extractPlanNumberFromPayments(payments: any): string | null {
+  const s = String(payments ?? '')
+  const m = s.match(/\d+/)
+  return m?.[0] ?? null
+}
+
+const creditView = computed(() => {
+  const c = currentCredit.value
+  if (!c) return null
+
+  const specs = (c.specs ?? {}) as any
+
+  const planNum = extractPlanNumberFromPayments(c.payments)
+  const ov = planNum ? weeklyOverridesByPlan[planNum] : undefined
+
+  // Si encontramos override, usamos EXACTO lo de las imágenes.
+  // Si no, cae a lo que ya traía tu data.
+  const creditRange = String(c.creditRange ?? specs.creditRange ?? '')
+  const fallbackMontoMinimo =
+    specs.montoMinimo ?? specs.monto_minimo ?? (creditRange.includes('a') ? creditRange.split('a')[0].replace('de', '').trim() : creditRange)
+  const fallbackMontoMaximo =
+    specs.montoMaximo ?? specs.monto_maximo ?? (creditRange.includes('a') ? creditRange.split('a')[1]?.trim() : '')
+
+  return {
+    titulo: specs.titulo ?? c.title ?? c.nombre ?? 'Crédito',
+    esquema: ov?.esquema ?? (specs.esquema ?? c.schedule ?? 'Semanal'),
+    plazo: ov?.plazo ?? (specs.plazo ?? c.payments ?? ''),
+    montoInicial: ov?.montoInicial ?? 'Sujeto a disponibilidad de pago',
+    montoMinimo: ov?.montoMinimo ?? (fallbackMontoMinimo || '—'),
+    montoMaximo: ov?.montoMaximo ?? (fallbackMontoMaximo || '—'),
+    cat: ov?.cat ?? (specs.cat ?? specs.CAT ?? c.cat ?? '—'),
+    poliza: ov?.poliza ?? (specs.poliza ?? c.poliza ?? '—'),
+    multa: ov?.multa ?? (specs.multa ?? c.multa ?? '—'),
+    aumento: ov?.aumento ?? (specs.aumento ?? c.aumento ?? '—'),
+    costos: ov?.costos ?? (specs.costos ?? c.costos ?? '—'),
+    icon: c.icon,
+    alt: c.alt ?? 'Crédito',
+  }
+})
 </script>
-    
-    <template>
-        <Head title="Impulsa tu negocio | Mr Lana" />
-        <PublicLayout>
-            <!-- MODAL -->
-            <BusinessLoanRequestModal
-                :open="openModal"
-                :branches="branches"
-                @close="closeBusinessModal"
-                @submit="onSubmit"
-            />
-            <!-- Banner Superior -->
-            <div class="relative">
-                <img src="/img/business-banner-1.jpg" class="hidden md:block w-full h-auto" alt="Banner negocio desktop"/>
-                <img src="/img/bg-bussines-mobile.jpg" class="block md:hidden w-full h-auto" alt="Banner negocio mobile"/>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-center text-white">
-                        <h1 class="text-4xl md:text-6xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">Mejora el NIVEL</h1>
-                        <p class="text-2xl md:text-4xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">de tu NEGOCIO</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sección de Pasos (con fondo gris) -->
-            <div class="py-12 md:py-16 bg-gray-100">
-                <Container>
-                    <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900 mb-10 md:mb-12">
-                        PASOS PARA OBTENER TU CRÉDITO
+
+<template>
+  <Head title="Impulsa tu negocio | Mr Lana" />
+  <PublicLayout>
+    <!-- MODAL -->
+    <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio"@close="closeBusinessModal" @submit="onSubmit" />
+
+    <!-- Banner Superior + botón a la DERECHA -->
+    <div class="relative w-full overflow-hidden">
+      <img
+        src="/img/business-banner-1.jpg"
+        class="hidden md:block w-full h-auto max-h-[500px] object-cover object-center"
+        alt="Banner negocio desktop"
+      />
+      <img
+        src="/img/bg-bussines-mobile.jpg"
+        class="block md:hidden w-full h-auto max-h-[400px] object-cover object-center"
+        alt="Banner negocio mobile"
+      />
+
+      <!-- TEXTO: no captura clicks -->
+      <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div class="text-center text-white px-4">
+          <h1 class="text-4xl md:text-6xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">Mejora el NIVEL</h1>
+          <p class="text-2xl md:text-4xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">de tu NEGOCIO</p>
+        </div>
+      </div>
+
+      <!-- CTA: a la derecha -->
+      <div class="absolute inset-0 z-10 flex items-end justify-end">
+        <div class="w-full px-4 pb-5 sm:pb-6 md:pb-7">
+          <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
+            <button
+              type="button"
+              @click="openBusinessModal"
+              class="inline-flex w-full sm:w-auto items-center justify-center
+                     rounded-full bg-black/70 px-6 sm:px-10 py-3 sm:py-4
+                     text-base sm:text-lg md:text-xl font-extrabold text-white
+                     shadow-lg ring-1 ring-white/15 transition
+                     hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]"
+            >
+              Solicitar ahora
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pasos (fondo negro) + separación igual a Impulsa.t -->
+    <section class="bg-gray-900 py-8 sm:py-10 md:py-12 lg:py-14 px-4 overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10 sm:mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-white uppercase">
+            PASOS PARA OBTENER TU CRÉDITO
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StepBanner
+            v-for="step in steps"
+            :key="step.stepTitle"
+            :step-title="step.stepTitle"
+            :step-subtitle="step.stepSubtitle"
+            :src="step.src"
+            :alt="step.alt"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Separación (como Impulsa.t) -->
+    <div class="h-10 sm:h-12 md:h-14 lg:h-16 bg-white"></div>
+
+    <!-- Quiénes somos (igual que ya lo tienes) -->
+    <div class="relative w-full bg-white">
+      <div class="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16">
+        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl md:rounded-4xl">
+          <div class="absolute inset-0 bg-[url('/img/home/banner-gradient.png')] bg-cover bg-center" />
+          <div class="relative z-10 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28">
+            <Container>
+              <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-10 xl:gap-12 items-center">
+                  <div class="text-center lg:text-left">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white">
+                      ¿QUIÉNES SOMOS?
                     </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <StepBanner
-                        v-for="step in steps"
-                        :key="step.stepTitle"
-                        :step-title="step.stepTitle"
-                        :step-subtitle="step.stepSubtitle"
-                        :src="step.src"
-                        :alt="step.alt"
-                        />
-                    </div>
-                </Container>
-            </div>
-    
-            <!-- Sección Quiénes Somos con bordes laterales blancos -->
-            <div class="relative w-full bg-white"> <!-- Fondo blanco para bordes -->
-                <!-- Contenedor con padding blanco a los lados -->
-                <div class="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16">
-                    <!-- Sección interna con la imagen -->
-                    <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl md:rounded-4xl">
-                        <!-- Imagen de fondo -->
-                        <div class="absolute inset-0 bg-[url('/img/home/banner-gradient.png')] bg-cover bg-center" />
-                        
-                        <!-- Contenido sobre la imagen -->
-                        <div class="relative z-10 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28">
-                            <Container>
-                                <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-10 xl:gap-12 items-center">
-                                        <!-- Título -->
-                                        <div class="text-center lg:text-left">
-                                            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white">
-                                                ¿QUIÉNES SOMOS?
-                                            </h2>
-                                        </div>
-                                        
-                                        <!-- Texto -->
-                                        <div>
-                                            <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white">
-                                                Somos una entidad financiera mexicana de nano y microcréditos que trabaja con compromiso y pasión para ofrecer préstamos rápidos de manera
-                                                sencilla, con el fin de impulsar el crecimiento y desarrollo de particulares y proyectos productivos en el país.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Container>
-                        </div>
-                    </div>
+                  </div>
+                  <div>
+                    <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white">
+                      Somos una entidad financiera mexicana de nano y microcréditos que trabaja con compromiso y pasión para ofrecer préstamos rápidos de manera
+                      sencilla, con el fin de impulsar el crecimiento y desarrollo de particulares y proyectos productivos en el país.
+                    </p>
+                  </div>
                 </div>
-            </div>
-    
-            <!-- Sección de Créditos -->
-            <div class="py-12 md:py-16 bg-gray-50">
-                <Container>
-                    <div class="text-center mb-10 md:mb-12">
-                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                            CONTAMOS CON DIFERENTES OPCIONES PARA TI
-                        </h2>
-                        <p class="text-lg md:text-xl text-gray-600">
-                            Conoce los créditos semanales para tu negocio, <b>fácil y rápido</b>
-                        </p>
-                    </div>
-            
-                    <!-- Créditos Semanales -->
-                    <div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8">
-                            Semanal
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <PanelCredit
-                            v-for="credit in weeklyCredits"
-                            :key="credit.id"
-                            :src-credit-icon="credit.icon"
-                            :alt-icon="credit.alt"
-                            :schedule="credit.schedule"
-                            :payments="credit.payments"
-                            :credit="credit.creditRange"
-                            :modal-id="credit.modalId"
-                            :specs="credit.specs"
-                            />
-                        </div>
-                    </div>
-            
-                    <!-- Llamado a la acción (también abre el modal si quieres) -->
-                    <div class="text-center mt-12 md:mt-16">
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                        ¿Ya sabes cuál te conviene?
-                    </h3>
+              </div>
+            </Container>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                    <button
-                        type="button"
-                        @click="openBusinessModal"
-                        class="inline-flex items-center justify-center px-7 py-4 sm:px-8 sm:py-4
-                            bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full
-                            hover:opacity-90 transition-opacity shadow-lg"
-                    >
-                        Solicita tu préstamo
-                        <img src="/img/icons/whats-icon.svg" class="ml-3 w-6 h-6" alt="WhatsApp" />
-                    </button>
-                    </div>
-                </Container>
-            </div>
-    
-            <!-- Banner App Store -->
-            <BannerAppStore />
+    <!-- Separación (como Impulsa.t) -->
+    <div class="h-10 sm:h-12 md:h-14 lg:h-16 bg-white"></div>
 
-            <br><br>
-    
-            <!-- Sección de Vacantes con imágenes diferentes para mobile/desktop -->
-            <div class="relative">
-                <!-- Imagen para mobile (se muestra solo en mobile) -->
-                <div 
-                    class="block md:hidden py-20 md:py-28 bg-cover bg-center"
-                    :style="{ backgroundImage: 'url(/img/bg-work-mobile.jpg)' }"
-                >
-                    <Container>
-                        <div class="flex flex-col items-center justify-center text-center">
-                            <button
-                                @click="handleOpenVacancies()"
-                                class="bg-white text-green-600 hover:bg-green-50 px-6 py-3 text-base font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                                style="min-width: 220px;"
-                            >
-                                Bolsa de trabajo
-                            </button>
-                        </div>
-                    </Container>
+    <!-- Créditos (Tabs) -->
+    <section class="py-12 md:py-16 bg-gray-50 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10 md:mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            CONTAMOS CON DIFERENTES OPCIONES PARA TI
+          </h2>
+          <p class="text-lg md:text-xl text-gray-600">
+            Conoce los créditos semanales para tu negocio, <b>fácil y rápido</b>
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-white p-5 sm:p-7 md:p-8 shadow-lg ring-1 ring-gray-200">
+          <SegmentTabs v-model="activeCredit" :items="creditTabs" aria-label="Créditos Semanales">
+            <template #default>
+              <div v-if="creditView" class="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 lg:gap-8 items-start">
+                <div class="flex items-center justify-center lg:justify-start">
+                  <!-- Icono MÁS GRANDE para que se distinga -->
+                  <img
+                    :src="creditView.icon"
+                    :alt="creditView.alt"
+                    class="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44"
+                  />
                 </div>
-                
-                <!-- Imagen para desktop (se muestra solo en desktop) -->
-                <div 
-                    class="hidden md:block py-28 lg:py-32 xl:py-40 bg-cover bg-center"
-                    :style="{ backgroundImage: 'url(/img/banner-employees.jpg)' }"
-                >
-                    <Container>
-                        <div class="flex flex-col items-center justify-center text-center">
-                            <button
-                                @click="handleOpenVacancies()"
-                                class="bg-white text-green-600 hover:bg-green-50 px-8 py-4 lg:px-12 lg:py-6 xl:px-16 xl:py-8 text-lg lg:text-xl xl:text-2xl font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                                style="min-width: 280px;"
-                            >
-                                Bolsa de trabajo
-                            </button>
-                        </div>
-                    </Container>
-                </div>
-            </div>
 
-            <br><br>
-    
-        </PublicLayout>
-    </template>
-    
-    <style scoped>
-    /* Asegurar que la imagen de fondo cubra bien en todos los dispositivos */
-    .bg-cover {
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    
-    /* Responsive para la sección de vacantes */
-    @media (min-width: 640px) {
-        .bg-cover {
-            min-height: 300px;
-        }
-    }
-    
-    @media (min-width: 768px) {
-        .bg-cover {
-            min-height: 400px;
-        }
-    }
-    
-    @media (min-width: 1024px) {
-        .bg-cover {
-            min-height: 500px;
-        }
-    }
-    
-    @media (min-width: 1280px) {
-        .bg-cover {
-            min-height: 600px;
-        }
-    }
-    
-    .bg-gradient-to-r {
-        background-size: 200% 200%;
-        animation: gradient 15s ease infinite;
-    }
-    
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-    </style>
+                <div>
+                  <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-900">
+                    {{ creditView.titulo }}
+                  </h3>
+
+                  <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Esquema</p>
+                      <p class="font-bold text-slate-900">{{ creditView.esquema }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Plazo</p>
+                      <p class="font-bold text-slate-900">{{ creditView.plazo }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Monto inicial</p>
+                      <p class="font-bold text-slate-900">{{ creditView.montoInicial }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Monto mínimo</p>
+                      <p class="font-bold text-slate-900">{{ creditView.montoMinimo }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Monto máximo</p>
+                      <p class="font-bold text-slate-900">{{ creditView.montoMaximo }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">CAT</p>
+                      <p class="font-bold text-slate-900">{{ creditView.cat }}</p>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <p class="text-slate-500 text-sm mb-2">Condiciones</p>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                          <p class="text-xs font-semibold text-slate-500">Póliza</p>
+                          <p class="mt-1 font-bold text-slate-900">{{ creditView.poliza }}</p>
+                        </div>
+                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                          <p class="text-xs font-semibold text-slate-500">Multa</p>
+                          <p class="mt-1 font-bold text-slate-900">{{ creditView.multa }}</p>
+                        </div>
+                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                          <p class="text-xs font-semibold text-slate-500">Aumento</p>
+                          <p class="mt-1 font-bold text-slate-900">{{ creditView.aumento }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                      <p class="text-slate-500 text-sm">Costos</p>
+                      <p class="font-semibold text-slate-900">{{ creditView.costos }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </SegmentTabs>
+        </div>
+
+        <!-- CTA WhatsApp (mismo número que Impulsa.t) -->
+        <div class="text-center mt-12 md:mt-16">
+          <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+            ¿Ya sabes cuál te conviene?
+          </h3>
+
+          <button
+            type="button"
+            @click="openWhatsApp"
+            class="inline-flex items-center justify-center px-7 py-4 sm:px-8 sm:py-4
+                   bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-full
+                   hover:opacity-90 transition-opacity shadow-lg"
+          >
+            Solicita tu préstamo
+            <img src="/img/icons/whats-icon.svg" class="ml-3 w-6 h-6" alt="WhatsApp" />
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner App Store -->
+    <BannerAppStore />
+
+    <br /><br />
+
+    <!-- Vacantes -->
+    <div class="relative">
+      <div class="block md:hidden py-20 md:py-28 bg-cover bg-center" :style="{ backgroundImage: 'url(/img/bg-work-mobile.jpg)' }">
+        <Container>
+          <div class="flex flex-col items-center justify-center text-center">
+            <button
+              @click="handleOpenVacancies()"
+              class="bg-white text-green-600 hover:bg-green-50 px-6 py-3 text-base font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              style="min-width: 220px;"
+            >
+              Bolsa de trabajo
+            </button>
+          </div>
+        </Container>
+      </div>
+
+      <div class="hidden md:block py-28 lg:py-32 xl:py-40 bg-cover bg-center" :style="{ backgroundImage: 'url(/img/banner-employees.jpg)' }">
+        <Container>
+          <div class="flex flex-col items-center justify-center text-center">
+            <button
+              @click="handleOpenVacancies()"
+              class="bg-white text-green-600 hover:bg-green-50 px-8 py-4 lg:px-12 lg:py-6 xl:px-16 xl:py-8 text-lg lg:text-xl xl:text-2xl font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              style="min-width: 280px;"
+            >
+              Bolsa de trabajo
+            </button>
+          </div>
+        </Container>
+      </div>
+    </div>
+
+    <br /><br />
+  </PublicLayout>
+</template>
+
+<style scoped>
+.bg-cover {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+</style>

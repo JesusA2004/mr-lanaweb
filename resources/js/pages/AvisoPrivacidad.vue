@@ -124,8 +124,8 @@ const jsonLd = {
                   Su información personal será utilizada exclusivamente para dar seguimiento a comentarios, consultas, quejas y reclamaciones que usted
                   presente en relación con nuestros productos y servicios, mantener controles estadísticos y administrativos y, en su caso, para ﬁnes de
                   publicidad y prospección comercial. En caso que usted no desee que trate sus datos personales para recibir publicidad y ofertas, usted
-                  nos lo puede hacer saber a nuestro Departamento de Relaciones con los Clientes al Tel. ( 777) 379 14 64, de lunes a viernes (días
-                  hábiles) de 9:00 a 19:00 hrs., o a través del correo electrónico atencion@mr-lana.com
+                  nos lo puede hacer saber a nuestro Departamento de Atención de Clientes al Tel. ( 777) 422 5973, de lunes a viernes (días
+                  hábiles) de 9:00 a 19:00 hrs., o a través del correo electrónico atencionclientes@mr-lana.com
                 </p>
 
                 <p class="text-sm sm:text-base text-slate-700 dark:text-white/80 leading-relaxed text-justify [text-align-last:left]">
@@ -162,7 +162,7 @@ const jsonLd = {
                 <p class="text-sm sm:text-base text-slate-700 dark:text-white/80 leading-relaxed text-justify [text-align-last:left]">
                   Los titulares podrán ejercer los derechos de acceso, rectificación, cancelación u oposición (ARCO) que les confiere la Ley a partir del
                   6 de enero de 2012, mediante una solicitud por escrito al Departamento de Protección de Datos Personales de Productos y Servicios Mr.
-                  Lana S.A.P.I. de C.V., ya sea en la oficina matriz o a través del correo electrónico: atencion@mr-lana.com. Todas las solicitudes
+                  Lana S.A.P.I. de C.V., ya sea en la oficina matriz o a través del correo electrónico: atencionclientes@mr-lana.com. Todas las solicitudes
                   dirigidas a Productos y Servicios Mr. Lana S.A.P.I. de C.V., independientemente del medio utilizado por los titulares, deberán incluir
                   lo siguiente: el nombre y firma autógrafa del titular, así como un domicilio u otro medio para comunicarle la respuesta a su solicitud;
                   documentos oficiales que acrediten la identidad del titular; una descripción clara y precisa de los datos personales respecto de los

@@ -139,6 +139,7 @@ const currentCredit = computed(() => creditSpecs[activeCredit.value])
     <BusinessLoanRequestModal
       :open="openModal"
       :branches="branches"
+      context="impulsat"
       @close="closeBusinessModal"
       @submit="onSubmit"
     />
@@ -289,7 +290,7 @@ const currentCredit = computed(() => creditSpecs[activeCredit.value])
             <template #default>
               <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-8 items-start">
                 <div class="flex items-center justify-center lg:justify-start">
-                  <img :src="currentCredit.icon" :alt="currentCredit.alt" class="h-24 w-24 sm:h-28 sm:w-28" />
+                  <img :src="currentCredit.icon" :alt="currentCredit.alt" class="h-50 w-50 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44" />
                 </div>
 
                 <div>
