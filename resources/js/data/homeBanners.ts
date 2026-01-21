@@ -23,10 +23,8 @@ export const homeBanners: HomeBanner[] = [
         mobileSrc: '/img/banner/bannerMobile1.jfif',
         alt: 'Obtén un crédito diario o semanal',
         ctaLabel: 'Obténlo Ahora',
-
         // redirige y abre modal al llegar
         ctaHref: '/impulsa-tu-negocio?solicitar=1',
-
         align: 'right',
         contentTranslate: 'translate-y-25 md:translate-y-5 lg:translate-y-5',
         kickerParts: [
@@ -58,9 +56,9 @@ export const homeBanners: HomeBanner[] = [
         mobileSrc: '/img/banner/bannerMobile3.jfif',
         alt: 'Crédito Comadres',
         ctaLabel: 'Solicita ahora',
-        ctaHref: '#solicitar',
+        ctaHref: '/credito-comadres?solicitar=1',
         align: 'left',
-        contentTranslate: 'translate-y-35 sm:translate-y-50 md:translate-y-30 lg:translate-y-40 xl:translate-y-60 2xl:translate-y-80',
+        contentTranslate: 'translate-y-35 sm:translate-y-10 md:translate-y-30 lg:translate-y-40 xl:translate-y-60 2xl:translate-y-80',
         kickerParts: [],
     },
 ]

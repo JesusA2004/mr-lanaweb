@@ -43,7 +43,6 @@
             },
             { threshold: 0.14, rootMargin: '120px 0px -90px 0px' }
         )
-
         requestAnimationFrame(() => {
             globalThis.document?.querySelectorAll('[data-banner-id]').forEach((el) => io?.observe(el))
         })
@@ -65,31 +64,31 @@
 
     // Texto
     const kickerClass = [
-    'text-black font-extrabold tracking-tight',
-    'leading-[1.12] md:leading-[1.10] xl:leading-[1.06]',
-    'drop-shadow-[0_14px_28px_rgba(0,0,0,0.60)]',
-    // mobile más chico, desktop igual
-    'text-[15px] sm:text-[18px] md:text-[25px] lg:text-[34px] xl:text-[44px] 2xl:text-[56px]',
-    'max-w-[14rem] sm:max-w-[16rem] md:max-w-[20rem] lg:max-w-[25rem] xl:max-w-[35rem] 2xl:max-w-[36rem]',
+        'text-black font-extrabold tracking-tight',
+        'leading-[1.12] md:leading-[1.10] xl:leading-[1.06]',
+        'drop-shadow-[0_14px_28px_rgba(0,0,0,0.60)]',
+        // mobile más chico, desktop igual
+        'text-[15px] sm:text-[18px] md:text-[25px] lg:text-[34px] xl:text-[44px] 2xl:text-[56px]',
+        'max-w-[14rem] sm:max-w-[16rem] md:max-w-[20rem] lg:max-w-[25rem] xl:max-w-[35rem] 2xl:max-w-[36rem]',
     ].join(' ')
 
     // Botón
     const ctaClass = [
-    'cta-glow relative inline-flex rounded-full',
-    'bg-black text-white',
-    // mobile compacto
-    'px-4 py-2 text-[14px]',
-    'sm:px-5 sm:py-2.5 sm:text-[16px]',
-    // desktop igual que tenías
-    'md:px-9 md:py-4 md:text-[22px]',
-    'lg:px-11 lg:py-5 lg:text-[30px]',
-    'xl:px-14 xl:py-6 xl:text-[35px]',
-    '2xl:px-16 2xl:py-7 2xl:text-[40px]',
-    'font-extrabold tracking-wide',
-    'transition-[box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
-    'hover:-translate-y-[1px]',
-    'hover:opacity-95',
-    'active:translate-y-0 active:scale-[0.99]',
+        'cta-glow relative inline-flex rounded-full',
+        'bg-black text-white',
+        // mobile compacto
+        'px-4 py-2 text-[14px]',
+        'sm:px-5 sm:py-2.5 sm:text-[16px]',
+        // desktop igual que tenías
+        'md:px-9 md:py-4 md:text-[22px]',
+        'lg:px-11 lg:py-5 lg:text-[30px]',
+        'xl:px-14 xl:py-6 xl:text-[35px]',
+        '2xl:px-16 2xl:py-7 2xl:text-[40px]',
+        'font-extrabold tracking-wide',
+        'transition-[box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(.22,1,.36,1)]',
+        'hover:-translate-y-[1px]',
+        'hover:opacity-95',
+        'active:translate-y-0 active:scale-[0.99]',
     ].join(' ')
 </script>
 
@@ -119,16 +118,17 @@
                             <!-- Texto + CTA -->
                             <div v-if="b.ctaLabel && b.ctaHref"
                             class="absolute inset-0 z-20 flex items-end md:items-start">
-                            <div class=" w-full
-                                px-4 sm:px-6 md:px-12 lg:px-14 xl:px-16 2xl:px-20
-                                /* MOBILE: padding compacto y pegado abajo */
-                                pb-3 pt-3
-                                [padding-bottom:calc(env(safe-area-inset-bottom)+12px)]
-                                /* DESKTOP: tu comportamiento original */
-                                md:py-10 lg:py-12 xl:py-14 2xl:py-16
-                                md:translate-y-12 lg:translate-y-14
-                                "
-                            >
+                            <div class="w-full
+                                    px-4 sm:px-6 md:px-12 lg:px-14 xl:px-16 2xl:px-20
+                                    pb-3 pt-3
+                                    [padding-bottom:calc(env(safe-area-inset-bottom)+12px)]
+                                    md:py-10 lg:py-12 xl:py-14 2xl:py-16"
+                                :class="[
+                                    b.id === 'banner-3'
+                                    ? 'sm:translate-y-0 md:translate-y-40 lg:translate-y-[230px] xl:translate-y-[300px] 2xl:translate-y-[380px]'
+                                    : 'md:translate-y-12 lg:translate-y-14'
+                                ]"
+                                >
                                 <div
                                 class="mx-auto w-full max-w-7xl flex flex-col"
                                 :class="[

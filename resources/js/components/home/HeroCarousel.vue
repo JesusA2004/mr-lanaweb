@@ -76,14 +76,13 @@
                 <div v-for="s in slides" :key="s.id" class="relative w-full shrink-0">
                     <div class="relative w-full overflow-hidden">
                         <!-- MOBILE: altura automática (no recorte, no bandas). MD+: alturas como antes -->
-                        <div class="relative w-full h-auto md:h-[500px] lg:h-[550px] xl:h-[530px] 2xl:h-[650px]">
+                        <div class="relative w-full h-auto">
                             <picture class="block w-full">
                                 <source media="(min-width: 1280px)" :srcset="s.desktopSrc" />
-                                <!-- MOBILE: imagen completa -->
                                 <img
                                 :src="s.mobileSrc"
                                 :alt="s.alt"
-                                class="block w-full h-auto object-contain md:h-full md:object-cover"
+                                class="block w-full h-auto object-contain"
                                 :style="{ objectPosition: objectPos(s.id) }"
                                 draggable="false"
                                 />

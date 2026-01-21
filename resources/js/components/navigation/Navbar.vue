@@ -61,15 +61,26 @@ const activeKey = computed<'servicios' | 'sucursales' | ''>(() => {
     <!-- DESKTOP OVERLAY -->
     <div class="hidden md:block">
       <div class="mx-auto flex w-full max-w-7xl items-center px-6 py-6">
-        <div class="ml-auto flex items-center gap-3 min-w-0">
-          <!-- NavLinks puede ocupar, pero no debe empujar el botón fuera -->
-          <NavLinks class="shrink min-w-0" variant="desktop" :active="activeKey" />
+        <!-- fila única garantizada -->
+        <div class="ml-auto flex w-full items-center justify-end gap-3 flex-nowrap min-w-0">
+          <!-- Nav: nunca wrap; si no cabe, scroll horizontal -->
+          <div class="min-w-0 flex-1">
+  <div class="min-w-0 w-full overflow-x-auto whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none]">
+    <div class="[&::-webkit-scrollbar]:hidden">
+      <NavLinks
+        class="inline-flex min-w-max align-middle"
+        variant="desktop"
+        :active="activeKey"
+      />
+    </div>
+  </div>
+</div>
 
-          <!-- Botón responsive: en md se vuelve compacto (icon-only) -->
+          <!-- Botón: fijo, no se encoge -->
           <button
             type="button"
             @click="$emit('openVacancies')"
-            class="group relative inline-flex items-center justify-center rounded-full
+            class="group relative inline-flex shrink-0 items-center justify-center rounded-full
             bg-sky-100 text-black transition
             shadow-[0_12px_30px_rgba(0,0,0,0.22)]
             hover:shadow-[0_16px_40px_rgba(0,0,0,0.28)]
@@ -83,7 +94,6 @@ const activeKey = computed<'servicios' | 'sucursales' | ''>(() => {
             2xl:w-[200px] 2xl:text-xs"
             aria-label="Bolsa de trabajo"
           >
-            <!-- Icono en md -->
             <span class="relative z-10 grid place-items-center lg:hidden">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 class="h-5 w-5" fill="none" stroke="currentColor"
@@ -94,7 +104,6 @@ const activeKey = computed<'servicios' | 'sucursales' | ''>(() => {
               </svg>
             </span>
 
-            <!-- Texto en lg+ -->
             <span class="relative z-10 hidden lg:inline text-xs font-extrabold tracking-widest">
               BOLSA DE TRABAJO
             </span>

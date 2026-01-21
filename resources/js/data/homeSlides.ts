@@ -77,7 +77,7 @@ export const homeSlides: Slide[] = [
                 { text: 'Comadres financieras', tone: 'white', bold: true },
             ],
             ctaLabel: 'Solicitar Ahora',
-            ctaHref: '/impulsat',
+            ctaHref: '/credito-comadres?solicitar=1',
         },
     },
 ]

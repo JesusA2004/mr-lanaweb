@@ -105,17 +105,22 @@ const isActive = (key: Active, href: string) => {
   return url.startsWith(href.toLowerCase())
 }
 
-/* ===================== DESKTOP (más compacto) ===================== */
+// DESKTOP (más compacto)
 const desktopLinkClass = (key: Active, href: string) => {
   const active = isActive(key, href)
   return [
-    'group relative inline-flex items-center',
-    'gap-1.5 sm:gap-2',
+    'group relative inline-flex items-center shrink-0',
+    // gaps más tight en md
+    'gap-1 sm:gap-1.5 md:gap-1 lg:gap-1',
+    // padding mínimo
     'px-0.5 py-1',
     'text-neutral',
-    'text-[9px] sm:text-[10px] md:text-[11px] lg:text-xs',
-    'tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.18em] lg:tracking-[0.20em]',
+    // tamaño más pequeño en md para que QUEPA TODO
+    'text-[9px] sm:text-[10px] md:text-[9px] lg:text-[10px]',
+    // tracking más chico en md (ahí se te muere el espacio)
+    'tracking-[0.14em] sm:tracking-[0.16em] md:tracking-[0.10em] lg:tracking-[0.20em]',
     'font-black uppercase',
+    'leading-none',              // evita que el alto “mate” espacio
     'transition-all duration-200',
     'hover:-translate-y-[1px]',
     active ? 'opacity-100' : 'opacity-90 hover:opacity-100',
@@ -135,13 +140,15 @@ const desktopIconClass = (key: Active, href: string) => {
 const desktopUnderlineClass = (key: Active, href: string) => {
   const active = isActive(key, href)
   return [
-    'absolute left-1/2 -bottom-[12px] -translate-x-1/2',
+    'absolute left-1/2 -translate-x-1/2',
+    'bottom-[-6px] sm:bottom-[-7px] md:bottom-[-6px]',
     'h-[3px] rounded-full',
     'bg-emerald-500 shadow-[0_2px_8px_rgba(16,185,129,0.45)]',
     'transition-all duration-300',
     active ? 'w-full' : 'w-0 group-hover:w-full',
   ].join(' ')
 }
+
 
 /* ===================== MOBILE ===================== */
 const mobileItemClass = (key: Active, href: string) => {
@@ -164,30 +171,33 @@ const mobileIconClass = (key: Active, href: string) => {
 
 <template>
   <!-- DESKTOP -->
-  <nav
-    v-if="variant === 'desktop'"
-    :class="[
-      'relative flex flex-wrap items-center justify-center',
-      'gap-x-4 gap-y-2 sm:gap-x-5 md:gap-x-4 lg:gap-x-5',
-      'rounded-full px-3 py-2 sm:px-4 sm:py-2.5 md:px-4',
-      'bg-sky-100 backdrop-blur-md',
-      'shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-white/60',
-      props.class ?? ''
-    ]"
+    <!-- DESKTOP -->
+<nav
+  v-if="variant === 'desktop'"
+  :class="[
+    'relative inline-flex flex-nowrap items-center justify-start',
+    'whitespace-nowrap',
+    // OJO: aquí NO overflow, el scroll lo hace el wrapper en Navbar.vue
+    'gap-x-4 sm:gap-x-5 md:gap-x-4 lg:gap-x-5',
+    'rounded-full px-3 py-2 sm:px-4 sm:py-2.5 md:px-4',
+    'bg-sky-100 backdrop-blur-md',
+    'shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-white/60',
+    props.class ?? ''
+  ]"
+>
+  <Link
+    v-for="l in links"
+    :key="l.href"
+    :href="l.href"
+    :class="desktopLinkClass(l.key, l.href)"
   >
-    <Link
-      v-for="l in links"
-      :key="l.href"
-      :href="l.href"
-      :class="desktopLinkClass(l.key, l.href)"
-    >
-      <span :class="desktopIconClass(l.key, l.href)" v-html="l.icon" />
-      <span class="relative">
-        {{ l.label }}
-        <span :class="desktopUnderlineClass(l.key, l.href)" />
-      </span>
-    </Link>
-  </nav>
+    <span :class="desktopIconClass(l.key, l.href)" v-html="l.icon" />
+    <span class="relative">
+      {{ l.label }}
+      <span :class="desktopUnderlineClass(l.key, l.href)" />
+    </span>
+  </Link>
+</nav>
 
   <!-- MOBILE (drawer list style) -->
   <nav v-else class="space-y-2">
