@@ -32,6 +32,13 @@ Route::get('/terminos-y-condiciones', function () {
     return Inertia::render('Terminos');
 })->name('Terminos');
 
+Route::get('/nosotros', function () {
+    return Inertia::render('Nosotros');
+})->name('nosotros');
+
+Route::get('/credito-comadres', function () {
+    return Inertia::render('CreditoComadres');
+})->name('creditoComadres');
 
 Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
   ->name('vacancies.apply');

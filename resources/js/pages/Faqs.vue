@@ -22,7 +22,7 @@
     </script>
 
     <template>
-      <Head title="FAQs | Mr Lana" />
+      <Head title="FAQs" />
 
       <PublicLayout>
         <!--
