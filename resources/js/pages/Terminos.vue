@@ -53,14 +53,28 @@ const jsonLd = {
       <!-- Fondo base -->
       <div class="absolute inset-0 bg-slate-50 dark:bg-slate-950"></div>
 
+      <!-- TOP STRIP (NO fixed): para que el navbar blanco se lea -->
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 z-10
+        h-16 sm:h-20 md:h-24
+        bg-gradient-to-b from-slate-950/75 via-slate-950/40 to-transparent
+        dark:from-black/65 dark:via-black/35"
+      />
+
       <!-- Blobs decorativos -->
       <div class="pointer-events-none absolute -top-28 -left-28 h-[26rem] w-[26rem] rounded-full bg-sky-200/60 dark:bg-sky-500/15" />
       <div class="pointer-events-none absolute -bottom-32 -right-32 h-[30rem] w-[30rem] rounded-full bg-indigo-200/60 dark:bg-indigo-500/15" />
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-transparent to-white/60 dark:from-white/5 dark:to-white/5" />
+
+      <!-- Capa de luz (más suave arriba para NO “apagar” el strip) -->
+      <div
+        class="pointer-events-none absolute inset-0 z-0
+        bg-gradient-to-b from-white/40 via-transparent to-white/60
+        dark:from-white/5 dark:to-white/5"
+      />
 
       <Container>
         <article
-          class="relative w-full rounded-3xl border border-slate-200/70 bg-white/80
+          class="relative z-20 w-full rounded-3xl border border-slate-200/70 bg-white/80
                  shadow-[0_20px_60px_-35px_rgba(0,0,0,0.35)]
                  backdrop-blur-sm
                  dark:border-white/10 dark:bg-slate-900/50"
@@ -176,7 +190,7 @@ const jsonLd = {
                   ANÓNIMA
                 </p>
 
-                <!-- Si te falta texto, aquí pega el resto siguiendo el mismo patrón -->
+                <!-- Continúa pegando el resto aquí con el mismo patrón -->
               </div>
             </div>
           </div>
