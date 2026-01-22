@@ -26,7 +26,7 @@ export const branches: Branch[] = [
     city: 'Cuernavaca',
     state: 'Morelos',
     address: 'Privada Reforma #751-D, Col. Tlaltenango, Cuernavaca, Morelos, C.P. 62170',
-    phones: [],
+    phones: ['777 900 8852'],
   },
   {
     id: 'miacatlan',
@@ -81,7 +81,7 @@ export const branches: Branch[] = [
     city: 'Orizaba',
     state: 'Veracruz',
     address: 'Oriente 6, #851, Int. 10 y 11, Esq. Sur 17, Col. Centro, Orizaba, Veracruz, C.P. 94300',
-    phones: [],
+    phones: ['272 341 4129'],
   },
   {
     id: 'huamantla',
@@ -90,7 +90,7 @@ export const branches: Branch[] = [
     city: 'Huamantla',
     state: 'Tlaxcala',
     address: 'Calle Morelos Oriente #311, local 15, Col. Centro, Huamantla, Tlaxcala, C.P. 90500',
-    phones: [],
+    phones: ['712 688 1615'],
   },
   {
     id: 'tlaxcala',
@@ -128,7 +128,7 @@ export const branches: Branch[] = [
     city: 'San Luis Potosí',
     state: 'San Luis Potosí',
     address: 'Plaza Coronel, Prolongación Coronel Romero #110, Col. Alamitos, San Luis Potosí, C.P. 78280',
-    phones: [],
+    phones: ['444 459 7378'],
   },
   {
     id: 'tula',

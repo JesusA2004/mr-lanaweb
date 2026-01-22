@@ -9,26 +9,33 @@ import { faqs } from '@/data/faqs'
   <Head title="FAQs" />
 
   <PublicLayout>
-    <!-- BACKDROP FIJO PARA NAVBAR (para que las letras blancas se lean) -->
-    <div
-      class="pointer-events-none fixed inset-x-0 top-0 z-40
-      h-20 sm:h-24 md:h-28
-      bg-slate-950/70 backdrop-blur-md
-      dark:bg-black/60"
-    />
-
     <section class="relative overflow-hidden pt-20 sm:pt-24 md:pt-28 pb-10 sm:pb-14 md:pb-20 lg:pb-24">
       <!-- Fondo base -->
       <div class="absolute inset-0 bg-slate-50 dark:bg-slate-950"></div>
 
+      <!-- TOP STRIP (NO fixed): esto es lo que hace que el navbar blanco se lea en FAQ -->
+      <!-- Nota: va encima del fondo, y debajo del contenido. Se desvanece hacia abajo. -->
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 z-10
+        h-16 sm:h-20 md:h-24
+        bg-gradient-to-b from-slate-950/75 via-slate-950/40 to-transparent
+        dark:from-black/65 dark:via-black/35"
+      />
+
       <!-- Blobs decorativos -->
       <div class="pointer-events-none absolute -top-28 -left-28 h-[26rem] w-[26rem] rounded-full bg-sky-200/60 dark:bg-sky-500/15" />
       <div class="pointer-events-none absolute -bottom-32 -right-32 h-[30rem] w-[30rem] rounded-full bg-indigo-200/60 dark:bg-indigo-500/15" />
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-transparent to-white/60 dark:from-white/5 dark:to-white/5" />
+
+      <!-- Capa de luz (ojo: más suave arriba para NO matar el top strip) -->
+      <div
+        class="pointer-events-none absolute inset-0 z-0
+        bg-gradient-to-b from-white/40 via-transparent to-white/60
+        dark:from-white/5 dark:to-white/5"
+      />
 
       <!-- Contenido -->
-      <div class="relative z-10 px-4 sm:px-6 lg:px-10">
-        <!-- Header -->
+      <div class="relative z-20 px-4 sm:px-6 lg:px-10">
+        <!-- Header (SEO limpio) -->
         <header class="pt-4 sm:pt-6 md:pt-8">
           <h1 class="text-center text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Preguntas frecuentes (FAQ)
@@ -58,10 +65,10 @@ import { faqs } from '@/data/faqs'
           <!-- Form -->
           <aside class="min-w-0 lg:col-span-5 xl:col-span-4">
             <div
-              class="rounded-2xl border border-slate-200/70 bg-white/75 p-5 sm:p-6
-                     shadow-[0_14px_40px_-30px_rgba(0,0,0,0.35)]
+              class="rounded-2xl border border-slate-200/70 bg-white/80 p-5 sm:p-6
+                     shadow-[0_18px_55px_-40px_rgba(0,0,0,0.45)]
                      backdrop-blur-sm
-                     dark:border-white/10 dark:bg-slate-900/40"
+                     dark:border-white/10 dark:bg-slate-900/45"
             >
               <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
                 Haz tu pregunta
