@@ -96,7 +96,7 @@
 </script>
 
 <template>
-    <Head title="Impulsa.t | Mr Lana" />
+    <Head title="Impulsa.t" />
     <PublicLayout>
         <!-- MODAL -->
         <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsat"
