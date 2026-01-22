@@ -2,8 +2,7 @@
     import { Head } from '@inertiajs/vue3'
     import { computed, onMounted, ref } from 'vue'
     import PublicLayout from '@/layouts/PublicLayout.vue'
-    import Container from '@/components/ui/Container.vue'
-    import StepBanner from '@/components/impulsaN/StepBanner.vue'
+    import CtaSection from '@/components/vacancies/CtaSection.vue'
     import BannerAppStore from '@/components/home/AppDownloadBanner.vue'
     import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
     import SegmentTabs, { type SegmentTabItem } from '@/components/ui/SegmentTabs.vue'
@@ -191,6 +190,9 @@
             <img src="/img/bg-bussines-mobile.jpg"
             class="block md:hidden w-full h-auto max-h-[400px] object-cover object-center"
             alt="Banner negocio mobile"/>
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
 
             <!-- TEXTO: no captura clicks -->
             <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -390,36 +392,20 @@
 
         <!-- Vacantes -->
         <div class="relative">
-            <div class="block md:hidden py-20 md:py-28 bg-cover bg-center"
-            :style="{ backgroundImage: 'url(/img/bg-work-mobile.jpg)' }">
-                <Container>
-                    <div class="flex flex-col items-center justify-center text-center">
-                        <button @click="handleOpenVacancies()"
-                        class="bg-white text-green-600 hover:bg-green-50 px-6
-                        py-3 text-base font-bold rounded-full shadow-lg hover:shadow-xl
-                        transition-all duration-300 transform hover:scale-105"
-                        style="min-width: 220px;">
-                            Bolsa de trabajo
-                        </button>
-                    </div>
-                </Container>
-            </div>
-
-            <div class="hidden md:block py-28 lg:py-32 xl:py-40 bg-cover bg-center"
-            :style="{ backgroundImage: 'url(/img/banner-employees.jpg)' }">
-                <Container>
-                    <div class="flex flex-col items-center justify-center text-center">
-                        <button @click="handleOpenVacancies()"
-                        class="bg-white text-green-600 hover:bg-green-50 px-8 py-4
-                        lg:px-12 lg:py-6 xl:px-16 xl:py-8 text-lg lg:text-xl xl:text-2xl
-                        font-bold rounded-full shadow-lg hover:shadow-xl transition-all
-                        duration-300 transform hover:scale-105"
-                        style="min-width: 280px;">
-                            Bolsa de trabajo
-                        </button>
-                    </div>
-                </Container>
-            </div>
+            <CtaSection
+                :sources="{
+                    base: '/img/bg-work-mobile.jpg',   // <sm
+                    sm: '/img/bg-work-mobile.jpg',     // >=sm <md
+                    md: '/img/bg-work-mobile.jpg',     // >=md <lg
+                    lg: '/img/banner-employees.jpg',   // >=lg <xl
+                    xl: '/img/banner-employees.jpg',   // >=xl <2xl
+                    '2xl': '/img/banner-employees.jpg' // >=2xl
+                }"
+                alt="Bolsa de trabajo"
+                button-text="Bolsa de trabajo"
+                @click="handleOpenVacancies()"
+                :button-class="'min-w-[180px] lg:min-w-[280px] lg:px-12 lg:py-6 xl:px-16 xl:py-8 lg:text-xl xl:text-2xl'"
+            />
         </div>
 
         <br /><br />

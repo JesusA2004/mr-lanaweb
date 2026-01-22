@@ -40,20 +40,6 @@
 <template>
     <div class="min-h-screen bg-white text-slate-900">
 
-        <!-- 1) Ovejita flotante que sigue al botón
-        <WhaticketBuddy
-            side="right"
-            :edge="18"
-            :width-desktop="190"
-            :width-mobile="92"
-            :anchor-x-desktop="72"
-            :anchor-y-desktop="62"
-            :anchor-x-mobile="50"
-            :anchor-y-mobile="62"
-        />
-        -->
-
-        <!-- 2) Widget (crea el botón) -->
         <WhaticketWidget />
 
         <Navbar @openVacancies="openVacancies" />

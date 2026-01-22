@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3'
     import PublicLayout from '@/layouts/PublicLayout.vue'
-    import Container from '@/components/ui/Container.vue'
     import MrBannerAppStore from '@/components/home/AppDownloadBanner.vue'
     import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
     import CtaSection from '@/components/vacancies/CtaSection.vue'
@@ -113,6 +112,9 @@
             <img src="/img/bg-impulsat-mobile.jpg"
             class="block md:hidden w-full h-auto max-h-[400px] object-cover object-center"
             alt="Banner negocio mobile"/>
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
 
             <!-- TEXTO: no debe capturar clicks -->
             <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -304,12 +306,26 @@
             <MrBannerAppStore />
         </section>
 
-        <CtaSection
-        img-mobile="/img/bg-work-mobile.jpg"
-        img-desktop="/img/banner-employees.jpg"
-        button-text="Bolsa de trabajo"
-        @click="handleOpenVacancies()"
-        />
+        <!-- Vacantes -->
+        <div class="relative">
+            <CtaSection
+                :sources="{
+                    base: '/img/bg-work-mobile.jpg',   // <sm
+                    sm: '/img/bg-work-mobile.jpg',     // >=sm <md
+                    md: '/img/bg-work-mobile.jpg',     // >=md <lg
+                    lg: '/img/banner-employees.jpg',   // >=lg <xl
+                    xl: '/img/banner-employees.jpg',   // >=xl <2xl
+                    '2xl': '/img/banner-employees.jpg' // >=2xl
+                }"
+                alt="Bolsa de trabajo"
+                button-text="Bolsa de trabajo"
+                @click="handleOpenVacancies()"
+                :button-class="'min-w-[180px] lg:min-w-[280px] lg:px-12 lg:py-6 xl:px-16 xl:py-8 lg:text-xl xl:text-2xl'"
+            />
+        </div>
+
+        <br>
+        <br>
 
     </PublicLayout>
 </template>
