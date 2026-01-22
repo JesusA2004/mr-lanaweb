@@ -318,7 +318,7 @@
                     '2xl': '/img/banner-employees.jpg' // >=2xl
                 }"
                 alt="Bolsa de trabajo"
-                button-text="Bolsa de trabajo"
+                button-text="Consulta nuestra bolsa de trabajo"
                 @click="handleOpenVacancies()"
                 :button-class="'min-w-[180px] lg:min-w-[280px] lg:px-12 lg:py-6 xl:px-16 xl:py-8 lg:text-xl xl:text-2xl'"
             />
