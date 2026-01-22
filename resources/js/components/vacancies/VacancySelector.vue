@@ -2,15 +2,15 @@
     const emit = defineEmits<{
       (e: 'select', step: 'coord' | 'manager' | 'sub' | 'cred'): void
     }>()
-    
+
     const items = [
       { key: 'coord', label: 'Coordinadora' },
       { key: 'manager', label: 'Gerente' },
       { key: 'sub', label: 'Subgerente' },
-      { key: 'cred', label: 'Gestor de Crédito' },
+      { key: 'cred', label: 'Vendedor de crédito' },
     ] as const
     </script>
-    
+
     <template>
       <div
         class="relative h-full w-full rounded-[2vw]"
@@ -23,7 +23,7 @@
       >
         <!-- Overlay sutil para que el contenido siempre se lea -->
         <div class="absolute inset-0 bg-black/10" />
-    
+
         <!-- IMPORTANTE: ya NO centramos vertical (justify-center), damos padding real arriba/abajo -->
         <div
           class="relative flex h-full w-full flex-col items-center justify-start px-4 sm:px-6
@@ -40,7 +40,7 @@
               loading="lazy"
             />
           </div>
-    
+
           <!-- Botones: grandes y centrados -->
           <div class="mt-4 sm:mt-5 md:mt-6 w-full max-w-[780px] space-y-3 sm:space-y-4">
             <button
@@ -64,4 +64,3 @@
         </div>
       </div>
     </template>
-    

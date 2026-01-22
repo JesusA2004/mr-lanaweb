@@ -20,7 +20,6 @@ const UI = {
   <section aria-label="WhatsApp">
     <div class="mb-2 flex items-center justify-between gap-3">
       <h3 :class="UI.title">{{ title ?? '¿Necesitas ayuda?' }}</h3>
-      <span :class="UI.tag">WhatsApp</span>
     </div>
 
     <a

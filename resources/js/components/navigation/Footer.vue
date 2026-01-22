@@ -1,165 +1,159 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+    import { computed } from 'vue'
+    import { Link, usePage } from '@inertiajs/vue3'
+    import SocialLinks from '@/components/navigation/SocialLinks.vue'
+    import iconoWhatsapp from '@/components/ui/HelpWhatsAppCard.vue'
+    import iconoEmail from '@/components/ui/HelpEmailCard.vue'
 
-import SocialLinks from '@/components/navigation/SocialLinks.vue'
-import iconoWhatsapp from '@/components/ui/HelpWhatsAppCard.vue'
-import iconoEmail from '@/components/ui/HelpEmailCard.vue'
+    type Active = 'servicios' | 'sucursales' | ''
+    type NavItem = { key: Active; href: string; label: string; icon: string }
+    const page = usePage()
+    const year = new Date().getFullYear()
+    const activeKey = computed<Active>(() => {
+        const url = (page.url || '').toLowerCase()
+        if (url.startsWith('/sucursales')) return 'sucursales'
+        if (url === '/' || url.startsWith('/index')) return 'servicios'
+        return ''
+    })
 
-type Active = 'servicios' | 'sucursales' | ''
+    const isActive = (key: Active, href: string) => {
+        const url = (page.url || '').toLowerCase()
+        if (key) return key === activeKey.value
+        return href !== '/' ? url.startsWith(href) : url === '/'
+    }
 
-type NavItem = {
-  key: Active
-  href: string
-  label: string
-  icon: string
-}
+    /* Íconos */
+    const icons = {
+        home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M6.5 10v10.5h11V10"/></svg>`,
+        card: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>`,
+        rocket: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c4-1 8-5 10-9 2-4 1-7 1-7s-3-1-7 1c-4 2-8 6-9 10"/><path d="M9 15l-2 2"/><path d="M14 10l-2 2"/></svg>`,
+        sparkles: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.2 4.2L17 7.4l-3.8 1.2L12 13l-1.2-4.4L7 7.4l3.8-1.2L12 2z"/><path d="M19 13l.7 2.3 2.3.7-2.3.7L19 19l-.7-2.3-2.3-.7 2.3-.7L19 13z"/></svg>`,
+        map: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/><path d="M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>`,
+        users: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"/><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M21 21v-1a4 4 0 0 0-3-3.87"/></svg>`,
+        help: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>`,
+        shield: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        file: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`,
+    } as const
 
-const page = usePage()
-const year = new Date().getFullYear()
+    const siteLinks = computed<NavItem[]>(() => [
+        { key: 'servicios', label: 'Servicios', href: '/', icon: icons.home },
+        { key: '', label: 'Crédito.C', href: '/credito-comadres', icon: icons.card },
+        { key: '', label: 'Impulsa.N', href: '/impulsa-tu-negocio', icon: icons.rocket },
+        { key: '', label: 'Impulsa.T', href: '/impulsat', icon: icons.sparkles },
+        { key: 'sucursales', label: 'Sucursales', href: '/sucursales', icon: icons.map },
+        { key: '', label: 'Nosotros', href: '/nosotros', icon: icons.users },
+        { key: '', label: 'FAQs', href: '/faqs', icon: icons.help },
+    ])
 
-const activeKey = computed<Active>(() => {
-  const url = (page.url || '').toLowerCase()
-  if (url.startsWith('/sucursales')) return 'sucursales'
-  if (url === '/' || url.startsWith('/index')) return 'servicios'
-  return ''
-})
-
-const icons = {
-  services: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="7" width="18" height="14" rx="2"/></svg>`,
-  credit: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>`,
-  rocket: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 19c4-1 7-4 9-9"/></svg>`,
-  spark: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="6" width="16" height="12" rx="2"/></svg>`,
-  branch: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 21s7-4.5 7-11"/></svg>`,
-  about: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="8" r="3"/></svg>`,
-  faq: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 18h.01"/></svg>`,
-} as const
-
-const siteLinks = computed<NavItem[]>(() => [
-  { key: 'servicios', label: 'Servicios', href: '/', icon: icons.services },
-  { key: '', label: 'Crédito.C', href: '/credito-comadres', icon: icons.credit },
-  { key: '', label: 'Impulsa.N', href: '/impulsa-tu-negocio', icon: icons.rocket },
-  { key: '', label: 'Impulsa.T', href: '/impulsat', icon: icons.spark },
-  { key: 'sucursales', label: 'Sucursales', href: '/sucursales', icon: icons.branch },
-  { key: '', label: 'Nosotros', href: '/nosotros', icon: icons.about },
-  { key: '', label: 'FAQs', href: '/faqs', icon: icons.faq },
-])
-
-const isActive = (key: Active, href: string) => {
-  const url = (page.url || '').toLowerCase()
-  if (key) return key === activeKey.value
-  return href !== '/' ? url.startsWith(href) : url === '/'
-}
-
-const legalLinks = [
-  { label: 'Términos y condiciones', href: '/terminos-y-condiciones' },
-  { label: 'Aviso de privacidad', href: '/aviso-de-privacidad' },
-  { label: "Preguntas Frecuentes (FAQ's)", href: '/faqs' },
-]
-
-// UI: tamaños fijos, responsive solo para layout
-const UI = {
-  footer:
-    'w-full bg-[#d9d9d9] text-slate-900 dark:bg-[#0b1220] dark:text-slate-100 ' +
-    'bg-[radial-gradient(60rem_60rem_at_20%_-10%,rgba(16,185,129,0.18),transparent_60%),radial-gradient(60rem_60rem_at_90%_120%,rgba(56,189,248,0.18),transparent_60%)]',
-  pad: 'px-6 lg:px-10',
-  title: 'text-sm font-extrabold tracking-wide',
-  text: 'text-sm font-semibold',
-  // Links del footer (estilo consistente + activo)
-  navLink: (active: boolean) =>
-    [
-      'group inline-flex items-center gap-2 rounded-2xl px-3 py-2',
-      'text-sm font-semibold',
-      'transition',
-      'bg-white/60 hover:bg-white/85 ring-1 ring-black/5 shadow-sm',
-      'dark:bg-white/5 dark:hover:bg-white/10 dark:ring-white/10',
-      active && 'ring-2 ring-emerald-500/50 dark:ring-emerald-400/40',
+    const legalLinks = [
+        { label: 'Términos y condiciones', href: '/terminos-y-condiciones', icon: icons.file },
+        { label: 'Aviso de privacidad', href: '/aviso-de-privacidad', icon: icons.shield },
+        { label: "Preguntas Frecuentes (FAQ's)", href: '/faqs', icon: icons.help },
     ]
-      .filter(Boolean)
-      .join(' '),
-  navIcon: 'h-[18px] w-[18px] opacity-85 transition group-hover:opacity-100',
-  underline:
-    'underline decoration-transparent underline-offset-4 transition group-hover:decoration-emerald-500/70',
-  legal:
-    'group inline-flex items-center gap-2 text-sm font-semibold text-slate-900 transition hover:text-emerald-700 ' +
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 ' +
-    'dark:text-slate-100 dark:hover:text-emerald-300',
-  legalUnderline:
-    'relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 ' +
-    'after:bg-gradient-to-r after:from-emerald-500 after:to-teal-400 ' +
-    'after:transition-all after:duration-300 group-hover:after:w-full',
-}
+
+    /* UI */
+    const UI = {
+        footer:
+            // Fondo claro con glows de marca
+            'w-full text-slate-900' +
+            'bg-white ',
+        pad: 'px-6 lg:px-12',
+        h: 'text-[12px] font-black tracking-[0.24em] uppercase text-slate-700/80',
+        // “pill” link
+        pill: (active: boolean) =>
+            [
+            'group inline-flex w-full items-center gap-3 rounded-2xl px-4 py-3',
+            'text-[14px] font-semibold',
+            'bg-white/80 ring-1 ring-black/5 shadow',
+            'transition',
+            'hover:-translate-y-[2px] hover:shadow-md',
+            // borde/halo con marca
+            'hover:ring-cyan-400/40 hover:shadow-[0_16px_46px_-30px_rgba(34,211,238,0.55)]',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60',
+            active && 'ring-2 ring-emerald-400/55',
+            ].filter(Boolean).join(' '),
+        icon: 'h-[18px] w-[18px] opacity-90 transition group-hover:opacity-100',
+        underline:
+            'underline decoration-transparent underline-offset-4 transition group-hover:decoration-emerald-500/70 dark:group-hover:decoration-emerald-300/80',
+        // Legal link (más limpio, sin texto extra)
+        legal:
+            'group inline-flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-[14px] font-semibold ' +
+            'text-slate-800 hover:text-slate-950 hover:bg-white/65 ring-1 ring-transparent ' +
+            'dark:text-white/85 dark:hover:text-white dark:hover:bg-white/10 ' +
+            'transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60',
+        legalU:
+            'relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-0 ' +
+            'after:bg-gradient-to-r after:from-cyan-500 after:via-emerald-500 after:to-lime-400 ' +
+            'after:transition-all after:duration-300 group-hover:after:w-full',
+    }
 </script>
 
 <template>
-  <footer :class="UI.footer" role="contentinfo">
-    <!-- TOP: logo/hero (sin wrappers innecesarios) -->
-    <img
-      src="/img/footer/mobile-footer.webp"
-      class="block w-full select-none object-cover"
-      loading="lazy"
-      alt="Mr. Lana"
-    />
+    <footer :class="UI.footer" role="contentinfo">
+        <!-- Línea marca fina -->
+        <div class="h-[3px] w-full bg-gradient-to-r" />
 
-    <!-- MAIN: full width, sin max-w (adiós franjas) -->
-    <section :class="[UI.pad, 'py-10']" aria-label="Footer principal">
-      <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
-        <!-- CONTACTO: semántico con address -->
-        <address class="not-italic lg:col-span-4">
-          <h2 :class="UI.title">Contacto</h2>
+        <!-- HEADER: -->
+        <div class="relative">
+            <img src="/img/footer/mobile-footer.webp" class="block w-full select-none object-cover"
+            loading="lazy"alt="Mr. Lana"/>
+        </div>
 
-          <div class="mt-4 space-y-4">
-            <iconoWhatsapp title="Contáctanos" phone="5217774225973" label="(777) 422-5973" />
-            <iconoEmail title="Correo" email="atencionclientes@mr-lana.com" />
-          </div>
+        <!-- Contenido (sin “divsote” tipo caja envolvente; solo layout) -->
+        <section :class="[UI.pad, 'py-12']" aria-label="Footer">
+            <div class="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+                <!-- Contacto -->
+                <address class="not-italic lg:col-span-4">
 
-          <p class="mt-4" :class="UI.text">
-            <span class="font-extrabold tracking-wide">Servicio al cliente:</span>
-            <span class="ml-2">LUN–SAB: 10:00am a 8:00pm</span>
-          </p>
-        </address>
+                    <div class="mt-4 space-y-4">
+                        <iconoWhatsapp title="Contáctanos" phone="5217774225973" label="(777) 422-5973" />
+                        <iconoEmail title="Correo" email="atencionclientes@mr-lana.com" />
+                    </div>
 
-        <!-- NAVEGACIÓN DEL SITIO (tus links del navbar) -->
-        <nav class="lg:col-span-5" aria-label="Navegación del sitio">
-          <h2 :class="UI.title">Sitio</h2>
+                    <p class="mt-4 text-sm font-semibold text-slate-800 dark:text-white/85">
+                        Servicio al cliente:
+                        <span class="ml-2 text-slate-950 dark:text-white">LUN–SAB: 10:00am a 8:00pm</span>
+                    </p>
+                </address>
 
-          <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <li v-for="l in siteLinks" :key="l.href">
-              <Link :href="l.href" :class="UI.navLink(isActive(l.key, l.href))">
-                <span :class="UI.navIcon" v-html="l.icon" aria-hidden="true" />
-                <span :class="UI.underline">{{ l.label }}</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
+                <!-- Sitio -->
+                <nav class="lg:col-span-5" aria-label="Sitio">
+                    <div :class="UI.h">Enlaces del sitio</div>
+                    <ul class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <li v-for="l in siteLinks" :key="l.href">
+                            <Link :href="l.href" :class="UI.pill(isActive(l.key, l.href))">
+                                <span :class="UI.icon" v-html="l.icon" aria-hidden="true" />
+                                <span :class="UI.underline">{{ l.label }}</span>
+                                <span class="ml-auto opacity-50 transition group-hover:opacity-100" aria-hidden="true">↗</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
 
-        <!-- SOCIAL + LEGAL -->
-        <section class="lg:col-span-3">
-          <SocialLinks />
+                <!-- Social + Legal -->
+                <section class="lg:col-span-3">
+                    <div class="mt-4">
+                        <SocialLinks />
+                    </div>
 
-          <h2 class="mt-8" :class="UI.title">Legal</h2>
-          <ul class="mt-4 space-y-3">
-            <li v-for="l in legalLinks" :key="l.href">
-              <Link :href="l.href" :class="UI.legal">
-                <span :class="UI.legalUnderline">{{ l.label }}</span>
-                <span class="opacity-60 transition group-hover:opacity-100" aria-hidden="true">↗</span>
-              </Link>
-            </li>
-          </ul>
+                    <div class="mt-8" :class="UI.h">Legal</div>
+                    <ul class="mt-3 space-y-2">
+                        <li v-for="l in legalLinks" :key="l.href">
+                            <Link :href="l.href" :class="UI.legal">
+                                <span class="h-[18px] w-[18px] opacity-90" v-html="l.icon" aria-hidden="true" />
+                                <span :class="UI.legalU">{{ l.label }}</span>
+                                <span class="ml-auto opacity-50 transition group-hover:opacity-100" aria-hidden="true">↗</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </section>
+            </div>
 
-          <p class="mt-8 text-sm font-semibold text-slate-800 dark:text-slate-200">
-            <span class="font-extrabold tracking-wide text-slate-900 dark:text-slate-100">Seguimiento claro:</span>
-            Comunicación directa y soporte en horarios establecidos.
-          </p>
+            <div class="mt-10 border-t border-black/10 pt-4 text-center dark:border-white/10">
+                <p class="text-xs font-semibold text-slate-600 dark:text-white/60">
+                    © {{ year }} Mr. Lana. Todos los derechos reservados.
+                </p>
+            </div>
         </section>
-      </div>
-    </section>
-
-    <!-- BOTTOM BAR -->
-    <section :class="[UI.pad, 'border-t border-black/10 dark:border-white/10 py-4']" aria-label="Créditos">
-      <p class="text-center text-xs font-semibold text-slate-700 dark:text-slate-300">
-        © {{ year }} Mr. Lana. Todos los derechos reservados.
-      </p>
-    </section>
-  </footer>
+    </footer>
 </template>
