@@ -1,4 +1,3 @@
-<!-- resources/js/Pages/CreditoComadres/Index.vue -->
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3'
     import PublicLayout from '@/layouts/PublicLayout.vue'
@@ -141,37 +140,33 @@
         <BusinessLoanRequestModal :open="openModal" :branches="branches"
         @close="closeBusinessModal" @submit="onSubmit" />
 
-        <!-- HERO (usa /img/home/Slider-3.jfif) -->
+        <!-- HERO -->
         <div class="relative w-full overflow-hidden">
-            <img src="/img/home/Slider-3.jfif"
-            class="w-full h-auto max-h-[520px] object-cover object-center"
-            alt="Crédito Comadres"/>
+            <picture class="block w-full">
+                <source media="(min-width: 1024px)" srcset="/img/home/Slider-3.jfif" />
+                <img
+                src="/img/home/Slider-3.jfif"
+                alt="Crédito Comadres"
+                class="block w-full h-auto object-contain"
+                draggable="false"
+                />
+            </picture>
 
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
-
-            <!-- Texto -->
-            <div class="pointer-events-none absolute inset-0 flex
-            items-center justify-center">
-                <div class="text-right text-white px-4">
-                    <p class="mt-2 text-lg sm:text-xl md:text-3xl font-bold
-                    [text-shadow:_0_2px_10px_rgb(0_0_0_/_85%)]">
-                        Grupo, confianza y crecimiento.
-                    </p>
-                </div>
-            </div>
+            <!-- Overlay (no afecta el tamaño de la imagen) -->
+            <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
 
             <!-- CTA -->
             <div class="absolute inset-0 z-10 flex items-end justify-center">
                 <div class="w-full px-4 pb-5 sm:pb-6 md:pb-7">
                     <div class="mx-auto max-w-[820px] text-center pointer-events-auto">
                         <button type="button" @click="openBusinessModal"
-                        class="inline-flex w-full sm:w-auto items-center justify-center
-                        rounded-full bg-white/15 px-6 sm:px-10 py-3 sm:py-4
-                        text-base sm:text-lg md:text-xl font-extrabold text-white
-                        shadow-lg ring-1 ring-white/20 backdrop-blur
-                        transition hover:bg-white/20 hover:scale-[1.01]
-                        active:scale-[0.99]">
+                        class="inline-flex items-center justify-center
+                        rounded-full bg-black/70 px-6
+                        sm:w-[180px] md:w-[230px] lg:w-[300px] xl:w-[340px]
+                        2xl:w-[400px] py-2 sm:py-2 md:py-5 lg:py-6 xl:py-7 2xl:py-8
+                        text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold text-white
+                        shadow-lg ring-1 ring-white/15 transition
+                        hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
                             Solicitar ahora
                         </button>
                     </div>
@@ -180,29 +175,30 @@
         </div>
 
         <!-- ===================== PASOS CRÉDITO COMADRES ===================== -->
-        <div class="bg-zinc-950 py-10 sm:py-12 px-4 overflow-hidden">
+        <div class="bg-white py-10 sm:py-12 px-4 overflow-hidden">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-10">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold
-                    text-white uppercase tracking-tight">
+                    text-black uppercase tracking-tight">
                         PASOS CRÉDITO COMADRES
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     <div v-for="s in steps" :key="s.title"
-                    class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-6
+                    class="rounded-2xl bg-teal-300/5 ring-teal-300/5 ring- p-6
                     shadow-[0_20px_60px_-45px_rgba(0,0,0,0.85)]
-                    transition hover:bg-white/7 hover:-translate-y-[1px]">
+                    transition hover:bg-white/[0.085]
+                    hover:ring-emerald-400/30 hover:-translate-y-[1px]">
                         <div class="flex items-center gap-4">
                             <div class="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/10">
                                 <img :src="s.icon" :alt="s.alt" class="h-7 w-7"/>
                             </div>
-                            <h3 class="text-base sm:text-lg font-extrabold text-white">
+                            <h3 class="text-base sm:text-lg font-extrabold text-black">
                                 {{ s.title }}
                             </h3>
                         </div>
-                        <p class="mt-3 text-sm sm:text-base text-white/75 leading-relaxed">
+                        <p class="mt-3 text-sm sm:text-base text-black/75 leading-relaxed">
                             {{ s.desc }}
                         </p>
                     </div>

@@ -102,50 +102,46 @@
         <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsat"
         @close="closeBusinessModal" @submit="onSubmit"/>
 
-        <!-- Banner Superior -->
+        <!-- Banner Superior (sin recorte, mantiene color del botón) -->
         <div class="relative w-full overflow-hidden">
-            <!-- Desktop -->
-            <img src="/img/impulsat-banner.jpg"
-            class="hidden md:block w-full h-auto max-h-[500px] object-cover object-center"
-            alt="Banner negocio desktop"/>
-            <!-- Mobile -->
-            <img src="/img/bg-impulsat-mobile.jpg"
-            class="block md:hidden w-full h-auto max-h-[400px] object-cover object-center"
-            alt="Banner negocio mobile"/>
+            <picture class="block w-full">
+                <!-- Desktop -->
+                <source media="(min-width: 768px)" srcset="/img/impulsat-banner.jpg" />
+                <!-- Mobile -->
+                <img src="/img/bg-impulsat-mobile.jpg" alt="Banner negocio"
+                class="block w-full h-auto object-contain" draggable="false"/>
+            </picture>
 
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
+            <!-- Overlay SOLO desktop -->
+            <div class="absolute inset-0 hidden md:block
+            bg-gradient-to-b from-black/55 via-black/30 to-black/55"/>
 
-            <!-- TEXTO: no debe capturar clicks -->
-            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div class="text-center text-white">
-                    <h1 class="text-4xl md:text-6xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">El IMPULSO</h1>
-                    <p class="text-2xl md:text-4xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">que te FALTABA</p>
-                </div>
-            </div>
-
-            <!-- CTA: arriba de todo y con clicks habilitados -->
+            <!-- CTA (MISMO COLOR que el original) -->
             <div class="absolute inset-0 z-10 flex items-end justify-center">
                 <div class="w-full px-4 pb-5 sm:pb-6 md:pb-7">
-                    <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
-                        <button type="button" @click="openBusinessModal"
-                        class="inline-flex w-full sm:w-auto items-center justify-center
-                        rounded-full bg-black/70 px-6 sm:px-10 py-3 sm:py-4
-                        text-base sm:text-lg md:text-xl font-extrabold text-white
-                        shadow-lg ring-1 ring-white/15 transition
-                        hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
-                            Solicitar ahora
-                        </button>
-                    </div>
+                <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
+                    <button
+                    type="button"
+                    @click="openBusinessModal"
+                    class="inline-flex items-center justify-center
+                    rounded-full bg-black/70 px-6
+                    sm:w-[180px] md:w-[230px] lg:w-[300px] xl:w-[340px]
+                    2xl:w-[400px] py-2 sm:py-2 md:py-5 lg:py-6 xl:py-7 2xl:py-8
+                    text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold text-white
+                    shadow-lg ring-1 ring-white/15 transition
+                    hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
+                        Solicitar ahora
+                    </button>
+                </div>
                 </div>
             </div>
         </div>
 
         <!-- Pasos -->
-        <section class="bg-zinc-950 px-4 py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden">
+        <section class="bg-white px-4 py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden">
             <div class="mx-auto max-w-7xl">
                 <header class="text-center mb-9 sm:mb-10 md:mb-12">
-                    <h2 class="text-white uppercase tracking-tight font-extrabold
+                    <h2 class="text-black uppercase tracking-tight font-extrabold
                     text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                         PASOS PARA OBTENER TU CRÉDITO
                     </h2>
@@ -154,8 +150,8 @@
                 <div class="grid gap-4 sm:gap-5 md:gap-6"
                 style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
                     <article v-for="(s, i) in steps" :key="`${i}-${s.title}`"
-                    class="group relative rounded-2xl bg-white/[0.06] ring-1
-                    ring-white/10 p-5 sm:p-6
+                    class="group relative rounded-2xl bg-teal-300/5
+                    ring-teal-300/5 ring-1 p-5 sm:p-6
                     shadow-[0_20px_60px_-45px_rgba(0,0,0,0.9)]
                     transition duration-300
                     hover:-translate-y-1 hover:bg-white/[0.08]
@@ -167,17 +163,17 @@
 
                         <div class="relative flex items-start gap-4">
                             <div class="shrink-0 grid place-items-center rounded-2xl
-                            h-12 w-12 bg-white/10 ring-1 ring-white/10 transition
+                            h-12 w-12 bg-black/10 ring-1 ring-black/10 transition
                             duration-300 group-hover:bg-emerald-400/10
                             group-hover:ring-emerald-400/30">
                                 <img :src="s.src" :alt="s.alt" class="h-7 w-7 opacity-95" />
                             </div>
 
                             <div class="min-w-0">
-                                <h3 class="text-white font-extrabold leading-snug text-base sm:text-lg">
+                                <h3 class="text-black font-extrabold leading-snug text-base sm:text-lg">
                                     {{ s.title }}
                                 </h3>
-                                <p class="mt-2 text-white/75 leading-relaxed text-sm sm:text-base">
+                                <p class="mt-2 text-black/75 leading-relaxed text-sm sm:text-base">
                                     {{ s.desc }}
                                 </p>
                             </div>

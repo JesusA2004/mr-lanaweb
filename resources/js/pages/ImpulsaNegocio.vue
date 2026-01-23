@@ -40,11 +40,6 @@
         closeBusinessModal()
     }
 
-    onMounted(() => {
-        const params = new URLSearchParams(window.location.search)
-        if (params.get('solicitar') === '1') openBusinessModal()
-    })
-
     function openWhatsApp() {
         window.open('https://wa.me/5217774225973', '_blank')
     }
@@ -53,10 +48,20 @@
     const weeklyCredits = computed<AnyCredit[]>(() => credits.filter((c: AnyCredit) => c.schedule === 'Semanal'))
     const activeCredit = ref<string>('')
 
+    // Evita un scroll automatico y abre modal si viene el parametro
     onMounted(() => {
-        if (!activeCredit.value && weeklyCredits.value.length) {
-            activeCredit.value = String(weeklyCredits.value[0].id ?? weeklyCredits.value[0].modalId ?? '0')
+        const params = new URLSearchParams(window.location.search)
+        const shouldOpen = params.get('solicitar') === '1'
+        if (shouldOpen) {
+            openBusinessModal()
+            return
         }
+        requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+            requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+            })
+        })
     })
 
     const creditTabs = computed<SegmentTabItem[]>(() =>
@@ -180,51 +185,46 @@
     <Head title="Impulsa tu negocio | Mr Lana" />
     <PublicLayout>
         <!-- MODAL -->
-        <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio"@close="closeBusinessModal" @submit="onSubmit" />
+        <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio" @close="closeBusinessModal" @submit="onSubmit" />
 
-        <!-- Banner Superior + botón a la DERECHA -->
+        <!-- Banner Superior -->
         <div class="relative w-full overflow-hidden">
-            <img src="/img/business-banner-1.jpg"
-            class="hidden md:block w-full h-auto max-h-[500px] object-cover object-center"
-            alt="Banner negocio desktop"/>
-            <img src="/img/bg-bussines-mobile.jpg"
-            class="block md:hidden w-full h-auto max-h-[400px] object-cover object-center"
-            alt="Banner negocio mobile"/>
+            <picture class="block w-full">
+                <!-- Desktop -->
+                <source media="(min-width: 768px)" srcset="/img/business-banner-1.jpg" />
+                <!-- Mobile -->
+                <img src="/img/bg-bussines-mobile.jpg" alt="Banner negocio"
+                class="block w-full h-auto object-contain" draggable="false"/>
+            </picture>
 
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55" />
+            <!-- Overlay SOLO desktop -->
+            <div class="absolute inset-0 pointer-events-none hidden md:block
+            bg-gradient-to-b from-black/55 via-black/30 to-black/55"/>
 
-            <!-- TEXTO: no captura clicks -->
-            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div class="text-center text-white px-4">
-                    <h1 class="text-4xl md:text-6xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">Mejora el NIVEL</h1>
-                    <p class="text-2xl md:text-4xl font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">de tu NEGOCIO</p>
-                </div>
-            </div>
-
-            <!-- CTA: a la derecha -->
+            <!-- CTA -->
             <div class="absolute inset-0 z-10 flex items-end justify-end">
                 <div class="w-full px-4 pb-5 sm:pb-6 md:pb-7">
-                    <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
-                        <button type="button" @click="openBusinessModal"
-                        class="inline-flex w-full sm:w-auto items-center justify-center
-                        rounded-full bg-black/70 px-6 sm:px-10 py-3 sm:py-4
-                        text-base sm:text-lg md:text-xl font-extrabold text-white
-                        shadow-lg ring-1 ring-white/15 transition
-                        hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
-                            Solicitar ahora
-                        </button>
-                    </div>
+                <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
+                    <button type="button" @click="openBusinessModal"
+                    class="inline-flex items-center justify-center
+                    rounded-full bg-black/70 px-6
+                    sm:w-[180px] md:w-[230px] lg:w-[300px] xl:w-[340px]
+                    2xl:w-[400px] py-2 sm:py-2 md:py-5 lg:py-6 xl:py-7 2xl:py-8
+                    text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold text-white
+                    shadow-lg ring-1 ring-white/15 transition
+                    hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
+                    Solicitar ahora
+                    </button>
+                </div>
                 </div>
             </div>
         </div>
-
                 <!-- Pasos -->
-        <section class="bg-zinc-950 py-10 sm:py-12 md:py-14 lg:py-16 px-4 overflow-hidden">
+        <section class="bg-white py-10 sm:py-12 md:py-14 lg:py-16 px-4 overflow-hidden">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-10 sm:mb-11 md:mb-12">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold
-                    text-white uppercase tracking-tight">
+                    text-black uppercase tracking-tight">
                         PASOS PARA OBTENER TU CRÉDITO
                     </h2>
                 </div>
@@ -232,13 +232,13 @@
                 <div class="grid gap-4 sm:gap-5 md:gap-6"
                 style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
                     <article v-for="(s, idx) in steps" :key="`${idx}-${s.stepTitle}`"
-                    class="group relative rounded-2xl bg-white/[0.06] ring-1 ring-white/10
+                    class="group relative rounded-2xl ring-1 bg-teal-300/5 ring-teal-300/5
                     p-5 sm:p-6
                     shadow-[0_22px_70px_-55px_rgba(0,0,0,0.95)]
                     transition duration-300
                     hover:-translate-y-1 hover:bg-white/[0.085]
                     hover:ring-emerald-400/30">
-                        <!-- Glow suave (NO diagonales) -->
+                        <!-- Glow suave -->
                         <div class="pointer-events-none absolute inset-0 rounded-2xl opacity-0
                         transition duration-300 group-hover:opacity-100"
                         style="background: radial-gradient(520px circle at 18% 0%, rgba(16,185,129,.18), transparent 58%);">
@@ -252,24 +252,24 @@
 
                         <div class="relative flex items-start gap-4">
                             <div class="shrink-0 grid h-12 w-12 place-items-center rounded-2xl
-                            bg-white/10 ring-1 ring-white/10
+                            bg-black/5 ring-1 ring-black/5
                             transition duration-300
                             group-hover:bg-emerald-400/10 group-hover:ring-emerald-400/30">
                                 <img :src="s.src" :alt="s.alt" class="h-7 w-7 opacity-95" />
                             </div>
 
                             <div class="min-w-0">
-                                <h3 class="text-base sm:text-lg font-extrabold text-white leading-snug">
+                                <h3 class="text-base sm:text-lg font-extrabold text-black leading-snug">
                                     {{ s.stepTitle }}
                                 </h3>
 
-                                <p class="mt-2 text-sm sm:text-base text-white/75 leading-relaxed">
+                                <p class="mt-2 text-sm sm:text-base text-black leading-relaxed">
                                     {{ s.stepSubtitle }}
                                 </p>
                             </div>
                         </div>
 
-                        <!-- micro-separador elegante (no “línea de mierda”) -->
+                        <!-- micro-separador elegante -->
                         <div class="relative mt-4 sm:mt-5 h-px w-full bg-white/0
                         group-hover:bg-white/10 transition duration-300"></div>
                     </article>

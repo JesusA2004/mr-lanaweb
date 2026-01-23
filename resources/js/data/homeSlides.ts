@@ -40,7 +40,7 @@ export const homeSlides: Slide[] = [
                 { text: ' fácil y rápido', tone: 'black', bold: true },
             ],
             ctaLabel: 'Solicitar Ahora',
-            ctaHref: '/impulsa-tu-negocio',
+            ctaHref: '/impulsa-tu-negocio?solicitar=1',
         },
     },
     {
@@ -59,7 +59,7 @@ export const homeSlides: Slide[] = [
                 { text: 'fácil y rápido', tone: 'black', bold: true },
             ],
             ctaLabel: 'Solicitar Ahora',
-            ctaHref: '/impulsat',
+            ctaHref: '/impulsat?solicitar=1',
         },
     },
     {

@@ -40,7 +40,7 @@
     <!--  Cuando el sheet está abierto, el navbar baja z para NO taparlo -->
     <header :class="[ 'sticky top-0 w-full md:absolute md:inset-x-0 md:top-0',
         sheetOpen ? 'z-[10]' : 'z-[120]']">
-        <!-- MOBILE BAR (NO TOCAR) -->
+        <!-- MOBILE BAR -->
         <div class="md:hidden w-full bg-gradient-to-r from-[#55D86A]
         via-[#49D7B8] shadow-[0_10px_25px_rgba(0,0,0,0.10)]">
             <div class="mx-auto flex w-full max-w-7xl items-center
