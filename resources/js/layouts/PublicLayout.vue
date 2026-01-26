@@ -4,7 +4,6 @@
     import Footer from '@/components/navigation/Footer.vue'
     import VacanciesHub from '@/components/vacancies/VacanciesHub.vue'
     import WhaticketWidget from '@/components/integrations/WhaticketWidget.vue'
-    import WhaticketBuddy from '@/components/integrations/WhaticketBuddy.vue'
 
     defineProps<{ title?: string }>()
 
@@ -17,18 +16,23 @@
         vacanciesOpen.value = false
     }
 
-    // Escuchar eventos del navbar
-    function handleNavbarOpenVacancies() {
-        openVacancies()
-    }
-
-    // Escuchar eventos globales desde ImpulsaNegocio
     function handleGlobalOpenVacancies() {
         openVacancies()
     }
 
+    function ensureSwalOnTop() {
+        // Esto fuerza Swal encima de modales/backdrops
+        if (document.getElementById('swal2-zfix')) return
+        const style = document.createElement('style')
+        style.id = 'swal2-zfix'
+        style.textContent = `
+            .swal2-container { z-index: 200000 !important; }
+        `
+        document.head.appendChild(style)
+    }
+
     onMounted(() => {
-        // Escuchar eventos globales
+        ensureSwalOnTop()
         window.addEventListener('open-vacancies-global', handleGlobalOpenVacancies)
     })
 
@@ -39,12 +43,10 @@
 
 <template>
     <div class="min-h-screen bg-white text-slate-900">
-
         <WhaticketWidget />
 
         <Navbar @openVacancies="openVacancies" />
 
-        <!-- Bolsa de trabajo (modal global) -->
         <VacanciesHub v-model="vacanciesOpen" @close="closeVacancies" />
 
         <main class="w-full">

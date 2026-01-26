@@ -40,11 +40,9 @@ class PublicFormController extends Controller {
             if (empty(trim($data['tipoEmpleo'] ?? ''))) return response()->json(['message' => 'Falta tipoEmpleo'], 422);
         }
         if ($data['context'] === 'credito_comadres') {
-            // si Crédito Comadres no usa esos campos, no pasa nada: van vacíos
-            // aquí puedes meter reglas extra si luego agregas “grupo”, etc.
         }
         Mail::to(config('mail.to.address'))->send(new PublicFormMail($data));
         return response()->json(['ok' => true]);
     }
-    
+
 }

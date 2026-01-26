@@ -8,6 +8,7 @@
     import SegmentTabs, { type SegmentTabItem } from '@/components/ui/SegmentTabs.vue'
     import { branches } from '@/data/sucursales'
     import { credits } from '@/data/credits'
+    import { swalOk, swalErr, swalLoading, swalClose } from '@/lib/swal'
 
     function handleOpenVacancies() {
         window.dispatchEvent(new CustomEvent('open-vacancies-global'))
@@ -24,6 +25,8 @@
 
     const openModal = ref(false)
 
+    const sending = ref(false)
+
     function openBusinessModal() {
      openModal.value = true
     }
@@ -36,24 +39,40 @@
     }
 
     async function onSubmit(payload: any) {
+        if (sending.value) return
         const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
-        const res = await fetch('/formularios/enviar', {
+        sending.value = true
+        swalLoading('Enviando solicitud...')
+        try {
+            const res = await fetch('/formularios/enviar', {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': csrf,
-            'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
+                Accept: 'application/json',
             },
             body: JSON.stringify(payload),
-        })
-        if (res.ok) {
+            })
+            if (res.ok) {
             closeBusinessModal()
+            swalClose()
+            await swalOk('Listo: tu solicitud fue enviada. En breve te contactamos.')
             return
+            }
+            const err = await res.json().catch(() => ({}))
+            const msg =
+            err?.message ||
+            (err?.errors ? (Object.values(err.errors).flat() as any[]).join(' ') : '') ||
+            'No se pudo enviar. Intenta de nuevo.'
+            swalClose()
+            await swalErr(msg)
+        } catch (e) {
+            swalClose()
+            await swalErr('Sin conexión o servidor no disponible. Intenta en un momento.')
+        } finally {
+            sending.value = false
         }
-        // opcional: ver error
-        const err = await res.json().catch(() => ({}))
-        console.error('Error formulario', res.status, err)
     }
 
     function openWhatsApp() {
@@ -198,10 +217,18 @@
 </script>
 
 <template>
-    <Head title="Impulsa tu negocio | Mr Lana" />
+    <Head title="Impulsa tu negocio" />
     <PublicLayout>
+
         <!-- MODAL -->
-        <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio" @close="closeBusinessModal" @submit="onSubmit" />
+        <BusinessLoanRequestModal
+            :open="openModal"
+            :branches="branches"
+            context="impulsa_negocio"
+            :sending="sending"
+            @close="closeBusinessModal"
+            @submit="onSubmit"
+        />
 
         <!-- Banner Superior -->
         <div class="relative w-full overflow-hidden">

@@ -12,18 +12,16 @@ class PublicFormMail extends Mailable {
 
     public function __construct(public array $data) {}
 
-    public function build() {
-        $map = [
-            'impulsat' => 'Solicitud - Impulsa.t',
-            'impulsa_negocio' => 'Solicitud - Impulsa tu negocio',
-            'credito_comadres' => 'Solicitud - Crédito Comadres',
-        ];
-
-        $subject = $map[$this->data['context']] ?? 'Solicitud web';
-
-        return $this->subject($subject)
-            ->replyTo($this->data['email'], trim(($this->data['nombres'] ?? '').' '.($this->data['apellido1'] ?? '')))
-            ->view('emails.public-form')
+    public function build(){
+        $context = $this->data['context'] ?? 'impulsat';
+        $view = match ($context) {
+            'impulsa_negocio' => 'emails.impulsa_negocio',
+            'credito_comadres' => 'emails.credito_comadres',
+            default => 'emails.impulsat',
+        };
+        return $this
+            ->subject('Nueva solicitud · Mr. Lana')
+            ->view($view)
             ->with(['d' => $this->data]);
     }
 
