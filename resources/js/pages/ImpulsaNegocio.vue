@@ -115,69 +115,72 @@
     })
 
     const weeklyOverridesByPlan: Record<
-    string,
-    {
-        esquema: string
-        plazo: string
-        montoInicial: string
-        montoMinimo: string
-        montoMaximo: string
-        poliza: string
-        multa: string
-        aumento: string
-        costos: string
-        cat: string
-    }
-    > = {
+        string,
+        {
+            esquema: string
+            plazo: string
+            montoInicial: string
+            montoMinimo: string
+            montoMaximo: string
+            poliza: string
+            multa: string
+            aumento: string
+            costos: string
+            cat: string
+        }
+        > = {
         '12': {
             esquema: 'Semanal',
             plazo: '12 pagos',
-            montoInicial: '$3,000.00, $4,000.00, $5,000.00',
+            montoInicial: '$3,000.00, $4,000.00, $5,000.00 (siempre y cuando el negocio sea viable)',
             montoMinimo: '$3,000.00',
             montoMaximo: '$25,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 cada ciclo, de acuerdo a política de aumentos',
-            costos: 'No Aplica',
-            cat: '2105.39%',
+            poliza: '$100.00',
+            multa: '$12.50 por cada $1,000.00',
+            aumento: '$1,000.00 cada ciclo, de acuerdo a política de aumentos.',
+            costos: 'No aplica',
+            cat: '2696.26% cálculo sobre $5,000.00 SIN IVA',
         },
+
         '16': {
             esquema: 'Semanal',
-            plazo: '12 pagos',
+            plazo: '16 pagos',
             montoInicial: '$5,000.00',
             montoMinimo: '$5,000.00',
             montoMaximo: '$25,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 cada ciclo, de acuerdo a política de aumentos',
-            costos: 'No Aplica',
-            cat: '2105.39%',
+            poliza: '$100.00',
+            multa: '$12.50 por cada $1,000.00',
+            aumento: '$1,000.00, $2,000.00 cada ciclo, de acuerdo a política de aumentos.',
+            costos: 'No aplica',
+            cat: '2566.47% cálculo sobre $5,000.00 SIN IVA',
         },
+
         '20': {
             esquema: 'Semanal',
-            plazo: '12 pagos',
+            plazo: '20 pagos',
             montoInicial: '$10,000.00',
             montoMinimo: '$10,000.00',
             montoMaximo: '$50,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
-            costos: 'No Aplica',
-            cat: '2015.39%',
+            poliza: '$100.00',
+            multa: '$12.50 por cada $1,000.00',
+            aumento: '$2,000.00, $3,000.00, $4,000.00 cada ciclo, de acuerdo a política de aumentos.',
+            costos: 'No aplica',
+            cat: '2015.39% cálculo sobre $5,000.00 SIN IVA',
         },
+
         '24': {
             esquema: 'Semanal',
-            plazo: '12 pagos',
+            plazo: '24 pagos',
             montoInicial: '$10,000.00',
             montoMinimo: '$10,000.00',
             montoMaximo: '$50,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
-            costos: 'No Aplica',
-            cat: '2105.39%',
+            poliza: '$100.00',
+            multa: '$12.50 por cada $1,000.00',
+            aumento: '$2,000.00, $3,000.00, $4,000.00 cada ciclo, de acuerdo a política de aumentos.',
+            costos: 'No aplica',
+            cat: '1900.02% cálculo sobre $5,000.00 SIN IVA',
         },
-    }
+        }
 
     function extractPlanNumberFromPayments(payments: any): string | null {
         const s = String(payments ?? '')

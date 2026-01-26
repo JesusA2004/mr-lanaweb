@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VacancyApplicationController;
 use App\Http\Controllers\PublicFormController;
+use App\Http\Controllers\FaqQuestionController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -25,6 +26,9 @@ Route::get('/faqs', function () {
     return Inertia::render('Faqs');
 })->name('faqs');
 
+Route::post('/faqs/preguntar', [FaqQuestionController::class, 'store'])
+    ->name('faqs.preguntar');
+
 Route::get('/aviso-de-privacidad', function () {
     return Inertia::render('AvisoPrivacidad');
 })->name('avisoPrivacidad');
@@ -43,7 +47,7 @@ Route::get('/credito-comadres', function () {
 
 Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
     ->name('vacancies.apply');
-    
+
 Route::post('/formularios/enviar', [PublicFormController::class, 'store'])
     ->name('public.forms.store');
 

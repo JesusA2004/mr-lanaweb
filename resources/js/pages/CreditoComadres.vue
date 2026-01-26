@@ -81,43 +81,27 @@
 
     // Créditos
     const creditSpecs = {
-        crece12: {
-            titulo: 'Crédito Comadres 12',
-            esquema: 'Semanal',
-            plazo: '12 pagos (lunes a viernes)',
-            montoInicial: 'Sujeto a disponibilidad de pago',
-            montoMinimo: '$5,000.00',
-            montoMaximo: '$100,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
-            costos: 'No aplica',
-            cat: '1887.06%',
-            icon: '/img/icons/icon-credit-crece12.png',
-            alt: 'Comadres 12',
-        },
         crece24: {
-            titulo: 'Crédito Comadres 24',
+            titulo: 'Crédito Comadres 16',
             esquema: 'Semanal',
-            plazo: '24 pagos (lunes a viernes)',
-            montoInicial: 'Sujeto a disponibilidad de pago',
+            plazo: '16 pagos (lunes a viernes)',
+            montoInicial: '$5,000.00 hasta $8,000.00',
             montoMinimo: '$10,000.00',
             montoMaximo: '$100,000.00',
-            poliza: '$100',
-            multa: '$12.50 por cada $1000',
-            aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
+            poliza: '1.6% del monto autorizado',
+            multa: '5% del monto del pago',
+            aumento: 'Hasta un 25% del monto de pago del ciclo a renovar',
             costos: 'No aplica',
-            cat: '1887.06%',
+            cat: '244.80% este sobre un monto promedio de $10,000.00 SIN IVA',
             icon: '/img/icons/icon-credit-crece24.png',
             alt: 'Comadres 24',
         },
     } as const
 
     type CreditKey = keyof typeof creditSpecs
-    const activeCredit = ref<CreditKey>('crece12')
+    const activeCredit = ref<CreditKey>('crece24')
     const creditTabs = computed<SegmentTabItem[]>(() => [
-        { key: 'crece12', label: 'Comadres 12', iconSrc: creditSpecs.crece12.icon, iconAlt: creditSpecs.crece12.alt },
-        { key: 'crece24', label: 'Comadres 24', iconSrc: creditSpecs.crece24.icon, iconAlt: creditSpecs.crece24.alt },
+        { key: 'crece24', label: 'Comadres 24' },
     ])
     const currentCredit = computed(() => creditSpecs[activeCredit.value])
 
@@ -254,89 +238,102 @@
                     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
                         PRODUCTO COMADRES
                     </h2>
-                    <p class="text-base sm:text-lg md:text-xl text-gray-700">
-                        Elige tu esquema y revisa condiciones en un solo panel. Sin vueltas.
-                    </p>
                 </div>
 
                 <div class="rounded-2xl bg-white p-5 sm:p-7 md:p-8 shadow-lg
                 ring-1 ring-gray-200">
                     <SegmentTabs v-model="activeCredit" :items="creditTabs" aria-label="Créditos Comadres">
                         <template #default>
-                            <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr]
-                            gap-6 lg:gap-8 items-start">
-                                <div class="flex items-center justify-center
-                                lg:justify-start">
-                                    <img :src="currentCredit.icon"
-                                    :alt="currentCredit.alt"
-                                    class="h-28 w-28 sm:h-32 sm:w-32 md:h-36 md:w-36
-                                    lg:h-44 lg:w-44"/>
-                                </div>
+                            <!-- Layout corregido: 1 columna en mobile, 12 cols en lg+ -->
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+                            <!-- Columna izquierda (branding / resumen) -->
+                            <aside class="lg:col-span-4">
+                                <div class="rounded-2xl bg-slate-50 ring-1 ring-slate-200 p-5 sm:p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="grid h-14 w-14 place-items-center rounded-2xl bg-white ring-1 ring-slate-200 overflow-hidden">
+                                    <img
+                                        :src="currentCredit.icon"
+                                        :alt="currentCredit.alt"
+                                        class="h-10 w-10 object-contain"
+                                        draggable="false"
+                                    />
+                                    </div>
 
-                                <div>
-                                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-900">
+                                    <div>
+                                    <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">Producto</p>
+                                    <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
                                         {{ currentCredit.titulo }}
                                     </h3>
-
-                                    <div class="mt-5 grid grid-cols-1 sm:grid-cols-2
-                                    gap-4">
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Esquema</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.esquema }}</p>
-                                        </div>
-
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Plazo</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.plazo }}</p>
-                                        </div>
-
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Monto inicial</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.montoInicial }}</p>
-                                        </div>
-
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Monto mínimo</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.montoMinimo }}</p>
-                                        </div>
-
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Monto máximo</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.montoMaximo }}</p>
-                                        </div>
-
-                                        <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">CAT</p>
-                                            <p class="font-bold text-slate-900">{{ currentCredit.cat }}</p>
-                                        </div>
-
-                                        <div class="sm:col-span-2">
-                                            <p class="text-slate-500 text-sm mb-2">Condiciones</p>
-                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                                    <p class="text-xs font-semibold text-slate-500">Póliza</p>
-                                                    <p class="mt-1 font-bold text-slate-900">{{ currentCredit.poliza }}</p>
-                                                </div>
-                                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                                    <p class="text-xs font-semibold text-slate-500">Multa</p>
-                                                    <p class="mt-1 font-bold text-slate-900">{{ currentCredit.multa }}</p>
-                                                </div>
-                                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                                    <p class="text-xs font-semibold text-slate-500">Aumento</p>
-                                                    <p class="mt-1 font-bold text-slate-900">{{ currentCredit.aumento }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="sm:col-span-2 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                                            <p class="text-slate-500 text-sm">Costos</p>
-                                            <p class="font-semibold text-slate-900">{{ currentCredit.costos }}</p>
-                                        </div>
                                     </div>
                                 </div>
+
+                                <div class="mt-5 grid grid-cols-1 gap-3">
+                                    <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Esquema</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.esquema }}</p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Plazo</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.plazo }}</p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">CAT</p>
+                                    <p class="font-extrabold text-slate-900 leading-snug">{{ currentCredit.cat }}</p>
+                                    </div>
+                                </div>
+                                </div>
+                            </aside>
+
+                            <!-- Columna derecha (detalles) -->
+                            <section class="lg:col-span-8">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Monto inicial</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.montoInicial }}</p>
+                                </div>
+
+                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Monto mínimo</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.montoMinimo }}</p>
+                                </div>
+
+                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Monto máximo</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.montoMaximo }}</p>
+                                </div>
+
+                                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                    <p class="text-slate-500 text-sm">Costos</p>
+                                    <p class="font-extrabold text-slate-900">{{ currentCredit.costos }}</p>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <p class="text-slate-500 text-sm mb-2">Condiciones</p>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                        <p class="text-xs font-semibold text-slate-500">Póliza</p>
+                                        <p class="mt-1 font-extrabold text-slate-900">{{ currentCredit.poliza }}</p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                        <p class="text-xs font-semibold text-slate-500">Multa</p>
+                                        <p class="mt-1 font-extrabold text-slate-900">{{ currentCredit.multa }}</p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                        <p class="text-xs font-semibold text-slate-500">Aumento</p>
+                                        <p class="mt-1 font-extrabold text-slate-900">{{ currentCredit.aumento }}</p>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </section>
                             </div>
                         </template>
-                    </SegmentTabs>
+                        </SegmentTabs>
                 </div>
 
                 <!-- WhatsApp -->

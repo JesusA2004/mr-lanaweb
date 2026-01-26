@@ -1,171 +1,172 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3'
-import PublicLayout from '@/layouts/PublicLayout.vue'
-import MrBannerAppStore from '@/components/home/AppDownloadBanner.vue'
-import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
-import CtaSection from '@/components/vacancies/CtaSection.vue'
-import SegmentTabs, { type SegmentTabItem } from '@/components/ui/SegmentTabs.vue'
-import { branches } from '@/data/sucursales'
-import { ref, onMounted, computed } from 'vue'
-import Swal from 'sweetalert2'
-import 'sweetalert2/dist/sweetalert2.min.css'
+    import { Head } from '@inertiajs/vue3'
+    import PublicLayout from '@/layouts/PublicLayout.vue'
+    import MrBannerAppStore from '@/components/home/AppDownloadBanner.vue'
+    import BusinessLoanRequestModal from '@/components/forms/BusinessLoanRequestModal.vue'
+    import CtaSection from '@/components/vacancies/CtaSection.vue'
+    import SegmentTabs, { type SegmentTabItem } from '@/components/ui/SegmentTabs.vue'
+    import { branches } from '@/data/sucursales'
+    import { ref, onMounted, computed } from 'vue'
+    import Swal from 'sweetalert2'
+    import 'sweetalert2/dist/sweetalert2.min.css'
 
-function handleOpenVacancies() {
-  window.dispatchEvent(new CustomEvent('open-vacancies-global'))
-}
-
-// ======== helper Swal (rápido, enterprise, sin mamadas) ========
-function swalOk(text: string) {
-  return Swal.fire({
-    icon: 'success',
-    title: 'Enviado',
-    text,
-    confirmButtonText: 'OK',
-    heightAuto: false,
-  })
-}
-
-function swalErr(text: string) {
-  return Swal.fire({
-    icon: 'error',
-    title: 'Error',
-    text,
-    confirmButtonText: 'Entendido',
-    heightAuto: false,
-  })
-}
-
-function swalLoading(text = 'Enviando...') {
-  Swal.fire({
-    title: text,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: () => Swal.showLoading(),
-    heightAuto: false,
-  })
-}
-
-// Datos de los créditos
-const creditSpecs = {
-  crece12: {
-    titulo: 'Crédito Crece12',
-    esquema: 'Semanal',
-    plazo: '12 pagos (lunes a viernes)',
-    montoInicial: 'Sujeto a disponibilidad de pago',
-    montoMinimo: '$5,000.00',
-    montoMaximo: '$100,000.00',
-    poliza: '$100',
-    multa: '$12.50 por cada $1000',
-    aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
-    costos: 'No aplica',
-    cat: '1887.06%',
-    icon: '/img/icons/icon-credit-crece12.png',
-    alt: 'Crece12',
-  },
-  crece24: {
-    titulo: 'Crédito Crece24',
-    esquema: 'Semanal',
-    plazo: '24 pagos (lunes a viernes)',
-    montoInicial: 'Sujeto a disponibilidad de pago',
-    montoMinimo: '$10,000.00',
-    montoMaximo: '$100,000.00',
-    poliza: '$100',
-    multa: '$12.50 por cada $1000',
-    aumento: '$1,000.00 por cada ciclo de acuerdo a política de aumentos',
-    costos: 'No aplica',
-    cat: '1887.06%',
-    icon: '/img/icons/icon-credit-crece24.png',
-    alt: 'Crece24',
-  },
-} as const
-
-type CreditKey = keyof typeof creditSpecs
-
-const openModal = ref(false)
-
-function openBusinessModal() {
-  openModal.value = true
-}
-
-function closeBusinessModal() {
-  openModal.value = false
-  const url = new URL(window.location.href)
-  url.searchParams.delete('solicitar')
-  window.history.replaceState({}, '', url.toString())
-}
-
-const sending = ref(false)
-
-async function onSubmit(payload: any) {
-  if (sending.value) return
-
-  const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
-  sending.value = true
-
-  // Loading visible sí o sí
-  swalLoading('Enviando solicitud...')
-
-  try {
-    const res = await fetch('/formularios/enviar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN': csrf,
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (res.ok) {
-      closeBusinessModal()
-      Swal.close()
-      await swalOk('Listo: tu solicitud fue enviada. En breve te contactamos.')
-      return
+    function handleOpenVacancies() {
+    window.dispatchEvent(new CustomEvent('open-vacancies-global'))
     }
 
-    const err = await res.json().catch(() => ({}))
-    const msg =
-      err?.message ||
-      (err?.errors ? (Object.values(err.errors).flat() as any[]).join(' ') : '') ||
-      'No se pudo enviar. Intenta de nuevo.'
+    // ======== helper Swal (rápido, enterprise, sin mamadas) ========
+    function swalOk(text: string) {
+    return Swal.fire({
+        icon: 'success',
+        title: 'Enviado',
+        text,
+        confirmButtonText: 'OK',
+        heightAuto: false,
+    })
+    }
 
-    Swal.close()
-    await swalErr(msg)
-  } catch (e) {
-    Swal.close()
-    await swalErr('Sin conexión o servidor no disponible. Intenta en un momento.')
-  } finally {
-    sending.value = false
-  }
-}
+    function swalErr(text: string) {
+    return Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text,
+        confirmButtonText: 'Entendido',
+        heightAuto: false,
+    })
+    }
 
-onMounted(() => {
-    // Swal.fire({ icon: 'info', title: 'Swal OK', text: 'Ya está entrando', heightAuto: false })
-  const params = new URLSearchParams(window.location.search)
-  if (params.get('solicitar') === '1') openBusinessModal()
-})
+    function swalLoading(text = 'Enviando...') {
+    Swal.fire({
+        title: text,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => Swal.showLoading(),
+        heightAuto: false,
+    })
+    }
 
-function openWhatsApp() {
-  window.open('https://wa.me/5217774225973', '_blank')
-}
+    // Datos de los créditos
+    const creditSpecs = {
+        crece12: {
+            titulo: 'Crédito Crece 12',
+            esquema: 'Semanal',
+            plazo: '12 pagos',
+            montoInicial: 'Sujeto a capacidad de pago',
+            montoMinimo: '$5,000.00',
+            montoMaximo: '$100,000.00',
+            poliza: 'Monto < $10,000.00: $130.00 | Monto > $10,000.00: 1.3% del monto otorgado',
+            multa: '10% del monto del pago',
+            aumento: 'Hasta un 20% del monto de pago del ciclo a renovar',
+            costos: 'Comisión por apertura: 5% del monto de crédito. Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            cat: '1887.06%',
+            icon: '/img/icons/icon-credit-crece12.png',
+            alt: 'Crece 12',
+        },
 
-const activeCredit = ref<CreditKey>('crece12')
+        crece24: {
+            titulo: 'Crédito Crece 24',
+            esquema: 'Semanal',
+            plazo: '24 pagos',
+            montoInicial: 'Sujeto a capacidad de pago',
+            montoMinimo: '$10,000.00',
+            montoMaximo: '$100,000.00',
+            poliza: 'Monto < $10,000.00: $260.00 | Monto > $10,000.00: 2.6% del monto otorgado',
+            multa: '10% del monto del pago',
+            aumento: 'Hasta un 20% del monto de pago del ciclo a renovar',
+            costos: 'Comisión por apertura: 5% del monto de crédito. Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            cat: '1434.54%',
+            icon: '/img/icons/icon-credit-crece24.png',
+            alt: 'Crece 24',
+        },
+    } as const
 
-const creditTabs = computed<SegmentTabItem[]>(() => [
-  { key: 'crece12', label: 'Crece12', iconSrc: creditSpecs.crece12.icon, iconAlt: creditSpecs.crece12.alt },
-  { key: 'crece24', label: 'Crece24', iconSrc: creditSpecs.crece24.icon, iconAlt: creditSpecs.crece24.alt },
-])
+    type CreditKey = keyof typeof creditSpecs
 
-const currentCredit = computed(() => creditSpecs[activeCredit.value])
+    const openModal = ref(false)
 
-const steps = [
-  { title: '1. Documentación', desc: 'Entrega al gestor de crédito tus documentos', src: '/img/icons/icon-doc.png', alt: 'Documentos' },
-  { title: '2. Formato', desc: 'Firma los formatos de crédito Mr. lana.', src: '/img/icons/icon-pencil.png', alt: 'Formato' },
-  { title: '3. Acepta la propuesta', desc: 'Grabamos un pequeño video, donde se aprecia tu casa o negocio.', src: '/img/icons/icon-video.png', alt: 'Video' },
-  { title: '4. Evaluación', desc: 'En 15 minutos te notificamos si tu crédito ha sido autorizado.', src: '/img/icons/icon-time.png', alt: 'Evaluación' },
-  { title: '5. Desembolso', desc: 'Espera la transferencia a tu cuenta por desembolso y comienza a impulsar tus proyectos.', src: '/img/icons/icon-money.png', alt: 'Desembolso' },
-]
+    function openBusinessModal() {
+    openModal.value = true
+    }
+
+    function closeBusinessModal() {
+    openModal.value = false
+    const url = new URL(window.location.href)
+    url.searchParams.delete('solicitar')
+    window.history.replaceState({}, '', url.toString())
+    }
+
+    const sending = ref(false)
+
+    async function onSubmit(payload: any) {
+    if (sending.value) return
+
+    const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
+    sending.value = true
+
+    // Loading visible sí o sí
+    swalLoading('Enviando solicitud...')
+
+    try {
+        const res = await fetch('/formularios/enviar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrf,
+            Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
+        })
+
+        if (res.ok) {
+        closeBusinessModal()
+        Swal.close()
+        await swalOk('Listo: tu solicitud fue enviada. En breve te contactamos.')
+        return
+        }
+
+        const err = await res.json().catch(() => ({}))
+        const msg =
+        err?.message ||
+        (err?.errors ? (Object.values(err.errors).flat() as any[]).join(' ') : '') ||
+        'No se pudo enviar. Intenta de nuevo.'
+
+        Swal.close()
+        await swalErr(msg)
+    } catch (e) {
+        Swal.close()
+        await swalErr('Sin conexión o servidor no disponible. Intenta en un momento.')
+    } finally {
+        sending.value = false
+    }
+    }
+
+    onMounted(() => {
+        // Swal.fire({ icon: 'info', title: 'Swal OK', text: 'Ya está entrando', heightAuto: false })
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('solicitar') === '1') openBusinessModal()
+    })
+
+    function openWhatsApp() {
+    window.open('https://wa.me/5217774225973', '_blank')
+    }
+
+    const activeCredit = ref<CreditKey>('crece12')
+
+    const creditTabs = computed<SegmentTabItem[]>(() => [
+    { key: 'crece12', label: 'Crece12', iconSrc: creditSpecs.crece12.icon, iconAlt: creditSpecs.crece12.alt },
+    { key: 'crece24', label: 'Crece24', iconSrc: creditSpecs.crece24.icon, iconAlt: creditSpecs.crece24.alt },
+    ])
+
+    const currentCredit = computed(() => creditSpecs[activeCredit.value])
+
+    const steps = [
+    { title: '1. Documentación', desc: 'Entrega al gestor de crédito tus documentos', src: '/img/icons/icon-doc.png', alt: 'Documentos' },
+    { title: '2. Formato', desc: 'Firma los formatos de crédito Mr. lana.', src: '/img/icons/icon-pencil.png', alt: 'Formato' },
+    { title: '3. Acepta la propuesta', desc: 'Grabamos un pequeño video, donde se aprecia tu casa o negocio.', src: '/img/icons/icon-video.png', alt: 'Video' },
+    { title: '4. Evaluación', desc: 'En 15 minutos te notificamos si tu crédito ha sido autorizado.', src: '/img/icons/icon-time.png', alt: 'Evaluación' },
+    { title: '5. Desembolso', desc: 'Espera la transferencia a tu cuenta por desembolso y comienza a impulsar tus proyectos.', src: '/img/icons/icon-money.png', alt: 'Desembolso' },
+    ]
 </script>
 
 <template>
