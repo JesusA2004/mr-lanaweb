@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VacancyApplicationController;
+use App\Http\Controllers\PublicFormController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -41,6 +42,8 @@ Route::get('/credito-comadres', function () {
 })->name('creditoComadres');
 
 Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
-  ->name('vacancies.apply');
-
+    ->name('vacancies.apply');
+    
+Route::post('/formularios/enviar', [PublicFormController::class, 'store'])
+    ->name('public.forms.store');
 

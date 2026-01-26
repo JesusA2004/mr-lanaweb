@@ -61,9 +61,47 @@
         window.history.replaceState({}, '', url.toString())
     }
 
-    function onSubmit(payload: any) {
-        console.log('submit impulsat', payload)
-        closeBusinessModal()
+    const sending = ref(false)
+    const toast = ref<{ type: 'success' | 'error'; text: string } | null>(null)
+
+    function showToast(type: 'success' | 'error', text: string) {
+        toast.value = { type, text }
+        window.setTimeout(() => (toast.value = null), 3500)
+    }
+
+    async function onSubmit(payload: any) {
+        if (sending.value) return
+        const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
+        sending.value = true
+        toast.value = null
+        try {
+            const res = await fetch('/formularios/enviar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(payload),
+            })
+            if (res.ok) {
+            closeBusinessModal()
+            showToast('success', 'Listo: tu solicitud fue enviada. En breve te contactamos.')
+            return
+            }
+            // errores de validación 422 u otros
+            const err = await res.json().catch(() => ({}))
+            const msg =
+            err?.message ||
+            (err?.errors ? Object.values(err.errors).flat().join(' ') : '') ||
+            'No se pudo enviar. Intenta de nuevo.'
+            showToast('error', msg)
+        } catch (e) {
+            showToast('error', 'Sin conexión o servidor no disponible. Intenta en un momento.')
+        } finally {
+            sending.value = false
+        }
     }
 
     onMounted(() => {
@@ -100,7 +138,7 @@
     <PublicLayout>
         <!-- MODAL -->
         <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsat"
-        @close="closeBusinessModal" @submit="onSubmit"/>
+        :sending="sending" @close="closeBusinessModal" @submit="onSubmit"/>
 
         <!-- Banner Superior (sin recorte, mantiene color del botón) -->
         <div class="relative w-full overflow-hidden">

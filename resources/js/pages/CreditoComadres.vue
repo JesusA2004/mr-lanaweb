@@ -27,9 +27,25 @@
         window.history.replaceState({}, '', url.toString())
     }
 
-    function onSubmit(payload: any) {
-        console.log('submit credito-comadres', payload)
-        closeBusinessModal()
+    async function onSubmit(payload: any) {
+        const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
+        const res = await fetch('/formularios/enviar', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        if (res.ok) {
+            closeBusinessModal()
+            return
+        }
+        // opcional: ver error
+        const err = await res.json().catch(() => ({}))
+        console.error('Error formulario', res.status, err)
     }
 
     onMounted(() => {
