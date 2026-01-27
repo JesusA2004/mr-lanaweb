@@ -34,11 +34,8 @@
           </div>
     
           <div class="mt-6 flex flex-col sm:flex-row gap-3">
-            <a href="#" class="flex-1 rounded-2xl bg-[#1DC1A2] px-5 py-3 text-center text-sm font-semibold text-white hover:bg-[#106A59]">
+            <a href="https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share" class="flex-1 rounded-2xl bg-[#1DC1A2] px-5 py-3 text-center text-sm font-semibold text-white hover:bg-[#106A59]">
               Google Play
-            </a>
-            <a href="#" class="flex-1 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-center text-sm font-semibold text-slate-900 hover:bg-slate-50">
-              App Store
             </a>
           </div>
         </div>

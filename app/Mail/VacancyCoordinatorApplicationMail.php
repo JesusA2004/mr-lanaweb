@@ -7,25 +7,37 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class VacancyCoordinatorApplicationMail extends Mailable {
-
+    
     use Queueable, SerializesModels;
 
     public array $data;
-    public ?string $cvAbsolutePath;
+
+    public ?string $cvDisk;
+    public ?string $cvPath;
     public ?string $cvName;
 
-    public function __construct(array $data, ?string $cvAbsolutePath = null, ?string $cvName = null) {
-        $this->data = $data;
-        $this->cvAbsolutePath = $cvAbsolutePath;
+    public function __construct(array $data, ?string $cvDisk = null, ?string $cvPath = null, ?string $cvName = null) {
+        $this->data   = $data;
+        $this->cvDisk = $cvDisk;
+        $this->cvPath = $cvPath;
         $this->cvName = $cvName;
     }
 
     public function build() {
-        $mail = $this->subject('Postulación: Coordinadora - ' . ($this->data['nombre'] ?? ''))
-            ->view('emails.vacancies.coordinator');
-        if ($this->cvAbsolutePath && is_file($this->cvAbsolutePath)) {
-            $mail->attach($this->cvAbsolutePath, ['as' => $this->cvName ?: 'CV.pdf', 'mime' => 'application/pdf']);
+        $mail = $this->subject('Postulación: Coordinadora de Sucursal - ' . ($this->data['nombre'] ?? ''))
+            ->view('emails.vacancies.coordinator', [
+                'data' => $this->data,
+            ]);
+
+        if ($this->cvDisk && $this->cvPath) {
+            $mail->attachFromStorageDisk(
+                $this->cvDisk,
+                $this->cvPath,
+                $this->cvName ?: 'CV.pdf',
+                ['mime' => 'application/pdf']
+            );
         }
+
         return $mail;
     }
 

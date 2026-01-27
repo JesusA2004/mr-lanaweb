@@ -7,8 +7,8 @@
     }
 
     const props = withDefaults(defineProps<Props>(), {
-      appStoreUrl: '#',
-      playStoreUrl: '#',
+      appStoreUrl: 'https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share',
+      playStoreUrl: 'https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share',
       className: '',
     })
     </script>

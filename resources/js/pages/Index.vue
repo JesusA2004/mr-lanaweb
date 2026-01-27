@@ -38,7 +38,7 @@
         <div class="py-8 sm:py-10 md:py-12">
             <AppDownloadBanner
                 appStoreUrl="#"
-                playStoreUrl="#"
+                playStoreUrl="https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share"
             />
         </div>
 
