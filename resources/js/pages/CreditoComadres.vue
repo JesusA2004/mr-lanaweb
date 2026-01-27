@@ -81,27 +81,31 @@
 
     // Créditos
     const creditSpecs = {
-        crece24: {
+        comadres16: {
             titulo: 'Crédito Comadres 16',
             esquema: 'Semanal',
             plazo: '16 pagos (lunes a viernes)',
             montoInicial: '$5,000.00 hasta $8,000.00',
-            montoMinimo: '$10,000.00',
+            montoMinimo: '$5,000.00',
             montoMaximo: '$100,000.00',
             poliza: '1.6% del monto autorizado',
             multa: '5% del monto del pago',
             aumento: 'Hasta un 25% del monto de pago del ciclo a renovar',
-            costos: 'No aplica',
+            costos: [
+                'Comisión por administración del crédito: 1% del monto de crédito',
+                'Comisión por apertura o renovación de crédito: 1% del monto de crédito',
+                'Comisión por gastos de verificación: 1% del monto de crédito',
+            ],
             cat: '244.80% este sobre un monto promedio de $10,000.00 SIN IVA',
             icon: '/img/icons/icon-credit-crece24.png',
-            alt: 'Comadres 24',
+            alt: 'Comadres 16',
         },
     } as const
 
     type CreditKey = keyof typeof creditSpecs
-    const activeCredit = ref<CreditKey>('crece24')
+    const activeCredit = ref<CreditKey>('comadres16')
     const creditTabs = computed<SegmentTabItem[]>(() => [
-        { key: 'crece24', label: 'Comadres 24' },
+        { key: 'comadres16', label: 'Comadres' },
     ])
     const currentCredit = computed(() => creditSpecs[activeCredit.value])
 
@@ -306,7 +310,14 @@
 
                                 <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                     <p class="text-slate-500 text-sm">Costos</p>
-                                    <p class="font-extrabold text-slate-900">{{ currentCredit.costos }}</p>
+
+                                    <ul class="mt-2 space-y-1 text-slate-900">
+                                        <li v-for="(c, i) in currentCredit.costos" :key="i"
+                                        class="flex gap-2 text-sm sm:text-base font-semibold leading-snug">
+                                            <span class="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>
+                                            <span>{{ c }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
 
                                 <div class="sm:col-span-2">

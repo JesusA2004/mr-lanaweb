@@ -331,7 +331,8 @@
                         CONTAMOS CON DIFERENTES OPCIONES PARA TI
                     </h2>
                     <p class="text-lg md:text-xl text-gray-600">
-                        Conoce los créditos semanales para tu negocio, <b>fácil y rápido</b>
+                        <b>Impulsa tu Negocio</b> está dirigido a dueños de negocios establecidos que buscan capital para crecer.
+
                     </p>
                 </div>
 

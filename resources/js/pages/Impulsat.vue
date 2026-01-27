@@ -57,7 +57,10 @@
             poliza: 'Monto < $10,000.00: $130.00 | Monto > $10,000.00: 1.3% del monto otorgado',
             multa: '10% del monto del pago',
             aumento: 'Hasta un 20% del monto de pago del ciclo a renovar',
-            costos: 'Comisión por apertura: 5% del monto de crédito. Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            costos: [
+                'Comisión por apertura: 5% del monto de crédito.',
+                'Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            ],
             cat: '1887.06%',
             icon: '/img/icons/icon-credit-crece12.png',
             alt: 'Crece 12',
@@ -73,7 +76,10 @@
             poliza: 'Monto < $10,000.00: $260.00 | Monto > $10,000.00: 2.6% del monto otorgado',
             multa: '10% del monto del pago',
             aumento: 'Hasta un 20% del monto de pago del ciclo a renovar',
-            costos: 'Comisión por apertura: 5% del monto de crédito. Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            costos: [
+                'Comisión por apertura: 5% del monto de crédito.',
+                'Comisión por apertura por aumento: 5% sobre el aumento de crédito',
+            ],
             cat: '1434.54%',
             icon: '/img/icons/icon-credit-crece24.png',
             alt: 'Crece 24',
@@ -258,7 +264,7 @@
             <span class="block">PRODUCTO CRECE</span>
           </h2>
           <p class="text-xl text-gray-700">
-            Conoce el nuevo crédito semanal para cumplir tu sueños, <span class="font-bold">fácil y rápido</span>
+            <b>Impulsa.t</b> es ideal para empleados o trabajadores formales que necesitan un crédito semanal, fácil y rápido.
           </p>
         </div>
 
@@ -327,9 +333,16 @@
                       </div>
                     </div>
 
-                    <div class="sm:col-span-2 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                      <p class="text-slate-500 text-sm">Costos</p>
-                      <p class="font-semibold text-slate-900">{{ currentCredit.costos }}</p>
+                    <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                        <p class="text-slate-500 text-sm">Costos</p>
+
+                        <ul class="mt-2 space-y-1 text-slate-900">
+                            <li v-for="(c, i) in currentCredit.costos" :key="i"
+                             class="flex gap-2 text-sm sm:text-base font-semibold leading-snug">
+                            <span class="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>
+                            <span>{{ c }}</span>
+                            </li>
+                        </ul>
                     </div>
                   </div>
                 </div>
