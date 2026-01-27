@@ -24,7 +24,7 @@
 <template>
     <PublicLayout>
         <AppPromoModal />
-        <ProductsPromoModal />
+        <!-- <ProductsPromoModal /> -->
 
         <!-- HERO -->
         <HeroCarousel :slides="homeSlides" :autoplayMs="9000" :pauseAfterInteractMs="8000" />
