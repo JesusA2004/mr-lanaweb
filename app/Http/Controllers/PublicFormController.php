@@ -41,8 +41,18 @@ class PublicFormController extends Controller {
         }
         if ($data['context'] === 'credito_comadres') {
         }
-        Mail::to(config('mail.to.address'))->send(new PublicFormMail($data));
-        return response()->json(['ok' => true]);
+        $toAddress = config('mail.recipients.contact.address');
+        $toName    = config('mail.recipients.contact.name');
+
+        if (!filter_var($toAddress, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'message' => 'CONTACT_TO_ADDRESS inválido. Revisa .env',
+                'debug' => app()->isLocal() ? compact('toAddress','toName') : null,
+            ], 500);
+        }
+
+        Mail::to([$toAddress => $toName])->send(new PublicFormMail($data));
+
     }
 
 }

@@ -114,9 +114,17 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
-    'to' => [
-        'address' => env('MAIL_TO_ADDRESS', 'mrlanaweb@outlook.com'),
-        'name' => env('MAIL_TO_NAME', 'Atención a Clientes'),
+    'to' => null,
+
+    'recipients' => [
+        'contact' => [
+            'address' => env('CONTACT_TO_ADDRESS'),
+            'name' => env('CONTACT_TO_NAME'),
+        ],
+        'vacancies' => [
+            'address' => env('VACANCIES_TO_ADDRESS'),
+            'name' => env('VACANCIES_TO_NAME'),
+        ],
     ],
 
 ];

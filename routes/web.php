@@ -45,9 +45,6 @@ Route::get('/credito-comadres', function () {
     return Inertia::render('CreditoComadres');
 })->name('creditoComadres');
 
-Route::post('/vacantes/postular', [VacancyApplicationController::class, 'store'])
-    ->name('vacancies.apply');
-
 Route::post('/formularios/enviar', [PublicFormController::class, 'store'])
     ->name('public.forms.store');
 
