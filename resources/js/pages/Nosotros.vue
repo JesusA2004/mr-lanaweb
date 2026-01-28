@@ -6,29 +6,29 @@
     const title = '¿Quiénes somos?'
     // ====== RUTAS (ya con tus nombres reales) ======
     const IMG = {
-    // textos como imagen
-    quienesSomosTxt: '/img/nosotros/quienesSomos.png',
-    principiosTxt: '/img/nosotros/principios.png',
-    // logo
-    logo: '/img/nosotros/logo-mr-lana.png',
-    // bordes/ondas
-    bordeArriba: '/img/nosotros/bordeArriba.png',
-    bordeAbajo: '/img/nosotros/bordeAbajo.png',
-    // círculos: con texto / sin texto
-    innovacionCon: '/img/nosotros/innovacionConTexto.png',
-    innovacionSin: '/img/nosotros/innovacionSinTexto.png',
-    diligenciaCon: '/img/nosotros/diligenciaConTexto.png',
-    diligenciaSin: '/img/nosotros/diligenciaSinTexto.png',
-    integridadCon: '/img/nosotros/integridadConTexto.png',
-    integridadSin: '/img/nosotros/integridadSinTexto.png',
-    trabajoCon: '/img/nosotros/trabajoConTexto.png',
-    trabajoSin: '/img/nosotros/trabajoSinTexto.png',
-    // ovejas
-    ovejaPrimera: '/img/nosotros/ovejaPrimera.png',
-    ovejaSegunda: '/img/nosotros/ovejaSegunda.png',
-    // misión / visión (texto en imagen)
-    mision: '/img/nosotros/mision.png',
-    vision: '/img/nosotros/vision.png',
+        // textos como imagen
+        quienesSomosTxt: '/img/nosotros/quienesSomos.png',
+        principiosTxt: '/img/nosotros/principios.png',
+        // logo
+        logo: '/img/nosotros/logo-mr-lana.png',
+        // bordes/ondas
+        bordeArriba: '/img/nosotros/bordeArriba.png',
+        bordeAbajo: '/img/nosotros/bordeAbajo.png',
+        // círculos: con texto / sin texto
+        innovacionCon: '/img/nosotros/innovacionConTexto.png',
+        innovacionSin: '/img/nosotros/innovacionSinTexto.png',
+        diligenciaCon: '/img/nosotros/diligenciaConTexto.png',
+        diligenciaSin: '/img/nosotros/diligenciaSinTexto.png',
+        integridadCon: '/img/nosotros/integridadConTexto.png',
+        integridadSin: '/img/nosotros/integridadSinTexto.png',
+        trabajoCon: '/img/nosotros/trabajoConTexto.png',
+        trabajoSin: '/img/nosotros/trabajoSinTexto.png',
+        // ovejas
+        ovejaPrimera: '/img/nosotros/ovejaPrimera.png',
+        ovejaSegunda: '/img/nosotros/ovejaSegunda.png',
+        // misión / visión (texto en imagen)
+        mision: '/img/nosotros/mision.png',
+        vision: '/img/nosotros/vision.png',
     } as const
 </script>
 

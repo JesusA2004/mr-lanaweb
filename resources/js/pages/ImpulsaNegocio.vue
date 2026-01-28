@@ -28,7 +28,7 @@
     const sending = ref(false)
 
     function openBusinessModal() {
-     openModal.value = true
+        openModal.value = true
     }
 
     function closeBusinessModal() {
@@ -222,16 +222,9 @@
 <template>
     <Head title="Impulsa tu negocio" />
     <PublicLayout>
-
         <!-- MODAL -->
-        <BusinessLoanRequestModal
-            :open="openModal"
-            :branches="branches"
-            context="impulsa_negocio"
-            :sending="sending"
-            @close="closeBusinessModal"
-            @submit="onSubmit"
-        />
+        <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio"
+        :sending="sending" @close="closeBusinessModal" @submit="onSubmit"/>
 
         <!-- Banner Superior -->
         <div class="relative w-full overflow-hidden">
@@ -250,18 +243,18 @@
             <!-- CTA -->
             <div class="absolute inset-0 z-10 flex items-end justify-end">
                 <div class="w-full px-4 pb-5 sm:pb-6 md:pb-7">
-                <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
-                    <button type="button" @click="openBusinessModal"
-                    class="inline-flex items-center justify-center
-                    rounded-full bg-black/70 px-6
-                    sm:w-[180px] md:w-[230px] lg:w-[300px] xl:w-[340px]
-                    2xl:w-[400px] py-2 sm:py-2 md:py-5 lg:py-6 xl:py-7 2xl:py-8
-                    text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold text-white
-                    shadow-lg ring-1 ring-white/15 transition
-                    hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
-                    Solicitar ahora
-                    </button>
-                </div>
+                    <div class="mx-auto max-w-[760px] text-center pointer-events-auto">
+                        <button type="button" @click="openBusinessModal"
+                        class="inline-flex items-center justify-center
+                        rounded-full bg-black/70 px-6
+                        sm:w-[180px] md:w-[230px] lg:w-[300px] xl:w-[340px]
+                        2xl:w-[400px] py-2 sm:py-2 md:py-5 lg:py-6 xl:py-7 2xl:py-8
+                        text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold text-white
+                        shadow-lg ring-1 ring-white/15 transition
+                        hover:bg-black/80 hover:scale-[1.01] active:scale-[0.99]">
+                            Solicitar ahora
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -308,7 +301,6 @@
                                 <h3 class="text-base sm:text-lg font-extrabold text-black leading-snug">
                                     {{ s.stepTitle }}
                                 </h3>
-
                                 <p class="mt-2 text-sm sm:text-base text-black leading-relaxed">
                                     {{ s.stepSubtitle }}
                                 </p>
@@ -332,7 +324,6 @@
                     </h2>
                     <p class="text-lg md:text-xl text-gray-600">
                         <b>Impulsa tu Negocio</b> está dirigido a dueños de negocios establecidos que buscan capital para crecer.
-
                     </p>
                 </div>
 
@@ -359,32 +350,26 @@
                                             <p class="text-slate-500 text-sm">Esquema</p>
                                             <p class="font-bold text-slate-900">{{ creditView.esquema }}</p>
                                         </div>
-
                                         <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                             <p class="text-slate-500 text-sm">Plazo</p>
                                             <p class="font-bold text-slate-900">{{ creditView.plazo }}</p>
                                         </div>
-
                                         <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                             <p class="text-slate-500 text-sm">Monto inicial</p>
                                             <p class="font-bold text-slate-900">{{ creditView.montoInicial }}</p>
                                         </div>
-
                                         <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                             <p class="text-slate-500 text-sm">Monto mínimo</p>
                                             <p class="font-bold text-slate-900">{{ creditView.montoMinimo }}</p>
                                         </div>
-
                                         <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                             <p class="text-slate-500 text-sm">Monto máximo</p>
                                             <p class="font-bold text-slate-900">{{ creditView.montoMaximo }}</p>
                                         </div>
-
                                         <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                                             <p class="text-slate-500 text-sm">CAT</p>
                                             <p class="font-bold text-slate-900">{{ creditView.cat }}</p>
                                         </div>
-
                                         <div class="sm:col-span-2">
                                             <p class="text-slate-500 text-sm mb-2">Condiciones</p>
                                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -419,7 +404,6 @@
                     <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6">
                         ¿Ya sabes cuál te conviene?
                     </h3>
-
                     <button type="button" @click="openWhatsApp"
                     class="inline-flex items-center justify-center px-7 py-4 sm:px-8
                     sm:py-4 bg-gradient-to-r from-green-400 to-blue-500

@@ -9,9 +9,7 @@
     import { homeSlides } from '@/data/homeSlides'
     import { homeBanners } from '@/data/homeBanners'
 
-    /**
-     * Scroll suave a anclas desde PromoBanners
-     */
+    // Scroll suave a anclas desde PromoBanners
     function onBannerCta(href?: string) {
         if (!href) return
         if (!href.startsWith('#')) return
@@ -38,9 +36,7 @@
         <div class="py-8 sm:py-10 md:py-12">
             <AppDownloadBanner
                 appStoreUrl="#"
-                playStoreUrl="https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share"
-            />
+                playStoreUrl="https://play.google.com/store/apps/details?id=io.mr.lana&pcampaignid=web_share"/>
         </div>
-
     </PublicLayout>
 </template>
