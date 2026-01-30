@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
+const SWAL_KEY = '__active_swal__'
 
 export function swalOk(text: string) {
     return Swal.fire({
@@ -41,11 +42,23 @@ export function swalNotify(
     title: string,
     text?: string
 ) {
+    //  guardamos el estado
+    sessionStorage.setItem(
+        SWAL_KEY,
+        JSON.stringify({ variant, title, text })
+    )
+
     return Swal.fire({
         icon: variant,
         title,
         text: text || '',
         confirmButtonText: 'OK',
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
         heightAuto: false,
+    }).then(() => {
+        // SOLO se borra cuando el usuario cierra
+        sessionStorage.removeItem(SWAL_KEY)
     })
 }

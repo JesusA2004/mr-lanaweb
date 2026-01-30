@@ -1,9 +1,12 @@
 <script setup lang="ts">
     import { ref, onMounted, onUnmounted } from 'vue'
+    import Swal from 'sweetalert2'
     import Navbar from '@/components/navigation/Navbar.vue'
     import Footer from '@/components/navigation/Footer.vue'
     import VacanciesHub from '@/components/vacancies/VacanciesHub.vue'
     import WhaticketWidget from '@/components/integrations/WhaticketWidget.vue'
+
+    const SWAL_KEY = '__active_swal__'
 
     defineProps<{ title?: string }>()
 
@@ -34,6 +37,24 @@
     onMounted(() => {
         ensureSwalOnTop()
         window.addEventListener('open-vacancies-global', handleGlobalOpenVacancies)
+
+        const raw = sessionStorage.getItem(SWAL_KEY)
+        if (!raw) return
+
+        const data = JSON.parse(raw)
+
+        Swal.fire({
+            icon: data.variant,
+            title: data.title,
+            text: data.text || '',
+            confirmButtonText: 'OK',
+            showCloseButton: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            heightAuto: false,
+        }).then(() => {
+            sessionStorage.removeItem(SWAL_KEY)
+        })
     })
 
     onUnmounted(() => {
