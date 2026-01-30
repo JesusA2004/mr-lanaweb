@@ -27,6 +27,7 @@ export const branches: Branch[] = [
     state: 'Morelos',
     address: 'Privada Reforma #751-D, Col. Tlaltenango, Cuernavaca, Morelos, C.P. 62170',
     phones: ['777 900 8852'],
+    mapUrl: '',
   },
   {
     id: 'miacatlan',
@@ -36,6 +37,7 @@ export const branches: Branch[] = [
     state: 'Morelos',
     address: 'Av. Morelos S/N, Col. Centro, Miacatlán, Morelos, C.P. 62600',
     phones: ['737 688 1772'],
+    mapUrl: '',
   },
   {
     id: 'tenango',
@@ -45,6 +47,7 @@ export const branches: Branch[] = [
     state: 'Estado de México',
     address: 'Benito Juárez #203, Col. Cruz Verde, Tenango del Valle, C.P. 52300',
     phones: ['559 054 9617'],
+    mapUrl: '',
   },
   {
     id: 'atlixco',
@@ -54,6 +57,7 @@ export const branches: Branch[] = [
     state: 'Puebla',
     address: 'Blvd. Niños Héroes #908-B, Col. Revolución, Atlixco, Puebla, C.P. 74270',
     phones: ['222 944 6532'],
+    mapUrl: '',
   },
   {
     id: 'ixtlahuaca',
@@ -63,6 +67,7 @@ export const branches: Branch[] = [
     state: 'Estado de México',
     address: 'Av. Gustavo Baz Prada #406, Ixtlahuaca, Estado de México, C.P. 50740',
     phones: ['712 688 1615'],
+    mapUrl: 'https://maps.app.goo.gl/H35SoKkWDMLuUM4V7',
   },
 
   {
@@ -73,6 +78,7 @@ export const branches: Branch[] = [
     state: 'Veracruz',
     address: 'Av. 11 #1305 local 20, Col. Centro, Córdoba, Veracruz, C.P. 94500',
     phones: ['271 344 2933'],
+    mapUrl: '',
   },
   {
     id: 'orizaba',
@@ -82,6 +88,7 @@ export const branches: Branch[] = [
     state: 'Veracruz',
     address: 'Oriente 6, #851, Int. 10 y 11, Esq. Sur 17, Col. Centro, Orizaba, Veracruz, C.P. 94300',
     phones: ['272 341 4129'],
+    mapUrl: 'https://maps.app.goo.gl/KBUX777EuuYXca39A',
   },
   {
     id: 'huamantla',
@@ -91,6 +98,7 @@ export const branches: Branch[] = [
     state: 'Tlaxcala',
     address: 'Calle Morelos Oriente #311, local 15, Col. Centro, Huamantla, Tlaxcala, C.P. 90500',
     phones: ['712 688 1615'],
+    mapUrl: '',
   },
   {
     id: 'tlaxcala',
@@ -100,6 +108,7 @@ export const branches: Branch[] = [
     state: 'Tlaxcala',
     address: 'Carr. Ocotlán–Chiautempan #134, Col. La Joya Centro, Tlaxcala, C.P. 90114',
     phones: ['246 312 8179'],
+    mapUrl: 'https://maps.app.goo.gl/7FNaoDgFCxaEZWbd6',
   },
 
   {
@@ -110,6 +119,7 @@ export const branches: Branch[] = [
     state: 'Estado de México',
     address: 'Juan N. Reséndiz 5, Col. Centro, Atlacomulco, Edo. Méx., C.P. 50450',
     phones: ['712 597 5776', '712 688 2923'],
+    mapUrl: 'https://maps.app.goo.gl/mvaNFDTLjrAkeesn9?g_st=aw',
   },
 
   {
@@ -120,6 +130,7 @@ export const branches: Branch[] = [
     state: 'Querétaro',
     address: 'Calle Corregidora #68, Col. Centro, San Juan del Río, Querétaro.',
     phones: ['427 366 8764'],
+    mapUrl: 'https://maps.app.goo.gl/FdeVMbmeAR4xzYvB7?g_st=aw',
   },
   {
     id: 'san-luis-potosi',
@@ -129,6 +140,7 @@ export const branches: Branch[] = [
     state: 'San Luis Potosí',
     address: 'Plaza Coronel, Prolongación Coronel Romero #110, Col. Alamitos, San Luis Potosí, C.P. 78280',
     phones: ['444 459 7378'],
+    mapUrl: 'https://maps.app.goo.gl/39VFxX9GunjMXVc48',
   },
   {
     id: 'tula',
@@ -138,5 +150,6 @@ export const branches: Branch[] = [
     state: 'Hidalgo',
     address: 'Boulevard Tula Iturbe #100, Col. Villas del Salitre, Tula de Allende, Hidalgo.',
     phones: ['773 732 2376'],
+    mapUrl: 'https://maps.app.goo.gl/QbUPbTrijP26TS14A?g_st=aw',
   },
 ]

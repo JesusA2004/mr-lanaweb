@@ -72,10 +72,15 @@ export function useVacancyCreditSeller(endpoint: string) {
 
   function onTelefonoInput(e: Event) {
     const el = e.target as HTMLInputElement
-    form.telefono = normalizeTelefono(el.value)
+    const clean = normalizeTelefono(el.value)
+
+    // CLAVE: reescribe el input para que nunca se vean letras
+    if (el.value !== clean) el.value = clean
+
+    form.telefono = clean
     clearAlerts()
     clearFieldError('telefono')
-  }
+    }
 
   function onCvChange(file: File | null) {
     clearAlerts()

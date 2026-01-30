@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class VacancyApplicationController extends Controller
-{
-    public function submitCoordinator(Request $request)
-    {
+class VacancyApplicationController extends Controller {
+
+    // Metodo para enviar postulación a Coordinadora
+    public function submitCoordinator(Request $request) {
         $validated = array_merge(
             $this->validateBaseCommon($request),
             $request->validate([
@@ -35,7 +35,6 @@ class VacancyApplicationController extends Controller
                 'cv.max'                         => 'El CV no debe exceder 5MB.',
             ])
         );
-
         return $this->sendWithCv(
             $request,
             $validated,
@@ -43,8 +42,8 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    public function submitManager(Request $request)
-    {
+    // Metodo para enviar postulación a Gerente
+    public function submitManager(Request $request) {
         $validated = array_merge(
             $this->validateBaseManagerLike($request),
             $request->validate([
@@ -66,7 +65,6 @@ class VacancyApplicationController extends Controller
                 'cv.max'                  => 'El CV no debe exceder 5MB.',
             ])
         );
-
         return $this->sendWithCv(
             $request,
             $validated,
@@ -74,8 +72,8 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    public function submitSubManager(Request $request)
-    {
+    // Metodo para enviar postulación a Subgerente
+    public function submitSubManager(Request $request) {
         $validated = array_merge(
             $this->validateBaseManagerLike($request),
             $request->validate([
@@ -88,7 +86,6 @@ class VacancyApplicationController extends Controller
                 'cv'             => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
             ])
         );
-
         return $this->sendWithCv(
             $request,
             $validated,
@@ -96,7 +93,9 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    public function submitCreditSeller(Request $request) {
+    // Metodo para enviar postulación a Vendedor de Crédito
+    public function submitCreditSeller(Request $request)
+    {
         $validated = array_merge(
             $this->validateBaseCreditSeller($request),
             $request->validate([
@@ -114,7 +113,7 @@ class VacancyApplicationController extends Controller
             ])
         );
 
-        // Gate server-side (por si alguien hackea el front):
+        // Filtro (como ya lo traías)
         if (($validated['p1_ventas_cambaceo'] ?? null) === 'no') {
             return response()->json([
                 'ok' => false,
@@ -131,31 +130,30 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    /**
-     * Base SOLO para Vendedor (sin experiencia_anios ni liderazgo)
-     */
-    private function validateBaseCreditSeller(Request $request): array {
+    // Base SOLO para Vendedor (sin experiencia_anios ni liderazgo)
+    private function validateBaseCreditSeller(Request $request): array
+    {
         return $request->validate(
             [
-                'nombre' => ['required', 'string', 'max:160'],
+                'nombre'           => ['required', 'string', 'max:160'],
                 'fecha_nacimiento' => ['required', 'date'],
-                'telefono' => ['required', 'regex:/^\d{10}$/'],
-                'correo' => ['required', 'email', 'max:160'],
-                'sucursal' => ['required', 'string', 'max:120'],
-                'escolaridad' => ['required', 'string', 'max:160'],
-                'office' => ['required', 'string', 'max:160'],
-                'cv' => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
+                'telefono'         => ['required', 'regex:/^\d{10}$/'],
+                'correo'           => ['required', 'email', 'max:160'],
+                'sucursal'         => ['required', 'string', 'max:120'],
+                'escolaridad'      => ['required', 'string', 'max:160'],
+                'office'           => ['required', 'string', 'max:160'],
+                'cv'               => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
             ],
             [
                 'telefono.regex' => 'El teléfono debe tener 10 dígitos.',
-                'cv.mimes' => 'El CV debe ser un PDF.',
-                'cv.max' => 'El CV no debe exceder 5MB.',
+                'cv.mimes'       => 'El CV debe ser un PDF.',
+                'cv.max'         => 'El CV no debe exceder 5MB.',
             ]
         );
     }
 
-    private function validateBaseCommon(Request $request): array
-    {
+    // Base común para todas las vacantes
+    private function validateBaseCommon(Request $request): array {
         return $request->validate(
             [
                 'nombre'          => ['required', 'string', 'max:160'],
@@ -172,9 +170,8 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    // Base para Gerente/Subgerente (lo que Coordinadora NO trae)
-    private function validateBaseManagerLike(Request $request): array
-    {
+    // Base para Gerente/Subgerente
+    private function validateBaseManagerLike(Request $request): array {
         return $request->validate(
             [
                 // common
@@ -196,11 +193,10 @@ class VacancyApplicationController extends Controller
         );
     }
 
-    private function vacanciesRecipient(): array
-    {
+    // Obtener destinatario de vacantes desde configuración
+    private function vacanciesRecipient(): array {
         $address = config('mail.recipients.vacancies.address') ?: config('mail.from.address');
         $name    = config('mail.recipients.vacancies.name') ?: config('mail.from.name');
-
         if (!$address || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
             abort(response()->json([
                 'ok' => false,
@@ -208,27 +204,35 @@ class VacancyApplicationController extends Controller
                 'debug' => app()->isLocal() ? compact('address', 'name') : null,
             ], 500));
         }
-
         return [$address, $name];
     }
 
-    private function sendWithCv(Request $request, array $validated, \Closure $mailableFactory)
-    {
+    // Envío de correo con CV adjunto (si aplica) y limpieza de archivo temporal
+    private function sendWithCv(Request $request, array $validated, \Closure $mailableFactory) {
         [$toAddress, $toName] = $this->vacanciesRecipient();
         $disk = 'local';
         $tempPath = null;
         $attachName = null;
+        $hasCv = false;
 
         try {
             if ($request->hasFile('cv')) {
                 $file = $request->file('cv');
-
                 $folder = 'tmp/cv/' . now()->format('Ymd') . '/' . Str::uuid()->toString();
+
                 $attachName = 'CV_' . Str::slug($validated['nombre']) . '_' . now()->format('His') . '.pdf';
                 $tempPath = $file->storeAs($folder, $attachName, $disk);
+
+                $hasCv = true;
             }
 
+            // 🔥 AGREGA ESTO (contrato explícito con el Blade)
+            $validated['has_cv']  = $hasCv;
+            $validated['cv_name'] = $attachName;
+            $validated['cv_path'] = $tempPath;
+
             $mailable = $mailableFactory($validated, $disk, $tempPath, $attachName);
+
             Mail::to($toAddress, $toName)->send($mailable);
 
             return response()->json([
@@ -239,22 +243,16 @@ class VacancyApplicationController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'ok' => false,
-                'message' => 'No se pudo enviar tu postulación en este momento. Intenta nuevamente.',
+                'message' => 'No se pudo enviar tu postulación en este momento.',
                 'debug' => app()->isLocal() ? $e->getMessage() : null,
             ], 500);
 
         } finally {
             if ($tempPath && Storage::disk($disk)->exists($tempPath)) {
                 Storage::disk($disk)->delete($tempPath);
-
-                $dir = dirname($tempPath);
-                if (
-                    count(Storage::disk($disk)->files($dir)) === 0 &&
-                    count(Storage::disk($disk)->directories($dir)) === 0
-                ) {
-                    Storage::disk($disk)->deleteDirectory($dir);
-                }
+                Storage::disk($disk)->deleteDirectory(dirname($tempPath));
             }
         }
     }
+
 }

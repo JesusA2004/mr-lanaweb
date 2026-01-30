@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Postulación: Vendedor de Crédito</title>
 </head>
 
-<body style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+<body style="margin:0;padding:0;background:#eef7f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,Helvetica,sans-serif;color:#0f172a;">
 @php
   $val = function(string $k, string $d='') use ($data) {
     return trim((string) data_get($data ?? [], $k, $d));
@@ -22,77 +24,386 @@
     return $s ?: '—';
   };
 
+  // Prioridad crédito: colocar_muchos | colocar_bien_cobrar | solo_vender
+  $prioridad = strtolower($val('p5_prioridad_credito'));
+  $prioridadTxt = match ($prioridad) {
+    'colocar_muchos'       => 'Colocar muchos créditos',
+    'colocar_bien_cobrar'  => 'Colocar bien y cobrar correctamente',
+    'solo_vender'          => 'Solo vender',
+    default                => '—',
+  };
+
+  // ===== Preguntas (IGUALES a tu formulario / controller) =====
   $qa = [
-    ['q' => '¿Experiencia en ventas?', 'a' => $yn('p_experiencia_ventas')],
-    ['q' => '¿Ha manejado cartera / cobranza?', 'a' => $yn('p_cobranza')],
-    ['q' => 'Meta mensual aproximada', 'a' => ($val('meta_mensual') ?: '—')],
+    ['q' => '¿Cuentas con experiencia REAL en ventas de campo o cambaceo? (No ventas en mostrador)', 'a' => $yn('p1_ventas_cambaceo')],
+    ['q' => '¿Has realizado cobranza en campo y negociación con clientes en atraso?', 'a' => $yn('p2_cobranza_campo')],
+    ['q' => '¿Sabes manejar motocicleta estándar y tienes licencia vigente?', 'a' => $yn('p3_moto_licencia')],
+    ['q' => 'Este puesto es 100% en calle (prospectar, cobrar y visitar clientes). ¿Estás dispuesto(a) a trabajar así todos los días?', 'a' => $yn('p4_trabajo_100_calle')],
+    ['q' => '¿Qué es más importante para ti al otorgar un crédito?', 'a' => $prioridadTxt],
   ];
+
+  $ts = now();
+
+  // Campos base (Vendedor de Crédito)
+  $nombre      = $val('nombre','—') ?: '—';
+  $fechaNac    = $fmtDate($val('fecha_nacimiento'));
+  $telefono    = $val('telefono');
+  $correo      = $val('correo');
+  $sucursal    = $val('sucursal') ?: '—';
+  $escolaridad = $val('escolaridad') ?: '—';
+  $office      = $val('office') ?: '—';
+
+  // Detectar si hay PDF (contrato con el controller)
+  $cvName    = $val('cv_name');
+  $cvPath    = $val('cv_path') ?: $val('cvPath');
+  $hasCvFlag = strtolower($val('has_cv')) === '1'
+            || strtolower($val('has_cv')) === 'true'
+            || strtolower($val('cv_attached')) === '1'
+            || strtolower($val('cv_attached')) === 'true';
+  $hasCv     = (bool) ($cvName || $cvPath || $hasCvFlag);
+
+  // UI pill
+  $pill = function(string $text, string $bg, string $bd, string $fg) {
+    return '<span style="display:inline-block;background:'.$bg.';border:1px solid '.$bd.';color:'.$fg.';border-radius:999px;padding:8px 12px;font-size:13px;font-weight:900;line-height:1;">'.$text.'</span>';
+  };
 @endphp
 
-  <div style="max-width:720px;margin:0 auto;padding:24px;">
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
+  <!-- Preheader -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+    Se recibió una postulación para Vendedor de Crédito. Datos, cuestionario y CV (si aplica).
+  </div>
 
-      <div style="padding:18px 20px;background:#0b67a3;color:#fff;">
-        <div style="font-size:14px;opacity:.92;">Mr Lana · Reclutamiento</div>
-        <div style="font-size:20px;font-weight:800;margin-top:4px;line-height:1.2;">
-          Postulación: Vendedor de Crédito
-        </div>
-        <div style="font-size:12px;opacity:.9;margin-top:6px;">
-          Registro recibido: {{ now()->format('Y-m-d H:i:s') }}
-        </div>
-      </div>
+  <!-- Wrapper -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#eef7f7;margin:0;padding:0;">
+    <tr>
+      <td align="center" style="padding:20px 12px;">
 
-      <div style="padding:20px;">
-        <h3 style="margin:0 0 10px 0;font-size:16px;">Datos del candidato</h3>
+        <!-- Container -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;width:100%;">
 
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tr><td style="padding:8px 0;color:#6b7280;width:220px;">Nombre</td><td style="padding:8px 0;font-weight:700;">{{ e($val('nombre','—')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Fecha de nacimiento</td><td style="padding:8px 0;">{{ e($fmtDate($val('fecha_nacimiento'))) }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Teléfono</td><td style="padding:8px 0;">{{ e($val('telefono')) ?: '—' }}</td></tr>
+          <!-- Top bar -->
           <tr>
-            <td style="padding:8px 0;color:#6b7280;">Correo</td>
-            <td style="padding:8px 0;">
-              @php($correo = $val('correo'))
-              @if($correo)
-                <a href="mailto:{{ e($correo) }}" style="color:#0b67a3;text-decoration:none;font-weight:700;">{{ e($correo) }}</a>
-              @else
-                —
-              @endif
+            <td style="padding:0 2px 12px 2px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td align="left" style="font-size:12px;color:#0f766e;">
+                    <span style="display:inline-block;background:#d8f3f1;border:1px solid #b8ece7;border-radius:999px;padding:7px 12px;font-weight:900;color:#0f766e;">
+                      Mr Lana · Reclutamiento
+                    </span>
+                  </td>
+                  <td align="right" style="font-size:12px;color:#64748b;">
+                    <span style="display:inline-block;background:#ffffff;border:1px solid #e5e7eb;border-radius:999px;padding:7px 12px;font-weight:800;color:#0f172a;">
+                      {{ $ts->format('Y-m-d H:i') }}
+                    </span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Sucursal</td><td style="padding:8px 0;">{{ e($val('sucursal')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Escolaridad</td><td style="padding:8px 0;">{{ e($val('escolaridad')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Paquetería Office</td><td style="padding:8px 0;">{{ e($val('office')) ?: '—' }}</td></tr>
+
+          <!-- Main card -->
+          <tr>
+            <td>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                     style="background:#ffffff;border-radius:30px;overflow:hidden;border:1px solid #e6f6f5;box-shadow:0 18px 60px rgba(15,23,42,.10);">
+
+                <!-- Header -->
+                <tr>
+                  <td style="padding:0;background:#062a2a;">
+                    <div style="height:7px;background:linear-gradient(90deg,#2dd4bf,#60a5fa,#34d399,#a78bfa);"></div>
+
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding:18px 18px 14px 18px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                              <td style="vertical-align:top;">
+                                <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.78);font-weight:900;">
+                                  Nueva postulación
+                                </div>
+                                <div style="margin-top:6px;font-size:26px;line-height:1.15;font-weight:1000;color:#ffffff;">
+                                  Vendedor de Crédito
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+
+                          <div style="height:12px;line-height:12px;">&nbsp;</div>
+
+                          <!-- Chips -->
+                          <div>
+                            <span style="display:inline-block;margin:0 8px 8px 0;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 12px;font-size:12px;color:#ffffff;font-weight:900;">
+                              Canal: Sitio web
+                            </span>
+                            <span style="display:inline-block;margin:0 8px 8px 0;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 12px;font-size:12px;color:#ffffff;font-weight:900;">
+                              Recibida: {{ $ts->format('d/m/Y H:i') }}
+                            </span>
+                            @if($hasCv)
+                              <span style="display:inline-block;margin:0 8px 8px 0;background:rgba(16,185,129,.18);border:1px solid rgba(16,185,129,.35);border-radius:999px;padding:8px 12px;font-size:12px;color:#ecfdf5;font-weight:1000;">
+                                CV: Adjuntado (PDF)
+                              </span>
+                            @else
+                              <span style="display:inline-block;margin:0 8px 8px 0;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:8px 12px;font-size:12px;color:#fff7ed;font-weight:1000;">
+                                CV: No adjuntó
+                              </span>
+                            @endif
+                          </div>
+                        </td>
+                      </tr>
+
+                      <!-- Candidate spotlight -->
+                      <tr>
+                        <td style="padding:0 18px 18px 18px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                 style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:26px;">
+                            <tr>
+                              <td style="padding:14px 14px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                  <tr>
+                                    <td style="vertical-align:middle;">
+                                      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                          <td style="width:54px;height:54px;border-radius:999px;background:rgba(45,212,191,.22);border:1px solid rgba(45,212,191,.38);text-align:center;vertical-align:middle;">
+                                            <span style="display:inline-block;font-size:20px;line-height:54px;color:#eafffd;font-weight:1000;">ML</span>
+                                          </td>
+                                          <td style="padding-left:12px;">
+                                            <div style="font-size:14px;color:rgba(255,255,255,.78);font-weight:900;letter-spacing:.06em;text-transform:uppercase;">
+                                              Nombre
+                                            </div>
+                                            <div style="margin-top:2px;font-size:20px;line-height:1.2;font-weight:1000;color:#ffffff;">
+                                              {{ e($nombre) }}
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+
+                                    <td align="right" style="vertical-align:middle;padding-left:10px;">
+                                      <div style="text-align:right;">
+                                        <div style="font-size:12px;color:rgba(255,255,255,.70);font-weight:900;letter-spacing:.06em;text-transform:uppercase;">Teléfono</div>
+                                        <div style="margin-top:2px;font-size:16px;color:#ffffff;font-weight:1000;">{{ e($telefono) ?: '—' }}</div>
+
+                                        <div style="height:8px;line-height:8px;">&nbsp;</div>
+
+                                        <div style="font-size:12px;color:rgba(255,255,255,.70);font-weight:900;letter-spacing:.06em;text-transform:uppercase;">Correo</div>
+                                        <div style="margin-top:2px;font-size:16px;color:#ffffff;font-weight:1000;">{{ e($correo) ?: '—' }}</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </table>
+
+                                @if(!$hasCv)
+                                  <div style="margin-top:12px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.30);border-radius:999px;padding:10px 12px;color:#fff7ed;font-weight:900;font-size:12px;line-height:1.4;text-align:center;">
+                                    El postulante no adjuntó archivo PDF.
+                                  </div>
+                                @endif
+
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                  <td style="padding:18px 18px 20px 18px;">
+
+                    <div style="font-size:14px;font-weight:1000;color:#0f172a;letter-spacing:.02em;margin-bottom:10px;">
+                      Información del candidato
+                    </div>
+
+                    <!-- Fields -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding:0;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+
+                            <tr>
+                              <td width="50%" style="padding-right:6px;vertical-align:top;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                       style="background:#f3fffd;border:1px solid #c8f3ed;border-radius:999px;">
+                                  <tr>
+                                    <td style="padding:10px 14px;">
+                                      <div style="font-size:11px;color:#0f766e;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;">Fecha de nacimiento</div>
+                                      <div style="margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">{{ e($fechaNac) }}</div>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+
+                              <td width="50%" style="padding-left:6px;vertical-align:top;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                       style="background:#f3fffd;border:1px solid #c8f3ed;border-radius:999px;">
+                                  <tr>
+                                    <td style="padding:10px 14px;">
+                                      <div style="font-size:11px;color:#0f766e;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;">Sucursal</div>
+                                      <div style="margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">{{ e($sucursal) }}</div>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+
+                            <tr><td colspan="2" style="height:10px;line-height:10px;">&nbsp;</td></tr>
+
+                            <tr>
+                              <td width="50%" style="padding-right:6px;vertical-align:top;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                       style="background:#f3fffd;border:1px solid #c8f3ed;border-radius:999px;">
+                                  <tr>
+                                    <td style="padding:10px 14px;">
+                                      <div style="font-size:11px;color:#0f766e;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;">Escolaridad</div>
+                                      <div style="margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">{{ e($escolaridad) }}</div>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+
+                              <td width="50%" style="padding-left:6px;vertical-align:top;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                       style="background:#f3fffd;border:1px solid #c8f3ed;border-radius:999px;">
+                                  <tr>
+                                    <td style="padding:10px 14px;">
+                                      <div style="font-size:11px;color:#0f766e;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;">Paquetería Office</div>
+                                      <div style="margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">{{ e($office) }}</div>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div style="height:14px;line-height:14px;">&nbsp;</div>
+
+                    <div style="font-size:14px;font-weight:1000;color:#0f172a;letter-spacing:.02em;margin-bottom:10px;">
+                      Cuestionario de evaluación
+                    </div>
+
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      @foreach($qa as $row)
+                        @php($ans = trim((string)($row['a'] ?? '—')))
+                        @php($isYes = mb_strtolower($ans) === 'sí')
+                        @php($isNo  = mb_strtolower($ans) === 'no')
+                        <tr>
+                          <td style="padding:0 0 10px 0;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                   style="background:#ffffff;border:1px solid #e6f6f5;border-radius:26px;box-shadow:0 10px 26px rgba(15,23,42,.06);">
+                              <tr>
+                                <td style="padding:14px 14px;">
+                                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                    <tr>
+                                      <td style="vertical-align:top;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                          <tr>
+                                            <td style="width:30px;height:30px;border-radius:999px;background:#d8f3f1;border:1px solid #b8ece7;text-align:center;vertical-align:middle;">
+                                              <span style="display:inline-block;font-size:12px;line-height:30px;font-weight:1000;color:#0f766e;">{{ $loop->iteration }}</span>
+                                            </td>
+                                            <td style="padding-left:10px;">
+                                              <div style="font-size:13px;line-height:1.5;color:#0f172a;font-weight:900;">
+                                                {{ $row['q'] }}
+                                              </div>
+                                              <div style="margin-top:8px;font-size:11px;color:#0f766e;font-weight:1000;letter-spacing:.10em;text-transform:uppercase;">
+                                                Respuesta
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+
+                                      <td align="right" style="vertical-align:top;padding-left:10px;">
+                                        @if($isYes)
+                                          {!! $pill('Sí', '#d1fae5', '#bbf7d0', '#065f46') !!}
+                                        @elseif($isNo)
+                                          {!! $pill('No', '#fee2e2', '#fecaca', '#991b1b') !!}
+                                        @else
+                                          <span style="display:inline-block;background:#f3fffd;border:1px solid #c8f3ed;color:#0f172a;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:900;max-width:320px;text-align:center;">
+                                            {{ $ans ?: '—' }}
+                                          </span>
+                                        @endif
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      @endforeach
+                    </table>
+
+                    <!-- CV strip -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:4px;">
+                      <tr>
+                        <td>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                 style="background:#ecfeff;border:1px solid #bae6fd;border-radius:999px;">
+                            <tr>
+                              <td style="padding:12px 14px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                  <tr>
+                                    <td style="vertical-align:middle;">
+                                      <span style="display:inline-block;width:34px;height:34px;border-radius:999px;background:#14b8a6;color:#ffffff;font-weight:1000;text-align:center;line-height:34px;">
+                                        CV
+                                      </span>
+                                      <span style="display:inline-block;padding-left:10px;vertical-align:middle;">
+                                        <span style="display:block;font-size:12px;color:#0f766e;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;">Adjunto</span>
+                                        @if($hasCv)
+                                          <span style="display:block;margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">Se adjuntó archivo PDF.</span>
+                                        @else
+                                          <span style="display:block;margin-top:2px;font-size:13px;color:#0f172a;font-weight:900;">El postulante no adjuntó archivo PDF.</span>
+                                        @endif
+                                      </span>
+                                    </td>
+
+                                    <td align="right" style="vertical-align:middle;">
+                                      @if($hasCv)
+                                        {!! $pill('OK', '#d1fae5', '#bbf7d0', '#065f46') !!}
+                                      @else
+                                        {!! $pill('Opcional', '#ffedd5', '#fed7aa', '#9a3412') !!}
+                                      @endif
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div style="height:14px;line-height:14px;">&nbsp;</div>
+
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="font-size:11px;line-height:1.6;color:#64748b;">
+                          <div style="font-weight:1000;color:#0f766e;">Nota operativa</div>
+                          <div>Correo generado automáticamente desde el formulario de Vacantes del sitio web de Mr Lana (Vendedor de Crédito).</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <div style="text-align:center;margin-top:14px;color:#94a3b8;font-size:11px;line-height:1.6;">
+                <div style="font-weight:1000;color:#0f766e;">Mr Lana · Reclutamiento</div>
+                <div>Sistema automatizado de recepción de postulaciones</div>
+              </div>
+
+            </td>
+          </tr>
         </table>
 
-        <hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0;">
-
-        <h3 style="margin:0 0 10px 0;font-size:16px;">Cuestionario</h3>
-
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          @foreach($qa as $row)
-            <tr>
-              <td style="padding:10px 0;color:#111827;font-weight:700;vertical-align:top;">
-                {{ $row['q'] }}
-              </td>
-              <td style="padding:10px 0;color:#0b67a3;font-weight:800;white-space:nowrap;vertical-align:top;text-align:right;padding-left:16px;">
-                {{ $row['a'] }}
-              </td>
-            </tr>
-            <tr><td colspan="2" style="border-top:1px solid #eef2f7;"></td></tr>
-          @endforeach
-        </table>
-
-        <div style="margin-top:16px;padding:12px 14px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb;font-size:13px;color:#374151;">
-          <div style="font-weight:800;margin-bottom:4px;">CV</div>
-          Si el candidato adjuntó archivo, llega como PDF adjunto en este correo.
-        </div>
-
-        <div style="margin-top:18px;font-size:12px;color:#6b7280;">
-          Este correo fue generado automáticamente desde el formulario de Vacantes (Vendedor de Crédito).
-        </div>
-      </div>
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
