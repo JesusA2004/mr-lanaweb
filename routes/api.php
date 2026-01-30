@@ -8,4 +8,4 @@ Route::post('/vacantes/gerente', [VacancyApplicationController::class, 'submitMa
 
 Route::post('/vacantes/subgerente', [VacancyApplicationController::class, 'submitSubManager'])->name('vacantes.subgerente.submit');
 
-Route::post('/vacantes/vendedor-credito', [VacancyApplicationController::class, 'submitCreditSeller'])->name('vacantes.vendedor_credito.submit');
+Route::post('/vacantes/credito-vendedor', [VacancyApplicationController::class, 'submitCreditSeller'])->name('vacantes.credito-vendedor.submit');

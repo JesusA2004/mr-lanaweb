@@ -1,201 +1,399 @@
 <script setup lang="ts">
-    import { reactive } from 'vue'
-    import Container from '@/components/ui/Container.vue'
-    import SectionHeader from '@/components/ui/SectionHeader.vue'
-    import FormAlert from '@/components/ui/FormAlert.vue'
-    import DatePickerShadcn from '@/components/ui/DatePickerShadcn.vue'
-    import NumericInput from '@/components/ui/NumericInput.vue'
-    import SelectSucursales from '@/components/ui/SelectSucursales.vue'
+import { computed, ref } from 'vue'
+import Container from '@/components/ui/Container.vue'
+import FormAlert from '@/components/ui/FormAlert.vue'
+import DatePickerShadcn from '@/components/ui/DatePickerShadcn.vue'
+import SelectSucursales from '@/components/ui/SelectSucursales.vue'
+import { swalNotify } from '@/lib/swal'
+import { useVacancyCreditSeller } from '@/composables/useVacancyCreditSeller'
 
-    const emit = defineEmits<{ (e:'back'):void; (e:'close'):void }>()
-    const bgSrc = '/img/vacantes/bg-manager-vacancy.png'
+const emit = defineEmits<{ (e: 'back'): void; (e: 'close'): void }>()
+const bgSrc = '/img/vacantes/bg-manager-vacancy.png'
 
-    const form = reactive({
-      nombre: '',
-      fecha_nacimiento: '',
-      telefono: '',
-      correo: '',
-      sucursal: '',
-      escolaridad: '',
-      office: '',
-      cartera: '',
-      ventas: '',
-      meta_mensual: '',
-    })
+const {
+  form,
+  errors,
+  blockedByP1,
+  blockMessage,
+  submitError,
+  submitOk,
+  cvName,
+  onCvChange,
+  onTelefonoInput,
+  clearFieldError,
+  clearAlerts,
+  sending,
+  submitDisabled,
+  submit,
+} = useVacancyCreditSeller('/api/vacantes/credito-vendedor')
 
-    const errors = reactive<Record<string,string>>({})
-    const submitError = reactive({ message: '' })
-    const submitOk = reactive({ message: '' })
+const cvInput = ref<HTMLInputElement | null>(null)
+const hasCv = computed(() => !!cvName.value)
 
-    function clearAlerts(){ submitError.message=''; submitOk.message='' }
-    function validateEmail(v:string){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) }
+function handleCvInput(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0] || null
+  onCvChange(file)
+  input.value = ''
+}
 
-    function validate(){
-      clearAlerts()
-      Object.keys(errors).forEach(k=>delete errors[k])
+function removeCv() {
+  onCvChange(null)
+  if (cvInput.value) cvInput.value.value = ''
+}
 
-      if(!form.nombre.trim()) errors.nombre='Campo obligatorio'
-      if(!form.fecha_nacimiento) errors.fecha_nacimiento='Campo obligatorio'
-      if(!form.telefono.trim()) errors.telefono='Campo obligatorio'
-      if(form.telefono.trim().length!==10) errors.telefono='Deben ser 10 dígitos'
-      if(!form.correo.trim()) errors.correo='Campo obligatorio'
-      if(form.correo.trim() && !validateEmail(form.correo)) errors.correo='Correo inválido'
-      if(!form.sucursal) errors.sucursal='Campo obligatorio'
-      if(!form.escolaridad.trim()) errors.escolaridad='Campo obligatorio'
-      if(!form.office.trim()) errors.office='Campo obligatorio'
-      if(!form.cartera) errors.cartera='Campo obligatorio'
-      if(!form.ventas) errors.ventas='Campo obligatorio'
-      if(!form.meta_mensual.trim()) errors.meta_mensual='Campo obligatorio'
+async function handleSubmit() {
+  if (blockedByP1.value) {
+    await swalNotify('warning', blockMessage.value || 'No puedes continuar con la postulación.', 'Filtro del puesto')
+    return
+  }
 
-      return Object.keys(errors).length===0
-    }
+  const result = await submit()
+  if (result.ok) {
+    emit('close')
+    clearAlerts()
+    await swalNotify('success', result.message, 'Postulación enviada')
+    return
+  }
+  await swalNotify('error', result.message, 'No se pudo enviar')
+}
+</script>
 
-    async function submit(){
-      if(!validate()){
-        submitError.message='Revisar los campos marcados antes de enviar.'
-        return
-      }
-      submitOk.message='Listo. La postulación se envió correctamente.'
-    }
-    </script>
+<template>
+  <div class="w-full bg-white">
+    <!-- HEADER -->
+    <div class="relative w-full">
+      <div class="relative h-[210px] sm:h-[230px] md:h-[250px] lg:h-[270px] xl:h-[290px] 2xl:h-[310px]">
+        <img :src="bgSrc" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" draggable="false" />
+        <div class="absolute inset-0 bg-gradient-to-b from-white/5 via-white/35 to-white" />
 
-    <template>
-      <div class="w-full bg-white">
-        <div class="relative w-full">
-          <div class="relative h-[210px] sm:h-[230px] md:h-[250px] lg:h-[270px] xl:h-[290px] 2xl:h-[310px]">
-            <img :src="bgSrc" alt="Vacante Gestor de Crédito" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" draggable="false" />
-            <div class="absolute inset-0 bg-gradient-to-b from-white/5 via-white/35 to-white" />
-
-            <div class="absolute left-3 top-3 z-20">
-              <button
-                type="button"
-                class="group inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs sm:text-sm font-extrabold text-slate-900
-                       ring-1 ring-black/5 shadow-sm backdrop-blur transition hover:bg-white hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.99]"
-                @click="emit('back')"
-              >
-                <span class="transition group-hover:-translate-x-[1px]">←</span>
-                <span>Regresar</span>
-              </button>
-            </div>
-
-            <div class="absolute right-3 top-3 z-20">
-              <button
-                type="button"
-                class="grid h-9 w-9 place-items-center rounded-full bg-black/85 text-slate-900 ring-1 ring-black/5 shadow-sm backdrop-blur transition
-                       hover:bg-white hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.98]"
-                @click="emit('close')"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div class="absolute left-4 right-4 top-[58%] -translate-y-1/2 sm:left-6 sm:right-6">
-              <h2 class="font-extrabold tracking-tight text-[#0b67a3] text-[28px] sm:text-[34px] md:text-[40px] lg:text-[46px] xl:text-[52px] 2xl:text-[56px]">
-                Vendedor de crédito
-              </h2>
-              <ul class="mt-2 list-disc pl-5 text-slate-900 text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] space-y-1">
-                <li>Colocación y seguimiento de crédito</li>
-                <li>Prospección y cierre</li>
-                <li>Gestión de cartera</li>
-                <li>Metas mensuales</li>
-              </ul>
-            </div>
-          </div>
+        <div class="absolute left-3 top-3 z-20">
+          <button
+            type="button"
+            class="group inline-flex items-center gap-2 rounded-full
+                   bg-white/85 px-3 py-2 text-xs sm:text-sm font-extrabold text-slate-900 ring-1
+                   ring-black/5 shadow-sm backdrop-blur transition hover:bg-white
+                   hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.99] disabled:opacity-60"
+            :disabled="sending"
+            @click="emit('back')"
+          >
+            <span class="transition group-hover:-translate-x-[1px]">←</span>
+            <span>Regresar</span>
+          </button>
         </div>
 
-        <Container class="py-5 sm:py-6">
-          <div class="space-y-4">
-            <FormAlert v-if="submitError.message" variant="error" :message="submitError.message" />
-            <FormAlert v-if="submitOk.message" variant="success" :message="submitOk.message" />
+        <div class="absolute right-3 top-3 z-20">
+          <button
+            type="button"
+            class="grid h-9 w-9 place-items-center rounded-full bg-black/85
+                   text-white ring-1 ring-black/5 shadow-sm backdrop-blur transition hover:bg-black
+                   hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.98] disabled:opacity-60"
+            :disabled="sending"
+            @click="emit('close')"
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        <div class="absolute left-4 right-4 top-[58%] -translate-y-1/2 sm:left-6 sm:right-6">
+          <h2 class="font-extrabold tracking-tight text-[#0b67a3] text-[28px] sm:text-[34px] md:text-[40px] lg:text-[46px] xl:text-[52px] 2xl:text-[56px]">
+            VENDEDOR DE CRÉDITO
+          </h2>
+          <ul class="mt-2 list-disc pl-5 text-slate-900 text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] space-y-1">
+            <li>Prospección en calle</li>
+            <li>Colocación y cobranza</li>
+            <li>Visitas y negociación</li>
+            <li>Trabajo 100% operativo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <Container class="py-5 sm:py-6">
+      <div class="space-y-4">
+        <FormAlert v-if="submitError" variant="error" :message="submitError" />
+        <FormAlert v-if="submitOk" variant="success" :message="submitOk" />
+        <FormAlert v-if="blockMessage" variant="error" :message="blockMessage" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+          <!-- LEFT -->
+          <div class="space-y-4">
+            <section class="rounded-3xl bg-slate-50 ring-1 ring-black/5 p-4 sm:p-5">
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-4">Datos del candidato</h3>
+
               <div class="space-y-4">
                 <div>
-                  <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Nombre Apellidos</label>
-                  <input v-model="form.nombre" class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5 outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60 text-[13px] sm:text-[14px] md:text-[15px]" @input="clearAlerts" />
+                  <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Nombre completo</label>
+                  <input
+                    v-model="form.nombre"
+                    class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5
+                           outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                           text-[13px] sm:text-[14px] md:text-[15px]"
+                    @input="clearAlerts(); clearFieldError('nombre')"
+                  />
                   <p v-if="errors.nombre" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.nombre }}</p>
                 </div>
 
-                <DatePickerShadcn v-model="form.fecha_nacimiento" label="Fecha de Nacimiento" placeholder="Selecciona fecha" :error="errors.fecha_nacimiento" @update:modelValue="clearAlerts" />
+                <DatePickerShadcn
+                  v-model="form.fecha_nacimiento"
+                  label="Fecha de Nacimiento"
+                  placeholder="Selecciona fecha"
+                  :error="errors.fecha_nacimiento"
+                  @update:modelValue="clearAlerts(); clearFieldError('fecha_nacimiento')"
+                />
 
-                <NumericInput v-model="form.telefono" label="Teléfono" placeholder="10 dígitos" :max-length="10" :error="errors.telefono" @update:modelValue="clearAlerts" />
+                <div>
+                  <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Teléfono</label>
+                  <input
+                    :value="form.telefono"
+                    inputmode="numeric"
+                    autocomplete="tel"
+                    placeholder="Teléfono a 10 dígitos"
+                    maxlength="10"
+                    class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5
+                           outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                           text-[13px] sm:text-[14px] md:text-[15px]"
+                    @input="onTelefonoInput"
+                    @paste="onTelefonoInput"
+                  />
+                  <p class="mt-1 text-[11px] sm:text-[12px] text-slate-500">Solo números (10)</p>
+                  <p v-if="errors.telefono" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.telefono }}</p>
+                </div>
 
                 <div>
                   <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Correo</label>
-                  <input v-model="form.correo" type="email" class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5 outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60 text-[13px] sm:text-[14px] md:text-[15px]" @input="clearAlerts" />
+                  <input
+                    v-model="form.correo"
+                    type="email"
+                    placeholder="usuario@dominio.com"
+                    class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5
+                           outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                           text-[13px] sm:text-[14px] md:text-[15px]"
+                    @input="clearAlerts(); clearFieldError('correo')"
+                  />
                   <p v-if="errors.correo" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.correo }}</p>
                 </div>
 
-                <SelectSucursales v-model="form.sucursal" label="Sucursal" placeholder="Selecciona" :error="errors.sucursal" @update:modelValue="clearAlerts" />
+                <SelectSucursales
+                  v-model="form.sucursal"
+                  label="Sucursal"
+                  placeholder="Selecciona"
+                  :error="errors.sucursal"
+                  @update:modelValue="clearAlerts(); clearFieldError('sucursal')"
+                />
               </div>
+            </section>
+          </div>
+
+          <!-- RIGHT -->
+          <div class="space-y-4">
+            <section class="rounded-3xl bg-slate-50 ring-1 ring-black/5 p-4 sm:p-5">
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-4">Perfil</h3>
 
               <div class="space-y-4">
                 <div>
                   <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Escolaridad</label>
-                  <input v-model="form.escolaridad" class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5 outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60 text-[13px] sm:text-[14px] md:text-[15px]" @input="clearAlerts" />
+                  <input
+                    v-model="form.escolaridad"
+                    class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5
+                           outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                           text-[13px] sm:text-[14px] md:text-[15px]"
+                    @input="clearAlerts(); clearFieldError('escolaridad')"
+                  />
                   <p v-if="errors.escolaridad" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.escolaridad }}</p>
                 </div>
 
                 <div>
                   <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Nivel de paquetería Office</label>
-                  <input v-model="form.office" class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5 outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60 text-[13px] sm:text-[14px] md:text-[15px]" @input="clearAlerts" />
+                  <input
+                    v-model="form.office"
+                    class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 ring-1 ring-black/5
+                           outline-none transition hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                           text-[13px] sm:text-[14px] md:text-[15px]"
+                    @input="clearAlerts(); clearFieldError('office')"
+                  />
                   <p v-if="errors.office" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.office }}</p>
                 </div>
-
-                <div>
-                  <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">¿Has manejado cartera?</label>
-                  <div class="mt-2 flex items-center gap-4 text-[13px] sm:text-[14px]">
-                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input v-model="form.cartera" type="radio" value="si" name="cartera" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
-                      <span class="font-semibold">Sí</span>
-                    </label>
-                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input v-model="form.cartera" type="radio" value="no" name="cartera" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
-                      <span class="font-semibold">No</span>
-                    </label>
-                  </div>
-                  <p v-if="errors.cartera" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.cartera }}</p>
-                </div>
-
-                <div>
-                  <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">¿Experiencia en ventas?</label>
-                  <div class="mt-2 flex items-center gap-4 text-[13px] sm:text-[14px]">
-                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input v-model="form.ventas" type="radio" value="si" name="ventas" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
-                      <span class="font-semibold">Sí</span>
-                    </label>
-                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input v-model="form.ventas" type="radio" value="no" name="ventas" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
-                      <span class="font-semibold">No</span>
-                    </label>
-                  </div>
-                  <p v-if="errors.ventas" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.ventas }}</p>
-                </div>
-
-                <NumericInput
-                  v-model="form.meta_mensual"
-                  label="Meta mensual aproximada"
-                  placeholder="Solo números"
-                  :error="errors.meta_mensual"
-                  @update:modelValue="clearAlerts"
-                />
-
-                <div class="pt-2">
-                  <button
-                    type="button"
-                    class="group w-full rounded-full bg-emerald-500 py-4 text-white font-extrabold shadow-[0_18px_40px_rgba(16,185,129,0.45)]
-                           transition hover:bg-emerald-600 hover:shadow-[0_22px_52px_rgba(16,185,129,0.55)] active:scale-[0.99]
-                           text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px]"
-                    @click="submit"
-                  >
-                    <span class="inline-flex items-center justify-center gap-2">
-                      Postularse <span class="transition group-hover:translate-x-[2px]">→</span>
-                    </span>
-                  </button>
-                </div>
               </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- CUESTIONARIO -->
+        <section class="rounded-3xl bg-white ring-1 ring-black/5 p-4 sm:p-5">
+          <h3 class="text-[14px] sm:text-[15px] font-extrabold text-slate-900">Cuestionario</h3>
+
+          <div class="mt-4 space-y-4 text-[13px] sm:text-[14px]">
+            <!-- Q1 -->
+            <div class="rounded-2xl bg-slate-50 ring-1 ring-black/5 p-4">
+              <div class="font-extrabold text-slate-900">
+                ¿Cuentas con experiencia REAL en ventas de campo o cambaceo? (No ventas en mostrador)
+              </div>
+              <div class="mt-2 flex items-center gap-4">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p1_ventas_cambaceo" type="radio" value="si" name="p1_ventas_cambaceo" class="h-4 w-4 accent-emerald-500"
+                         @change="clearAlerts(); clearFieldError('p1_ventas_cambaceo')" />
+                  <span class="font-semibold">Sí</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p1_ventas_cambaceo" type="radio" value="no" name="p1_ventas_cambaceo" class="h-4 w-4 accent-emerald-500"
+                         @change="clearAlerts(); clearFieldError('p1_ventas_cambaceo')" />
+                  <span class="font-semibold">No</span>
+                </label>
+              </div>
+              <p v-if="errors.p1_ventas_cambaceo" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p1_ventas_cambaceo }}</p>
+            </div>
+
+            <!-- Q2 -->
+            <div class="rounded-2xl bg-slate-50 ring-1 ring-black/5 p-4" :class="blockedByP1 ? 'opacity-55 pointer-events-none' : ''">
+              <div class="font-extrabold text-slate-900">
+                ¿Has realizado cobranza en campo y negociación con clientes en atraso?
+              </div>
+              <div class="mt-2 flex items-center gap-4">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p2_cobranza_campo" type="radio" value="si" name="p2_cobranza_campo" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p2_cobranza_campo')" />
+                  <span class="font-semibold">Sí</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p2_cobranza_campo" type="radio" value="no" name="p2_cobranza_campo" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p2_cobranza_campo')" />
+                  <span class="font-semibold">No</span>
+                </label>
+              </div>
+              <p v-if="errors.p2_cobranza_campo" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p2_cobranza_campo }}</p>
+            </div>
+
+            <!-- Q3 -->
+            <div class="rounded-2xl bg-slate-50 ring-1 ring-black/5 p-4" :class="blockedByP1 ? 'opacity-55 pointer-events-none' : ''">
+              <div class="font-extrabold text-slate-900">
+                ¿Sabes manejar motocicleta estándar y tienes licencia vigente?
+              </div>
+              <div class="mt-2 flex items-center gap-4">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p3_moto_licencia" type="radio" value="si" name="p3_moto_licencia" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p3_moto_licencia')" />
+                  <span class="font-semibold">Sí</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p3_moto_licencia" type="radio" value="no" name="p3_moto_licencia" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p3_moto_licencia')" />
+                  <span class="font-semibold">No</span>
+                </label>
+              </div>
+              <p v-if="errors.p3_moto_licencia" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p3_moto_licencia }}</p>
+            </div>
+
+            <!-- Q4 -->
+            <div class="rounded-2xl bg-slate-50 ring-1 ring-black/5 p-4" :class="blockedByP1 ? 'opacity-55 pointer-events-none' : ''">
+              <div class="font-extrabold text-slate-900">
+                Este puesto es 100% en calle (prospectar, cobrar y visitar clientes). ¿Estás dispuesto(a) a trabajar así todos los días?
+              </div>
+              <div class="mt-2 flex items-center gap-4">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p4_trabajo_100_calle" type="radio" value="si" name="p4_trabajo_100_calle" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p4_trabajo_100_calle')" />
+                  <span class="font-semibold">Sí</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p4_trabajo_100_calle" type="radio" value="no" name="p4_trabajo_100_calle" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p4_trabajo_100_calle')" />
+                  <span class="font-semibold">No</span>
+                </label>
+              </div>
+              <p v-if="errors.p4_trabajo_100_calle" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p4_trabajo_100_calle }}</p>
+            </div>
+
+            <!-- Q5 -->
+            <div class="rounded-2xl bg-slate-50 ring-1 ring-black/5 p-4" :class="blockedByP1 ? 'opacity-55 pointer-events-none' : ''">
+              <div class="font-extrabold text-slate-900">
+                ¿Qué es más importante para ti al otorgar un crédito?
+              </div>
+              <div class="mt-2 space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p5_prioridad_credito" type="radio" value="colocar_muchos" name="p5_prioridad_credito" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p5_prioridad_credito')" />
+                  <span class="font-semibold">Colocar muchos créditos</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p5_prioridad_credito" type="radio" value="colocar_bien_cobrar" name="p5_prioridad_credito" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p5_prioridad_credito')" />
+                  <span class="font-semibold">Colocar bien y cobrar correctamente</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input v-model="form.p5_prioridad_credito" type="radio" value="solo_vender" name="p5_prioridad_credito" class="h-4 w-4 accent-emerald-500"
+                         @change="clearFieldError('p5_prioridad_credito')" />
+                  <span class="font-semibold">Solo vender</span>
+                </label>
+              </div>
+              <p v-if="errors.p5_prioridad_credito" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p5_prioridad_credito }}</p>
             </div>
           </div>
-        </Container>
+
+          <!-- CV -->
+          <div class="mt-5">
+            <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">
+              CV (PDF, opcional)
+            </label>
+
+            <input ref="cvInput" type="file" accept="application/pdf,.pdf" class="hidden" @change="handleCvInput" :disabled="sending" />
+
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2
+                       text-[13px] sm:text-[14px] font-extrabold text-white transition hover:bg-slate-800 disabled:opacity-60"
+                :disabled="sending"
+                @click="cvInput?.click()"
+              >
+                {{ hasCv ? 'Cambiar PDF' : 'Seleccionar PDF' }}
+              </button>
+
+              <button
+                v-if="hasCv"
+                type="button"
+                class="inline-flex items-center justify-center rounded-full bg-rose-600 px-4 py-2
+                       text-[13px] sm:text-[14px] font-extrabold text-white transition hover:bg-rose-700 disabled:opacity-60"
+                :disabled="sending"
+                @click="removeCv"
+              >
+                Quitar
+              </button>
+            </div>
+
+            <div v-if="hasCv" class="mt-3 rounded-2xl bg-white/70 ring-1 ring-black/5 px-4 py-3 shadow-sm">
+              <p class="text-[12px] sm:text-[13px] font-extrabold text-slate-900 truncate">{{ cvName }}</p>
+              <p class="text-[11px] sm:text-[12px] text-slate-600">PDF cargado y listo para enviar</p>
+            </div>
+
+            <p v-if="errors.cv" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.cv }}</p>
+            <p v-if="!hasCv" class="mt-2 text-[11px] sm:text-[12px] text-slate-500">Solo PDF. Máximo 5MB.</p>
+          </div>
+
+          <!-- CTA -->
+          <div class="pt-5">
+            <button
+              type="button"
+              :disabled="submitDisabled"
+              class="group w-full rounded-full py-4 font-extrabold text-white shadow-[0_18px_40px_rgba(16,185,129,0.45)]
+                     transition active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed
+                     text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px]"
+              :class="submitDisabled ? 'bg-emerald-500/70' : 'bg-emerald-500 hover:bg-emerald-600 hover:shadow-[0_22px_52px_rgba(16,185,129,0.55)]'"
+              @click="handleSubmit"
+            >
+              <span class="inline-flex items-center justify-center gap-2">
+                {{ sending ? 'Enviando...' : blockedByP1 ? 'Requiere ventas en campo' : 'Postularse' }}
+                <span class="transition group-hover:translate-x-[2px]">→</span>
+              </span>
+            </button>
+
+            <p v-if="blockedByP1 && blockMessage" class="mt-2 text-[11px] sm:text-[12px] text-slate-600">
+              {{ blockMessage }}
+            </p>
+          </div>
+        </section>
       </div>
-    </template>
+    </Container>
+  </div>
+</template>

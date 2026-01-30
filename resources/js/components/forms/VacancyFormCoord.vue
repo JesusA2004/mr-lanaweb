@@ -1,175 +1,58 @@
 <!-- resources/js/components/vacancies/VacancyFormCoordinator.vue -->
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import Container from '@/components/ui/Container.vue'
 import FormAlert from '@/components/ui/FormAlert.vue'
 import DatePickerShadcn from '@/components/ui/DatePickerShadcn.vue'
-import NumericInput from '@/components/ui/NumericInput.vue'
 import SelectSucursales from '@/components/ui/SelectSucursales.vue'
+import { swalNotify } from '@/lib/swal'
+import { useVacancyCoordinator } from '@/composables/useVacancyCoordinator'
 
-type YesNo = '' | 'si' | 'no'
-type CierreFaltante = '' | 'detengo_reporto' | 'ajusto' | 'dejo_despues'
-
-const emit = defineEmits<{
-  (e: 'back'): void
-  (e: 'close'): void
-  (e: 'submit', payload: FormData): void
-}>()
-
+const emit = defineEmits<{ (e: 'back'): void; (e: 'close'): void }>()
 const bgSrc = '/img/vacantes/bg-coord-vacancy.jpg'
 
-const form = reactive({
-  // ===== Base =====
-  nombre: '',
-  fecha_nacimiento: '', // YYYY-MM-DD
-  telefono: '',
-  correo: '',
-  sucursal: '',
-  escolaridad: '',
-  office: '',
+const {
+  form,
+  errors,
+  p4Human,
+  submitError,
+  submitOk,
+  cvFile,
+  cvName,
+  onCvChange,
+  onTelefonoInput,
+  clearFieldError,
+  clearAlerts,
+  sending,
+  submit,
+} = useVacancyCoordinator('/api/vacantes/coordinadora')
 
-  // ===== Preguntas (Coordinadora) =====
-  p1_resguardo_efectivo: '' as YesNo,
-  p2_expedientes: '' as YesNo,
-  p3_cuadres_cierre: '' as YesNo,
-  p4_faltante: '' as CierreFaltante,
-  p5_responsabilidad: '' as YesNo,
-})
+const cvInput = ref<HTMLInputElement | null>(null)
+const hasCv = computed(() => !!cvName.value)
+const canSend = computed(() => !sending.value)
 
-const cvFile = ref<File | null>(null)
-
-const errors = reactive<Record<string, string>>({})
-const submitError = reactive({ message: '' })
-const submitOk = reactive({ message: '' })
-
-const canSubmit = computed(() => true)
-
-function clearAlerts() {
-  submitError.message = ''
-  submitOk.message = ''
+function handleCvInput(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0] || null
+  onCvChange(file)
+  input.value = ''
 }
 
-function isEmail(v: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
-}
-function onlyDigits(v: string) {
-  return (v ?? '').replace(/\D+/g, '')
+function removeCv() {
+  onCvChange(null)
+  if (cvInput.value) cvInput.value.value = ''
 }
 
-function setCv(file: File | null) {
-  clearAlerts()
-  errors.cv = ''
-  cvFile.value = null
-
-  if (!file) return
-
-  // Validaciones PDF (como backend: pdf y <= 5MB)
-  const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
-  const maxBytes = 5 * 1024 * 1024
-  if (!isPdf) {
-    errors.cv = 'El CV debe ser un PDF.'
+async function handleSubmit() {
+  const result = await submit()
+  if (result.ok) {
+    emit('close')
+    clearAlerts()
+    await swalNotify('success', result.message, 'Postulación enviada')
     return
   }
-  if (file.size > maxBytes) {
-    errors.cv = 'El CV no debe exceder 5MB.'
-    return
-  }
-  cvFile.value = file
+  await swalNotify('error', result.message, 'No se pudo enviar')
 }
-
-function validate() {
-  clearAlerts()
-  Object.keys(errors).forEach((k) => delete errors[k])
-
-  // ===== Base =====
-  if (!form.nombre.trim()) errors.nombre = 'Campo obligatorio'
-  if (!form.fecha_nacimiento) errors.fecha_nacimiento = 'Campo obligatorio'
-
-  form.telefono = onlyDigits(form.telefono)
-  if (!form.telefono.trim()) errors.telefono = 'Campo obligatorio'
-  if (form.telefono && form.telefono.length !== 10) errors.telefono = 'Deben ser 10 dígitos'
-
-  if (!form.correo.trim()) errors.correo = 'Campo obligatorio'
-  if (form.correo.trim() && !isEmail(form.correo)) errors.correo = 'Correo inválido'
-
-  if (!form.sucursal) errors.sucursal = 'Campo obligatorio'
-  if (!form.escolaridad.trim()) errors.escolaridad = 'Campo obligatorio'
-  if (!form.office.trim()) errors.office = 'Campo obligatorio'
-
-  // ===== Preguntas =====
-  if (!form.p1_resguardo_efectivo) errors.p1_resguardo_efectivo = 'Selecciona una opción'
-  if (!form.p2_expedientes) errors.p2_expedientes = 'Selecciona una opción'
-  if (!form.p3_cuadres_cierre) errors.p3_cuadres_cierre = 'Selecciona una opción'
-  if (!form.p4_faltante) errors.p4_faltante = 'Selecciona una opción'
-  if (!form.p5_responsabilidad) errors.p5_responsabilidad = 'Selecciona una opción'
-
-  // CV: opcional, pero si viene, validado en setCv (por si pegan / cambian input raro)
-  if (cvFile.value) {
-    const isPdf = cvFile.value.type === 'application/pdf' || cvFile.value.name.toLowerCase().endsWith('.pdf')
-    const maxBytes = 5 * 1024 * 1024
-    if (!isPdf) errors.cv = 'El CV debe ser un PDF.'
-    if (cvFile.value.size > maxBytes) errors.cv = 'El CV no debe exceder 5MB.'
-  }
-
-  return Object.keys(errors).length === 0
-}
-
-const p4Human = computed(() => {
-  switch (form.p4_faltante) {
-    case 'detengo_reporto':
-      return 'Detienes el cierre, documentas y reportas de inmediato'
-    case 'ajusto':
-      return 'Ajustas para cuadrar'
-    case 'dejo_despues':
-      return 'Lo dejas para el día siguiente'
-    default:
-      return '—'
-  }
-})
-
-function buildFormData() {
-  const fd = new FormData()
-
-  fd.append('nombre', form.nombre.trim())
-  fd.append('fecha_nacimiento', form.fecha_nacimiento)
-  fd.append('telefono', form.telefono.trim())
-  fd.append('correo', form.correo.trim())
-  fd.append('sucursal', form.sucursal)
-  fd.append('escolaridad', form.escolaridad.trim())
-  fd.append('office', form.office.trim())
-
-  fd.append('p1_resguardo_efectivo', form.p1_resguardo_efectivo)
-  fd.append('p2_expedientes', form.p2_expedientes)
-  fd.append('p3_cuadres_cierre', form.p3_cuadres_cierre)
-  fd.append('p4_faltante', form.p4_faltante)
-  fd.append('p5_responsabilidad', form.p5_responsabilidad)
-
-  if (cvFile.value) fd.append('cv', cvFile.value)
-
-  return fd
-}
-
-async function submit() {
-  if (!canSubmit.value) return
-  if (!validate()) {
-    submitError.message = 'Revisar los campos marcados antes de enviar.'
-    return
-  }
-
-  emit('submit', buildFormData())
-  submitOk.message = 'Listo. La postulación se envió correctamente.'
-}
-
-function onlyDigits10(v: string) {
-  return (v ?? '').replace(/\D+/g, '').slice(0, 10)
-}
-
-watch(
-  () => form.telefono,
-  (v) => {
-    form.telefono = onlyDigits10(v)
-  }
-)
 </script>
 
 <template>
@@ -177,13 +60,7 @@ watch(
     <!-- HERO -->
     <div class="relative w-full">
       <div class="relative h-[210px] sm:h-[230px] md:h-[250px] lg:h-[270px] xl:h-[290px] 2xl:h-[310px]">
-        <img
-          :src="bgSrc"
-          alt="Vacante Coordinadora"
-          class="absolute inset-0 h-full w-full object-cover object-center"
-          loading="lazy"
-          draggable="false"
-        />
+        <img :src="bgSrc" alt="Vacante Coordinadora" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" draggable="false" />
         <div class="absolute inset-0 bg-gradient-to-b from-white/5 via-white/35 to-white" />
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.20),transparent_55%)]" />
 
@@ -192,7 +69,8 @@ watch(
             type="button"
             class="group inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-2 text-xs sm:text-sm font-extrabold text-slate-900
                    ring-1 ring-black/5 shadow-sm backdrop-blur transition
-                   hover:bg-white hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.99]"
+                   hover:bg-white hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.99] disabled:opacity-60"
+            :disabled="sending"
             @click="emit('back')"
           >
             <span class="transition group-hover:-translate-x-[1px]">←</span>
@@ -205,7 +83,8 @@ watch(
             type="button"
             class="grid h-9 w-9 place-items-center rounded-full bg-black/85 text-white
                    ring-1 ring-black/5 shadow-sm backdrop-blur transition
-                   hover:bg-white hover:text-slate-900 hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.98]"
+                   hover:bg-white hover:text-slate-900 hover:shadow-[0_10px_22px_rgba(0,0,0,0.10)] active:scale-[0.98] disabled:opacity-60"
+            :disabled="sending"
             @click="emit('close')"
             aria-label="Cerrar"
             title="Cerrar"
@@ -238,12 +117,11 @@ watch(
 
     <Container class="py-5 sm:py-6">
       <div class="space-y-4">
-        <FormAlert v-if="submitError.message" variant="error" :message="submitError.message" />
-        <FormAlert v-if="submitOk.message" variant="success" :message="submitOk.message" />
+        <FormAlert v-if="submitError" variant="error" :message="submitError" />
+        <FormAlert v-if="submitOk" variant="success" :message="submitOk" />
 
-        <!-- Layout tipo “Gerente/Subgerente”: 2 columnas, tarjetas, separación clara -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          <!-- CARD: Datos del candidato -->
+          <!-- DATOS -->
           <div class="rounded-3xl border border-black/5 bg-white/80 p-4 sm:p-5 shadow-sm">
             <div class="flex items-center justify-between gap-3">
               <div class="text-[13px] sm:text-[14px] font-extrabold text-slate-900">Datos del candidato</div>
@@ -260,7 +138,7 @@ watch(
                          hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
                          text-[13px] sm:text-[14px] md:text-[15px]"
                   placeholder="Escribe aquí"
-                  @input="clearAlerts"
+                  @input="clearAlerts(); clearFieldError('nombre')"
                 />
                 <p v-if="errors.nombre" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.nombre }}</p>
               </div>
@@ -270,17 +148,28 @@ watch(
                 label="Fecha de Nacimiento"
                 placeholder="Selecciona fecha"
                 :error="errors.fecha_nacimiento"
-                @update:modelValue="clearAlerts"
+                @update:modelValue="clearAlerts(); clearFieldError('fecha_nacimiento')"
               />
 
-              <NumericInput
-                v-model="form.telefono"
-                label="Teléfono"
-                placeholder="10 dígitos"
-                :max-length="10"
-                inputmode="numeric"
-                autocomplete="tel"
+              <!-- Teléfono (hard-stop 10 dígitos) -->
+              <div>
+                <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Teléfono</label>
+                <input
+                  :value="form.telefono"
+                  inputmode="numeric"
+                  autocomplete="tel"
+                  maxlength="10"
+                  placeholder="10 dígitos"
+                  class="mt-1 w-full rounded-2xl bg-slate-100/70 px-4 py-3 text-slate-900 placeholder:text-slate-500
+                         ring-1 ring-black/5 outline-none transition
+                         hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
+                         text-[13px] sm:text-[14px] md:text-[15px]"
+                  @input="onTelefonoInput"
+                  @paste="onTelefonoInput"
                 />
+                <p class="mt-1 text-[11px] sm:text-[12px] text-slate-500">Solo números (10)</p>
+                <p v-if="errors.telefono" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.telefono }}</p>
+              </div>
 
               <div>
                 <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">Correo</label>
@@ -292,7 +181,7 @@ watch(
                          hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
                          text-[13px] sm:text-[14px] md:text-[15px]"
                   placeholder="correo@dominio.com"
-                  @input="clearAlerts"
+                  @input="clearAlerts(); clearFieldError('correo')"
                 />
                 <p v-if="errors.correo" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.correo }}</p>
               </div>
@@ -302,7 +191,7 @@ watch(
                 label="Sucursal"
                 placeholder="Selecciona"
                 :error="errors.sucursal"
-                @update:modelValue="clearAlerts"
+                @update:modelValue="clearAlerts(); clearFieldError('sucursal')"
               />
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -315,7 +204,7 @@ watch(
                            hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
                            text-[13px] sm:text-[14px] md:text-[15px]"
                     placeholder="Escribe aquí"
-                    @input="clearAlerts"
+                    @input="clearAlerts(); clearFieldError('escolaridad')"
                   />
                   <p v-if="errors.escolaridad" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.escolaridad }}</p>
                 </div>
@@ -329,13 +218,13 @@ watch(
                            hover:ring-black/10 focus:ring-2 focus:ring-emerald-400/60
                            text-[13px] sm:text-[14px] md:text-[15px]"
                     placeholder="Básico / Intermedio / Avanzado"
-                    @input="clearAlerts"
+                    @input="clearAlerts(); clearFieldError('office')"
                   />
                   <p v-if="errors.office" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.office }}</p>
                 </div>
               </div>
 
-              <!-- CV -->
+              <!-- CV (opcional) -->
               <div class="pt-1">
                 <div class="flex items-center justify-between gap-3">
                   <label class="block font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">
@@ -344,49 +233,42 @@ watch(
                   <div class="text-[11px] sm:text-[12px] font-semibold text-slate-500">Máx. 5MB</div>
                 </div>
 
-                <label
-                  class="mt-2 flex items-center justify-between gap-3 rounded-2xl bg-slate-100/70 px-4 py-3 ring-1 ring-black/5
-                         hover:ring-black/10 transition cursor-pointer"
-                >
-                  <div class="min-w-0">
-                    <div class="text-[13px] sm:text-[14px] font-extrabold text-slate-900 truncate">
-                      {{ cvFile?.name || 'Adjuntar archivo PDF' }}
-                    </div>
-                    <div class="text-[11px] sm:text-[12px] font-semibold text-slate-500 truncate">
-                      {{ cvFile ? `${Math.ceil(cvFile.size / 1024)} KB` : 'Se enviará adjunto en el correo si lo agregas' }}
-                    </div>
-                  </div>
+                <input ref="cvInput" type="file" accept="application/pdf,.pdf" class="hidden" @change="handleCvInput" :disabled="sending" />
 
-                  <div
-                    class="shrink-0 rounded-full bg-white px-3 py-2 text-[12px] sm:text-[13px] font-extrabold text-slate-900
-                           ring-1 ring-black/5 shadow-sm"
+                <div class="mt-2 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2
+                           text-[13px] sm:text-[14px] font-extrabold text-white transition hover:bg-slate-800 disabled:opacity-60"
+                    :disabled="sending"
+                    @click="cvInput?.click()"
                   >
-                    Elegir
-                  </div>
+                    <span>{{ hasCv ? 'Cambiar PDF' : 'Seleccionar PDF' }}</span>
+                  </button>
 
-                  <input
-                    type="file"
-                    accept="application/pdf,.pdf"
-                    class="hidden"
-                    @change="setCv(($event.target as HTMLInputElement).files?.[0] || null)"
-                  />
-                </label>
+                  <button
+                    v-if="hasCv"
+                    type="button"
+                    class="inline-flex items-center justify-center gap-2 rounded-full bg-rose-600 px-4 py-2
+                           text-[13px] sm:text-[14px] font-extrabold text-white transition hover:bg-rose-700 disabled:opacity-60"
+                    :disabled="sending"
+                    @click="removeCv"
+                  >
+                    <span>Quitar</span>
+                  </button>
+                </div>
 
-                <p v-if="errors.cv" class="mt-1 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.cv }}</p>
+                <div v-if="hasCv" class="mt-3 rounded-2xl bg-white/70 ring-1 ring-black/5 px-4 py-3 shadow-sm">
+                  <p class="text-[12px] sm:text-[13px] font-extrabold text-slate-900 truncate">{{ cvName }}</p>
+                  <p class="text-[11px] sm:text-[12px] text-slate-600">PDF listo para adjuntar al correo</p>
+                </div>
 
-                <button
-                  v-if="cvFile"
-                  type="button"
-                  class="mt-2 text-[12px] sm:text-[13px] font-extrabold text-slate-700 hover:text-slate-900 underline underline-offset-4"
-                  @click="setCv(null)"
-                >
-                  Quitar PDF
-                </button>
+                <p v-if="errors.cv" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.cv }}</p>
               </div>
             </div>
           </div>
 
-          <!-- CARD: Cuestionario -->
+          <!-- CUESTIONARIO -->
           <div class="rounded-3xl border border-black/5 bg-white/80 p-4 sm:p-5 shadow-sm">
             <div class="flex items-center justify-between gap-3">
               <div class="text-[13px] sm:text-[14px] font-extrabold text-slate-900">Cuestionario</div>
@@ -398,25 +280,23 @@ watch(
               <div class="rounded-2xl bg-slate-50/80 ring-1 ring-black/5 p-4">
                 <div class="font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px]">
                   1) ¿Has sido responsable directa del resguardo y control de efectivo en un trabajo anterior?
-                  <span class="block font-semibold text-slate-600 text-[11px] sm:text-[12px] mt-1">
-                    (Cortes, caja, depósitos, arqueos)
-                  </span>
+                  <span class="block font-semibold text-slate-600 text-[11px] sm:text-[12px] mt-1">(Cortes, caja, depósitos, arqueos)</span>
                 </div>
 
                 <div class="mt-3 flex flex-wrap items-center gap-4 text-[13px] sm:text-[14px]">
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p1_resguardo_efectivo" type="radio" value="si" name="p1" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p1_resguardo_efectivo" type="radio" value="si" name="p1_res" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p1_resguardo_efectivo')" />
                     <span class="font-semibold">Sí</span>
                   </label>
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p1_resguardo_efectivo" type="radio" value="no" name="p1" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p1_resguardo_efectivo" type="radio" value="no" name="p1_res" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p1_resguardo_efectivo')" />
                     <span class="font-semibold">No</span>
                   </label>
                 </div>
 
-                <p v-if="errors.p1_resguardo_efectivo" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">
-                  {{ errors.p1_resguardo_efectivo }}
-                </p>
+                <p v-if="errors.p1_resguardo_efectivo" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p1_resguardo_efectivo }}</p>
               </div>
 
               <!-- Q2 -->
@@ -427,18 +307,18 @@ watch(
 
                 <div class="mt-3 flex flex-wrap items-center gap-4 text-[13px] sm:text-[14px]">
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p2_expedientes" type="radio" value="si" name="p2" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p2_expedientes" type="radio" value="si" name="p2_exp" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p2_expedientes')" />
                     <span class="font-semibold">Sí</span>
                   </label>
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p2_expedientes" type="radio" value="no" name="p2" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p2_expedientes" type="radio" value="no" name="p2_exp" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p2_expedientes')" />
                     <span class="font-semibold">No</span>
                   </label>
                 </div>
 
-                <p v-if="errors.p2_expedientes" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">
-                  {{ errors.p2_expedientes }}
-                </p>
+                <p v-if="errors.p2_expedientes" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p2_expedientes }}</p>
               </div>
 
               <!-- Q3 -->
@@ -449,18 +329,18 @@ watch(
 
                 <div class="mt-3 flex flex-wrap items-center gap-4 text-[13px] sm:text-[14px]">
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p3_cuadres_cierre" type="radio" value="si" name="p3" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p3_cuadres_cierre" type="radio" value="si" name="p3_cua" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p3_cuadres_cierre')" />
                     <span class="font-semibold">Sí</span>
                   </label>
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p3_cuadres_cierre" type="radio" value="no" name="p3" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p3_cuadres_cierre" type="radio" value="no" name="p3_cua" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p3_cuadres_cierre')" />
                     <span class="font-semibold">No</span>
                   </label>
                 </div>
 
-                <p v-if="errors.p3_cuadres_cierre" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">
-                  {{ errors.p3_cuadres_cierre }}
-                </p>
+                <p v-if="errors.p3_cuadres_cierre" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p3_cuadres_cierre }}</p>
               </div>
 
               <!-- Q4 -->
@@ -471,24 +351,23 @@ watch(
 
                 <div class="mt-3 space-y-2 text-[13px] sm:text-[14px]">
                   <label class="flex items-start gap-2 cursor-pointer select-none">
-                    <input v-model="form.p4_faltante" type="radio" value="detengo_reporto" name="p4" class="mt-0.5 h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p4_faltante" type="radio" value="detengo_reporto" name="p4_fal" class="mt-0.5 h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p4_faltante')" />
                     <span class="font-semibold">Detienes el cierre, documentas y reportas de inmediato</span>
                   </label>
-
                   <label class="flex items-start gap-2 cursor-pointer select-none">
-                    <input v-model="form.p4_faltante" type="radio" value="ajusto" name="p4" class="mt-0.5 h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p4_faltante" type="radio" value="ajusto" name="p4_fal" class="mt-0.5 h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p4_faltante')" />
                     <span class="font-semibold">Ajustas para cuadrar</span>
                   </label>
-
                   <label class="flex items-start gap-2 cursor-pointer select-none">
-                    <input v-model="form.p4_faltante" type="radio" value="dejo_despues" name="p4" class="mt-0.5 h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p4_faltante" type="radio" value="dejo_despues" name="p4_fal" class="mt-0.5 h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p4_faltante')" />
                     <span class="font-semibold">Lo dejas para el día siguiente</span>
                   </label>
                 </div>
 
-                <p v-if="errors.p4_faltante" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">
-                  {{ errors.p4_faltante }}
-                </p>
+                <p v-if="errors.p4_faltante" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p4_faltante }}</p>
 
                 <div class="mt-3 rounded-xl bg-white/80 px-3 py-2 ring-1 ring-black/5">
                   <div class="text-[11px] sm:text-[12px] font-semibold text-slate-500">Selección</div>
@@ -505,33 +384,34 @@ watch(
 
                 <div class="mt-3 flex flex-wrap items-center gap-4 text-[13px] sm:text-[14px]">
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p5_responsabilidad" type="radio" value="si" name="p5" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p5_responsabilidad" type="radio" value="si" name="p5_res" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p5_responsabilidad')" />
                     <span class="font-semibold">Sí</span>
                   </label>
                   <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                    <input v-model="form.p5_responsabilidad" type="radio" value="no" name="p5" class="h-4 w-4 accent-emerald-500" @change="clearAlerts" />
+                    <input v-model="form.p5_responsabilidad" type="radio" value="no" name="p5_res" class="h-4 w-4 accent-emerald-500"
+                           @change="clearAlerts(); clearFieldError('p5_responsabilidad')" />
                     <span class="font-semibold">No</span>
                   </label>
                 </div>
 
-                <p v-if="errors.p5_responsabilidad" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">
-                  {{ errors.p5_responsabilidad }}
-                </p>
+                <p v-if="errors.p5_responsabilidad" class="mt-2 text-[11px] sm:text-[12px] font-semibold text-rose-600">{{ errors.p5_responsabilidad }}</p>
               </div>
 
               <!-- CTA -->
               <div class="pt-1">
                 <button
                   type="button"
-                  class="group w-full rounded-full bg-emerald-500 py-4 text-white font-extrabold
+                  class="group w-full rounded-full py-4 font-extrabold text-white
                          shadow-[0_18px_40px_rgba(16,185,129,0.45)]
-                         transition hover:bg-emerald-600 hover:shadow-[0_22px_52px_rgba(16,185,129,0.55)]
-                         active:scale-[0.99]
+                         transition active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed
                          text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px]"
-                  @click="submit"
+                  :class="canSend ? 'bg-emerald-500 hover:bg-emerald-600 hover:shadow-[0_22px_52px_rgba(16,185,129,0.55)]' : 'bg-emerald-500/70'"
+                  :disabled="!canSend"
+                  @click="handleSubmit"
                 >
                   <span class="inline-flex items-center justify-center gap-2">
-                    Postularse
+                    {{ sending ? 'Enviando...' : 'Postularse' }}
                     <span class="transition group-hover:translate-x-[2px]">→</span>
                   </span>
                 </button>

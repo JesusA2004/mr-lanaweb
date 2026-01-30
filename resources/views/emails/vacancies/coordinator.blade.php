@@ -22,20 +22,37 @@
     return $s ?: '—';
   };
 
-  $faltante = strtolower($val('p4_faltante_accion'));
+  //  KEY y valores correctos según tu form/controller:
+  // p4_faltante: detengo_reporto | ajusto | dejo_despues
+  $faltante = strtolower($val('p4_faltante'));
   $faltanteTxt = match ($faltante) {
     'detengo_reporto' => 'Detiene el cierre, documenta y reporta de inmediato',
-    'ajusto_cuadro'   => 'Ajusta para cuadrar',
-    'dejo_manana'     => 'Lo deja para el día siguiente',
+    'ajusto'          => 'Ajusta para cuadrar',
+    'dejo_despues'    => 'Lo deja para el día siguiente',
     default           => '—',
   };
 
   $qa = [
-    ['q' => '¿Has sido responsable directa del resguardo y control de efectivo en un trabajo anterior? (Cortes, caja, depósitos, arqueos)', 'a' => $yn('p1_resguardo_efectivo')],
-    ['q' => '¿Tienes experiencia integrando y validando expedientes completos de clientes o personal?', 'a' => $yn('p2_expedientes')],
-    ['q' => '¿Has realizado cuadres diarios de caja o cartera y cierre de turno?', 'a' => $yn('p3_cuadres_cierre')],
-    ['q' => 'Si al cierre del turno detectas un faltante de efectivo, tú normalmente…', 'a' => $faltanteTxt],
-    ['q' => 'Este puesto requiere orden extremo, apego a procesos y manejo de dinero todos los días. ¿Te sientes cómoda trabajando bajo esta responsabilidad?', 'a' => $yn('p5_responsabilidad')],
+    [
+      'q' => '¿Has sido responsable directa del resguardo y control de efectivo en un trabajo anterior? (Cortes, caja, depósitos, arqueos)',
+      'a' => $yn('p1_resguardo_efectivo')
+    ],
+    [
+      'q' => '¿Tienes experiencia integrando y validando expedientes completos de clientes o personal?',
+      'a' => $yn('p2_expedientes')
+    ],
+    [
+      'q' => '¿Has realizado cuadres diarios de caja o cartera y cierre de turno?',
+      'a' => $yn('p3_cuadres_cierre')
+    ],
+    [
+      'q' => 'Si al cierre del turno detectas un faltante de efectivo, tú normalmente…',
+      'a' => $faltanteTxt
+    ],
+    [
+      'q' => 'Este puesto requiere orden extremo, apego a procesos y manejo de dinero todos los días. ¿Te sientes cómoda trabajando bajo esta responsabilidad?',
+      'a' => $yn('p5_responsabilidad')
+    ],
   ];
 @endphp
 
@@ -56,25 +73,49 @@
         <h3 style="margin:0 0 10px 0;font-size:16px;">Datos del candidato</h3>
 
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tr><td style="padding:8px 0;color:#6b7280;width:220px;">Nombre</td><td style="padding:8px 0;font-weight:700;">{{ e($val('nombre','—')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Fecha de nacimiento</td><td style="padding:8px 0;">{{ e($fmtDate($val('fecha_nacimiento'))) }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Teléfono</td><td style="padding:8px 0;">{{ e($val('telefono')) ?: '—' }}</td></tr>
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;width:220px;">Nombre</td>
+            <td style="padding:8px 0;font-weight:700;">{{ e($val('nombre','—')) ?: '—' }}</td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;">Fecha de nacimiento</td>
+            <td style="padding:8px 0;">{{ e($fmtDate($val('fecha_nacimiento'))) }}</td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;">Teléfono</td>
+            <td style="padding:8px 0;">{{ e($val('telefono')) ?: '—' }}</td>
+          </tr>
+
           <tr>
             <td style="padding:8px 0;color:#6b7280;">Correo</td>
             <td style="padding:8px 0;">
               @php($correo = $val('correo'))
               @if($correo)
-                <a href="mailto:{{ e($correo) }}" style="color:#0b67a3;text-decoration:none;font-weight:700;">{{ e($correo) }}</a>
+                <a href="mailto:{{ e($correo) }}" style="color:#0b67a3;text-decoration:none;font-weight:700;">
+                  {{ e($correo) }}
+                </a>
               @else
                 —
               @endif
             </td>
           </tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Sucursal</td><td style="padding:8px 0;">{{ e($val('sucursal')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Escolaridad</td><td style="padding:8px 0;">{{ e($val('escolaridad')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Paquetería Office</td><td style="padding:8px 0;">{{ e($val('office')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">Años de experiencia</td><td style="padding:8px 0;">{{ e($val('experiencia_anios')) ?: '—' }}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">¿Liderazgo?</td><td style="padding:8px 0;">{{ $yn('liderazgo') }}</td></tr>
+
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;">Sucursal</td>
+            <td style="padding:8px 0;">{{ e($val('sucursal')) ?: '—' }}</td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;">Escolaridad</td>
+            <td style="padding:8px 0;">{{ e($val('escolaridad')) ?: '—' }}</td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;">Paquetería Office</td>
+            <td style="padding:8px 0;">{{ e($val('office')) ?: '—' }}</td>
+          </tr>
         </table>
 
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0;">
@@ -97,7 +138,7 @@
 
         <div style="margin-top:16px;padding:12px 14px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb;font-size:13px;color:#374151;">
           <div style="font-weight:800;margin-bottom:4px;">CV</div>
-          Si el candidato adjuntó archivo, llega como PDF adjunto en este correo.
+          Si la candidata adjuntó archivo, llega como PDF adjunto en este correo.
         </div>
 
         <div style="margin-top:18px;font-size:12px;color:#6b7280;">
