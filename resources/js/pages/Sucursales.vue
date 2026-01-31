@@ -11,7 +11,7 @@
 
 <template>
     <Head title="Sucursales">
-        <!-- SEO / Social básico (sin humo) -->
+        <!-- SEO / Social básico -->
         <meta name="description" :content="metaDescription" />
         <meta property="og:title" content="Sucursales" />
         <meta property="og:description" :content="metaDescription" />

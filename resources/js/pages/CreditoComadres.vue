@@ -157,17 +157,39 @@
 </script>
 
 <template>
-    <Head title="Crédito Comadres" />
+    <Head>
+        <!-- Título SEO -->
+        <title>Crédito Comadres</title>
+        <!-- Meta descripción -->
+        <meta name="description"
+        content="Crédito Comadres de Mr. Lana: préstamos grupales para mujeres emprendedoras. Forma tu grupo, obtén financiamiento y haz crecer tu negocio."/>
+        <!-- Keywords -->
+        <meta name="keywords"
+        content="crédito para mujeres, crédito grupal, crédito comadres, préstamos para emprendedoras, microcréditos México"/>
+
+        <!-- Canonical -->
+        <link rel="canonical"
+        href="https://mr-lana.com/credito-comadres"/>
+
+        <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Crédito Comadres" />
+        <meta property="og:description"
+        content="Financiamiento grupal para mujeres emprendedoras. Crédito Comadres de Mr. Lana."/>
+        <meta property="og:url" content="https://mr-lana.com/credito-comadres" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Crédito Comadres"/>
+        <meta name="twitter:description"
+        content="Crédito grupal para mujeres emprendedoras. Forma tu grupo y solicita hoy."/>
+    </Head>
     <PublicLayout>
         <!-- MODAL -->
-        <BusinessLoanRequestModal
-        :open="openModal"
-        :branches="branches"
-        context="credito_comadres"
-        :sending="sending"
-        @close="closeBusinessModal"
-        @submit="onSubmit"
-        />
+        <BusinessLoanRequestModal :open="openModal"
+        :branches="branches" context="credito_comadres"
+        :sending="sending" @close="closeBusinessModal"
+        @submit="onSubmit"/>
 
         <!-- HERO -->
         <div class="relative w-full overflow-hidden">
@@ -242,6 +264,9 @@
                     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
                         PRODUCTO COMADRES
                     </h2>
+                    <p class="text-center text-lg md:text-xl text-gray-600">
+                        <b>Crédito Comadres de Mr. Lana</b>: préstamos grupales para mujeres emprendedoras. Forma tu grupo, obtén financiamiento y haz crecer tu negocio.
+                    </p>
                 </div>
 
                 <div class="rounded-2xl bg-white p-5 sm:p-7 md:p-8 shadow-lg

@@ -220,7 +220,36 @@
 </script>
 
 <template>
-    <Head title="Impulsa tu negocio" />
+    <Head>
+        <!-- Título SEO -->
+        <title>Impulsa tu Negocio</title>
+
+        <!-- Meta descripción -->
+        <meta name="description"
+        content="Impulsa tu Negocio con los créditos semanales de Mr. Lana. Opciones flexibles para dueños de negocios establecidos que buscan crecer."/>
+
+        <!-- Keywords -->
+        <meta name="keywords"
+        content="créditos para negocios, crédito semanal, préstamo para negocio, impulsa tu negocio, financiamiento pymes México"/>
+
+        <!-- Canonical -->
+        <link rel="canonical"
+        href="https://mr-lana.com/impulsa-tu-negocio"/>
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Impulsa tu Negocio"/>
+        <meta property="og:description"
+        content="Créditos semanales para negocios establecidos. Impulsa el crecimiento de tu negocio con Mr. Lana."/>
+        <meta property="og:url" content="https://mr-lana.com/impulsa-tu-negocio" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title" content="Impulsa tu Negocio"/>
+        <meta name="twitter:description"
+        content="Financiamiento semanal para negocios que quieren crecer. Conoce Impulsa tu Negocio de Mr. Lana."/>
+    </Head>
+
     <PublicLayout>
         <!-- MODAL -->
         <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsa_negocio"

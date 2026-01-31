@@ -59,7 +59,35 @@
 </script>
 
 <template>
-    <Head title="FAQs" />
+    <Head>
+        <!-- Título SEO -->
+        <title>Preguntas frecuentes</title>
+
+        <!-- Meta descripción -->
+        <meta name="description"
+        content="Resuelve tus dudas sobre créditos, solicitudes y servicios de Mr. Lana. Consulta nuestras preguntas frecuentes o envíanos tu pregunta."/>
+
+        <!-- Keywords (opcional) -->
+        <meta name="keywords"
+        content="faq mr lana, preguntas frecuentes créditos, dudas préstamos, ayuda mr lana, soporte crédito"/>
+
+        <!-- Canonical -->
+        <link rel="canonical"
+        href="https://mr-lana.com/faqs"/>
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Preguntas frecuentes" />
+        <meta property="og:description"
+        content="Encuentra respuestas rápidas sobre nuestros créditos y servicios. Si tienes dudas, aquí las resolvemos."/>
+        <meta property="og:url" content="https://mr-lana.com/faqs" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Preguntas frecuentes" />
+        <meta name="twitter:description"
+        content="Aclara tus dudas sobre créditos y servicios de Mr. Lana. FAQ oficial."/>
+    </Head>
 
     <PublicLayout>
         <section class="relative overflow-hidden pt-20 sm:pt-24 md:pt-28 pb-10 sm:pb-14 md:pb-20 lg:pb-24">

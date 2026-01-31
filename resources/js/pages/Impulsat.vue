@@ -169,7 +169,36 @@
 </script>
 
 <template>
-    <Head title="Impulsa.t" />
+    <Head>
+        <!-- Título SEO -->
+        <title>Impulsa.t</title>
+
+        <!-- Meta descripción -->
+        <meta name="description"
+        content="Impulsa.t de Mr. Lana: crédito semanal fácil y rápido para empleados y trabajadores formales. Solicita hoy y recibe respuesta en minutos."/>
+
+        <!-- Keywords -->
+        <meta name="keywords"
+        content="crédito semanal, crédito para empleados, préstamo rápido, impulsa.t, producto crece, mr lana crédito"/>
+
+        <!-- Canonical -->
+        <link rel="canonical"
+        href="https://mr-lana.com/impulsat"/>
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Impulsa.t" />
+        <meta property="og:description"
+        content="Crédito semanal ideal para empleados y trabajadores formales. Impulsa.t es rápido, claro y accesible."/>
+        <meta property="og:url" content="https://mr-lana.com/impulsat" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title" content="Impulsa.t"/>
+        <meta name="twitter:description"
+        content="Solicita tu crédito semanal con Impulsa.t de Mr. Lana. Respuesta rápida y proceso sencillo."/>
+    </Head>
+
     <PublicLayout>
         <BusinessLoanRequestModal :open="openModal" :branches="branches" context="impulsat"
         :sending="sending" @close="closeBusinessModal" @submit="onSubmit"/>

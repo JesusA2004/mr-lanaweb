@@ -1,10 +1,11 @@
 <script setup lang="ts">
+    import { Head } from '@inertiajs/vue3'
     import PublicLayout from '@/layouts/PublicLayout.vue'
     import HeroCarousel from '@/components/home/HeroCarousel.vue'
     import PromoBanners from '@/components/home/PromoBanners.vue'
     import AppDownloadBanner from '@/components/home/AppDownloadBanner.vue'
     import AppPromoModal from '@/components/home/AppPromoModal.vue'
-    import ProductsPromoModal from '@/components/home/ProductsPromoModal.vue'
+    // import ProductsPromoModal from '@/components/home/ProductsPromoModal.vue'
 
     import { homeSlides } from '@/data/homeSlides'
     import { homeBanners } from '@/data/homeBanners'
@@ -20,6 +21,35 @@
 </script>
 
 <template>
+    <Head>
+        <!-- Título SEO -->
+        <title>Mr. Lana</title>
+
+        <!-- Meta descripción -->
+        <meta name="description"
+        content="Mr. Lana ofrece créditos rápidos, claros y accesibles para negocios, empleados y emprendedores en México. Solicita hoy y recibe respuesta en minutos."/>
+
+        <!-- Keywords -->
+        <meta name="keywords"
+        content="mr lana, créditos rápidos, préstamos en méxico, microcréditos, nano créditos, crédito semanal"/>
+
+        <!-- Canonical -->
+        <link  rel="canonical" href="https://mr-lana.com/"/>
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Mr. Lana" />
+        <meta property="og:description"
+        content="Créditos rápidos y accesibles para impulsar negocios y proyectos productivos en México."/>
+        <meta property="og:url" content="https://mr-lana.com/" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title" content="Mr. Lana"/>
+        <meta  name="twitter:description"
+        content="Solicita tu crédito con Mr. Lana. Proceso simple, rápido y transparente."/>
+    </Head>
+
     <PublicLayout>
         <AppPromoModal />
         <!-- <ProductsPromoModal /> -->
@@ -31,7 +61,7 @@
         <div class="w-full bg-white h-10 sm:h-12 md:h-14 lg:h-16" />
 
         <!-- PROMO BANNERS -->
-        <PromoBanners :banners="homeBanners" @cta="onBannerCta" />
+        <PromoBanners :banners="homeBanners" @cta="onBannerCta"/>
 
         <div class="py-8 sm:py-10 md:py-12">
             <AppDownloadBanner
