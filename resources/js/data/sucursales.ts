@@ -40,16 +40,6 @@ export const branches: Branch[] = [
         mapUrl: 'https://maps.app.goo.gl/eodydGRWEjsgDuyt7',
     },
     {
-        id: 'tenango',
-        zone: 'Centro',
-        name: 'Sucursal Tenango',
-        city: 'Tenango del Valle',
-        state: 'Estado de México',
-        address: 'Benito Juárez #203, Col. Cruz Verde, Tenango del Valle, C.P. 52300',
-        phones: ['559 054 9617'],
-        mapUrl: 'https://maps.app.goo.gl/RyFbFaSdgcK3WDSE9?g_st=aw',
-    },
-    {
         id: 'atlixco',
         zone: 'Centro',
         name: 'Sucursal Atlixco',
@@ -59,17 +49,6 @@ export const branches: Branch[] = [
         phones: ['222 944 6532'],
         mapUrl: 'https://maps.app.goo.gl/rE1GePkFLR8mbA4FA',
     },
-    {
-        id: 'ixtlahuaca',
-        zone: 'Centro',
-        name: 'Sucursal Ixtlahuaca',
-        city: 'Ixtlahuaca',
-        state: 'Estado de México',
-        address: 'Av. Gustavo Baz Prada #406, Ixtlahuaca, Estado de México, C.P. 50740',
-        phones: ['712 688 1615'],
-        mapUrl: 'https://maps.app.goo.gl/H35SoKkWDMLuUM4V7',
-    },
-
     {
         id: 'cordoba',
         zone: 'Golfo',
@@ -89,16 +68,6 @@ export const branches: Branch[] = [
         address: 'Oriente 6, #851, Int. 10 y 11, Esq. Sur 17, Col. Centro, Orizaba, Veracruz, C.P. 94300',
         phones: ['272 341 4129'],
         mapUrl: 'https://maps.app.goo.gl/KBUX777EuuYXca39A',
-    },
-    {
-        id: 'huamantla',
-        zone: 'Golfo',
-        name: 'Sucursal Huamantla',
-        city: 'Huamantla',
-        state: 'Tlaxcala',
-        address: 'Calle Morelos Oriente #311, local 15, Col. Centro, Huamantla, Tlaxcala, C.P. 90500',
-        phones: ['712 688 1615'],
-        mapUrl: 'https://maps.app.goo.gl/KXG2YbupuGQCgy8UA',
     },
     {
         id: 'tlaxcala',
