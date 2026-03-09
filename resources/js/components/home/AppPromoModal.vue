@@ -45,20 +45,23 @@
                 @click="close"/>
 
                 <!-- Modal -->
-                <div class="relative h-full w-full flex items-center justify-center p-4 sm:p-6">
+                <div class="relative flex min-h-dvh w-full items-center justify-center p-3 sm:p-4 md:p-6">
                     <Transition enter-active-class="transition ease-out duration-300"
                     enter-from-class="opacity-0 translate-y-3 scale-[0.98]"
                     enter-to-class="opacity-100 translate-y-0 scale-100"
                     leave-active-class="transition ease-in duration-200"
                     leave-from-class="opacity-100 translate-y-0 scale-100"
                     leave-to-class="opacity-0 translate-y-2 scale-[0.98]">
-                        <div v-if="open" class="relative w-full max-w-[720px] rounded-3xl
-                        overflow-hidden shadow-2xl ring-1 ring-white/10">
+                        <div v-if="open" class="relative w-full max-w-[680px] rounded-3xl
+                        overflow-hidden shadow-2xl ring-1 ring-white/10 bg-transparent
+                        max-h-[88dvh] sm:max-h-[90dvh]">
                             <!-- Botón cerrar (flotante) -->
-                            <button type="button" class="absolute right-3 top-3 z-10
-                            inline-flex h-10 w-10 items-center justify-center rounded-2xl
-                            bg-black/55 text-white ring-1 ring-white/15 backdrop-blur
-                            transition hover:bg-black/70 focus:outline-none
+                            <button type="button" class="absolute right-2 top-2
+                            sm:right-3 sm:top-3 z-20 inline-flex h-9 w-9 sm:h-10 sm:w-10
+                            items-center justify-center rounded-full bg-black/55
+                            text-white text-base sm:text-lg ring-1 ring-white/15
+                            backdrop-blur-md transition duration-200 hover:scale-105
+                            hover:bg-black/70 active:scale-95 focus:outline-none
                             focus-visible:ring-2 focus-visible:ring-white/40"
                             @click="close" aria-label="Cerrar">
                                 ✕

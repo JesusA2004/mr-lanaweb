@@ -11,7 +11,6 @@ export const SUCURSALES = [
     'Orizaba',
     'Pachuca',
     'San Luis Potosí',
-    'San Juan del Río',
     'Tenango',
     'Tlaxcala',
     'Tula',

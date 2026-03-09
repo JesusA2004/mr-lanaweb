@@ -121,17 +121,6 @@ export const branches: Branch[] = [
         phones: ['712 597 5776', '712 688 2923'],
         mapUrl: 'https://maps.app.goo.gl/mvaNFDTLjrAkeesn9?g_st=aw',
     },
-
-    {
-        id: 'san-juan-del-rio',
-        zone: 'Bajio',
-        name: 'Sucursal San Juan del Río',
-        city: 'San Juan del Río',
-        state: 'Querétaro',
-        address: 'Calle Corregidora #68, Col. Centro, San Juan del Río, Querétaro.',
-        phones: ['427 366 8764'],
-        mapUrl: 'https://maps.app.goo.gl/FdeVMbmeAR4xzYvB7?g_st=aw',
-    },
     {
         id: 'san-luis-potosi',
         zone: 'Bajio',
