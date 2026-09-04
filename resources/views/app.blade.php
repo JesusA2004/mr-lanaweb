@@ -1,30 +1,41 @@
 @php
-    $seoConfig = config('seo');
-    $seoRoute = $seoConfig['pages'][\Illuminate\Support\Facades\Route::currentRouteName()] ?? $seoConfig['pages']['home'];
+    // Fallback defensivo: si en el servidor el config todavía está cacheado
+    // (php artisan config:cache) desde antes de que existiera config/seo.php,
+    // config('seo') puede devolver null. En ese caso no debe tronar la página,
+    // solo perder el SEO enriquecido hasta que se limpie la caché de config.
+    $seoConfig = config('seo') ?? [];
+    $seoPages = $seoConfig['pages'] ?? [];
+    $seoHome = $seoPages['home'] ?? [
+        'path' => '/',
+        'title' => config('app.name', 'Mr. Lana'),
+        'description' => '',
+    ];
+    $seoRoute = $seoPages[\Illuminate\Support\Facades\Route::currentRouteName()] ?? $seoHome;
+    $seoOrganization = $seoConfig['organization'] ?? [];
+    $seoOrgAddress = $seoOrganization['address'] ?? [];
 
-    $seoSiteName = $seoConfig['site_name'];
-    $seoSiteUrl = $seoConfig['site_url'];
-    $seoTitle = $seoRoute['title'];
-    $seoDescription = $seoRoute['description'];
+    $seoSiteName = $seoConfig['site_name'] ?? config('app.name', 'Mr. Lana');
+    $seoSiteUrl = $seoConfig['site_url'] ?? config('app.url', '');
+    $seoTitle = $seoRoute['title'] ?? $seoSiteName;
+    $seoDescription = $seoRoute['description'] ?? '';
     $seoKeywords = $seoRoute['keywords'] ?? null;
-    $seoCanonical = $seoSiteUrl . $seoRoute['path'];
-    $seoImage = $seoSiteUrl . $seoConfig['default_image'];
+    $seoCanonical = $seoSiteUrl . ($seoRoute['path'] ?? '/');
+    $seoImage = $seoSiteUrl . ($seoConfig['default_image'] ?? '/img/logo-mr-lana.png');
 
     $seoOrganizationJsonLd = [
         '@context' => 'https://schema.org',
         '@type' => 'FinancialService',
-        'name' => $seoConfig['organization']['name'],
-        'legalName' => $seoConfig['organization']['legal_name'],
-        'description' => $seoConfig['organization']['description'],
+        'name' => $seoOrganization['name'] ?? $seoSiteName,
+        'legalName' => $seoOrganization['legal_name'] ?? $seoSiteName,
+        'description' => $seoOrganization['description'] ?? $seoDescription,
         'url' => $seoSiteUrl,
         'logo' => $seoImage,
         'image' => $seoImage,
-        'email' => $seoConfig['organization']['email'],
-        'telephone' => $seoConfig['organization']['telephone'],
-        'address' => [
-            '@type' => 'PostalAddress',
-            ...$seoConfig['organization']['address'],
-        ],
+        'email' => $seoOrganization['email'] ?? null,
+        'telephone' => $seoOrganization['telephone'] ?? null,
+        // array_merge en vez de "...$array" (spread con claves string):
+        // ese spread requiere PHP 8.1+ y tronaba en producción.
+        'address' => array_merge(['@type' => 'PostalAddress'], $seoOrgAddress),
         'areaServed' => 'MX',
     ];
 
@@ -62,13 +73,13 @@
         <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="{{ $seoSiteName }}">
-        <meta property="og:locale" content="{{ $seoConfig['locale'] }}">
+        <meta property="og:locale" content="{{ $seoConfig['locale'] ?? 'es_MX' }}">
         <meta property="og:title" content="{{ $seoTitle }}">
         <meta property="og:description" content="{{ $seoDescription }}">
         <meta property="og:url" content="{{ $seoCanonical }}">
         <meta property="og:image" content="{{ $seoImage }}">
-        <meta property="og:image:width" content="{{ $seoConfig['default_image_width'] }}">
-        <meta property="og:image:height" content="{{ $seoConfig['default_image_height'] }}">
+        <meta property="og:image:width" content="{{ $seoConfig['default_image_width'] ?? 508 }}">
+        <meta property="og:image:height" content="{{ $seoConfig['default_image_height'] ?? 192 }}">
 
         <!-- Twitter / X -->
         <meta name="twitter:card" content="summary_large_image">
