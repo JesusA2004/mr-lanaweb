@@ -60,33 +60,8 @@
 
 <template>
     <Head>
-        <!-- Título SEO -->
-        <title>Preguntas frecuentes</title>
-
-        <!-- Meta descripción -->
-        <meta name="description"
-        content="Resuelve tus dudas sobre créditos, solicitudes y servicios de Mr. Lana. Consulta nuestras preguntas frecuentes o envíanos tu pregunta."/>
-
-        <!-- Keywords (opcional) -->
-        <meta name="keywords"
-        content="faq mr lana, preguntas frecuentes créditos, dudas préstamos, ayuda mr lana, soporte crédito"/>
-
-        <!-- Canonical -->
-        <link rel="canonical"
-        href="https://mr-lana.com/faqs"/>
-
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Preguntas frecuentes" />
-        <meta property="og:description"
-        content="Encuentra respuestas rápidas sobre nuestros créditos y servicios. Si tienes dudas, aquí las resolvemos."/>
-        <meta property="og:url" content="https://mr-lana.com/faqs" />
-
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Preguntas frecuentes" />
-        <meta name="twitter:description"
-        content="Aclara tus dudas sobre créditos y servicios de Mr. Lana. FAQ oficial."/>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>Preguntas frecuentes | Mr. Lana</title>
     </Head>
 
     <PublicLayout>

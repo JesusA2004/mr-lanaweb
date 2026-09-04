@@ -158,31 +158,8 @@
 
 <template>
     <Head>
-        <!-- Título SEO -->
-        <title>Crédito Comadres</title>
-        <!-- Meta descripción -->
-        <meta name="description"
-        content="Crédito Comadres de Mr. Lana: préstamos grupales para mujeres emprendedoras. Forma tu grupo, obtén financiamiento y haz crecer tu negocio."/>
-        <!-- Keywords -->
-        <meta name="keywords"
-        content="crédito para mujeres, crédito grupal, crédito comadres, préstamos para emprendedoras, microcréditos México"/>
-
-        <!-- Canonical -->
-        <link rel="canonical"
-        href="https://mr-lana.com/credito-comadres"/>
-
-        <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Crédito Comadres" />
-        <meta property="og:description"
-        content="Financiamiento grupal para mujeres emprendedoras. Crédito Comadres de Mr. Lana."/>
-        <meta property="og:url" content="https://mr-lana.com/credito-comadres" />
-
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Crédito Comadres"/>
-        <meta name="twitter:description"
-        content="Crédito grupal para mujeres emprendedoras. Forma tu grupo y solicita hoy."/>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>Crédito Comadres | Mr. Lana</title>
     </Head>
     <PublicLayout>
         <!-- MODAL -->

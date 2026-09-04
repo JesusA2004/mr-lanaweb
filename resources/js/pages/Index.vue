@@ -22,30 +22,10 @@
 
 <template>
     <Head>
-
-        <!-- Meta descripción -->
-        <meta name="description"
-        content="Mr. Lana ofrece créditos rápidos, claros y accesibles para negocios, empleados y emprendedores en México. Solicita hoy y recibe respuesta en minutos."/>
-
-        <!-- Keywords -->
-        <meta name="keywords"
-        content="mr lana, créditos rápidos, préstamos en méxico, microcréditos, nano créditos, crédito semanal"/>
-
-        <!-- Canonical -->
-        <link  rel="canonical" href="https://mr-lana.com/"/>
-
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Mr. Lana" />
-        <meta property="og:description"
-        content="Créditos rápidos y accesibles para impulsar negocios y proyectos productivos en México."/>
-        <meta property="og:url" content="https://mr-lana.com/" />
-
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:title" content="Mr. Lana"/>
-        <meta  name="twitter:description"
-        content="Solicita tu crédito con Mr. Lana. Proceso simple, rápido y transparente."/>
+        <!-- El resto del SEO (description, canonical, og:*, twitter:*, JSON-LD)
+        ya se sirve server-side desde resources/views/app.blade.php + config/seo.php,
+        para que funcione también sin JavaScript (WhatsApp, Facebook, Twitter/X). -->
+        <title>Mr. Lana | Créditos rápidos y accesibles en México</title>
     </Head>
 
     <PublicLayout>

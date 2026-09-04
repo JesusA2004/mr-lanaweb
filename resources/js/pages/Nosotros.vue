@@ -33,32 +33,8 @@
 
 <template>
     <Head>
-        <!-- Título SEO -->
-        <title>¿Quiénes somos?</title>
-        <!-- Meta descripción -->
-        <meta name="description"
-        content="Conoce quiénes somos en Mr. Lana. Somos una entidad financiera mexicana de nano y microcréditos enfocada en impulsar negocios y proyectos productivos."/>
-
-        <!-- Keywords -->
-        <meta name="keywords"
-        content="mr lana, quienes somos, microcréditos méxico, nano créditos, entidad financiera mexicana, misión visión mr lana"/>
-
-        <!-- Canonical -->
-        <link rel="canonical"
-        href="https://mr-lana.com/nosotros"/>
-
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="¿Quiénes somos?" />
-        <meta property="og:description"
-        content="Descubre la misión, visión y principios de Mr. Lana, entidad financiera mexicana especializada en nano y microcréditos."/>
-        <meta property="og:url" content="https://mr-lana.com/nosotros" />
-
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:title" content="¿Quiénes somos?"/>
-        <meta name="twitter:description"
-        content="MrLana impulsa negocios y proyectos productivos a través de nano y microcréditos en México."/>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>¿Quiénes somos? | Mr. Lana</title>
     </Head>
 
     <PublicLayout>

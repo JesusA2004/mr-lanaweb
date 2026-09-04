@@ -3,46 +3,12 @@
     import PublicLayout from '@/layouts/PublicLayout.vue'
     import Container from '@/components/ui/Container.vue'
 
-    const title = 'Aviso de Privacidad'
-    const description =
-    'Aviso de Privacidad de Mr Lana. Conoce cómo se recaban y tratan los datos personales, limitaciones de uso y divulgación, derechos ARCO, transferencias y comunicación.'
-    const canonical = 'https://mr-lana.com/aviso-de-privacidad'
-    const ogImage = 'https://mr-lana.com/img/og/aviso-privacidad.png'
-
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: 'Aviso de Privacidad',
-        description,
-        url: canonical,
-        isPartOf: {
-            '@type': 'WebSite',
-            name: 'Mr Lana',
-            url: 'https://mr-lana.com',
-        },
-    }
 </script>
 
 <template>
-    <Head :title="title">
-        <!-- SEO base -->
-        <meta name="description" :content="description" />
-        <link rel="canonical" :href="canonical" />
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Mr Lana" />
-        <meta property="og:title" :content="title" />
-        <meta property="og:description" :content="description" />
-        <meta property="og:url" :content="canonical" />
-        <meta property="og:image" :content="ogImage" />
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" :content="title" />
-        <meta name="twitter:description" :content="description" />
-        <meta name="twitter:image" :content="ogImage" />
-        <!-- JSON-LD (sin <script> en template para evitar Vite error) -->
-        <meta type="application/ld+json"
-        :content="JSON.stringify(jsonLd)"/>
+    <Head>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>Aviso de Privacidad | Mr. Lana</title>
     </Head>
 
     <PublicLayout>

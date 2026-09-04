@@ -3,45 +3,12 @@
     import PublicLayout from '@/layouts/PublicLayout.vue'
     import Container from '@/components/ui/Container.vue'
 
-    const title = 'Términos y Condiciones'
-    const description =
-    'Términos y Condiciones de Mr Lana. Consulta las reglas de uso de la aplicación móvil y sitio web, modificaciones, permisos, servicios y alcance.'
-    const canonical = 'https://mr-lana.com/terminos-y-condiciones'
-    const ogImage = 'https://mr-lana.com/img/og/terminos-condiciones.png' // Ajusta si ya tienes uno
-
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: 'Términos y Condiciones',
-        description,
-        url: canonical,
-        isPartOf: {
-            '@type': 'WebSite',
-            name: 'Mr Lana',
-            url: 'https://mr-lana.com',
-        },
-    }
 </script>
 
 <template>
-    <Head :title="title">
-        <!-- SEO base -->
-        <meta name="description" :content="description" />
-        <link rel="canonical" :href="canonical" />
-        <!-- Open Graph -->
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Mr Lana" />
-        <meta property="og:title" :content="title" />
-        <meta property="og:description" :content="description" />
-        <meta property="og:url" :content="canonical" />
-        <meta property="og:image" :content="ogImage" />
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" :content="title" />
-        <meta name="twitter:description" :content="description" />
-        <meta name="twitter:image" :content="ogImage" />
-        <!-- JSON-LD -->
-        <meta type="application/ld+json" :content="JSON.stringify(jsonLd)" />
+    <Head>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>Términos y Condiciones | Mr. Lana</title>
     </Head>
 
     <PublicLayout>

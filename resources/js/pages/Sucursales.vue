@@ -5,17 +5,12 @@
     import BranchesMap from '@/components/branches/BranchesMap.vue'
     import { branches } from '@/data/sucursales'
 
-    const metaDescription =
-    'Consulta las sucursales por estado: teléfono directo y ubicación en Google Maps. En desktop usa el cursor; en móvil toca un estado.'
 </script>
 
 <template>
-    <Head title="Sucursales">
-        <!-- SEO / Social básico -->
-        <meta name="description" :content="metaDescription" />
-        <meta property="og:title" content="Sucursales" />
-        <meta property="og:description" :content="metaDescription" />
-        <meta name="twitter:card" content="summary" />
+    <Head>
+        <!-- El resto del SEO ya se sirve server-side desde app.blade.php + config/seo.php -->
+        <title>Sucursales | Mr. Lana</title>
     </Head>
 
     <PublicLayout>
