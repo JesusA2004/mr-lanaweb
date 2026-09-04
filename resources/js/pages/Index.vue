@@ -25,7 +25,7 @@
         <!-- El resto del SEO (description, canonical, og:*, twitter:*, JSON-LD)
         ya se sirve server-side desde resources/views/app.blade.php + config/seo.php,
         para que funcione también sin JavaScript (WhatsApp, Facebook, Twitter/X). -->
-        <title>Mr. Lana | Créditos rápidos y accesibles en México</title>
+        <title>Mr. Lana</title>
     </Head>
 
     <PublicLayout>

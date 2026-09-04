@@ -21,6 +21,7 @@
     $seoKeywords = $seoRoute['keywords'] ?? null;
     $seoCanonical = $seoSiteUrl . ($seoRoute['path'] ?? '/');
     $seoImage = $seoSiteUrl . ($seoConfig['default_image'] ?? '/img/logo-mr-lana.png');
+    $seoImageAlt = $seoConfig['default_image_alt'] ?? $seoSiteName;
 
     $seoOrganizationJsonLd = [
         '@context' => 'https://schema.org',
@@ -78,14 +79,16 @@
         <meta property="og:description" content="{{ $seoDescription }}">
         <meta property="og:url" content="{{ $seoCanonical }}">
         <meta property="og:image" content="{{ $seoImage }}">
-        <meta property="og:image:width" content="{{ $seoConfig['default_image_width'] ?? 508 }}">
-        <meta property="og:image:height" content="{{ $seoConfig['default_image_height'] ?? 192 }}">
+        <meta property="og:image:width" content="{{ $seoConfig['default_image_width'] ?? 1200 }}">
+        <meta property="og:image:height" content="{{ $seoConfig['default_image_height'] ?? 630 }}">
+        <meta property="og:image:alt" content="{{ $seoImageAlt }}">
 
         <!-- Twitter / X -->
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $seoTitle }}">
         <meta name="twitter:description" content="{{ $seoDescription }}">
         <meta name="twitter:image" content="{{ $seoImage }}">
+        <meta name="twitter:image:alt" content="{{ $seoImageAlt }}">
 
         <!-- JSON-LD -->
         <script type="application/ld+json">{!! json_encode($seoOrganizationJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>

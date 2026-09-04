@@ -31,10 +31,13 @@ return [
     'locale' => 'es_MX',
 
     // Imagen usada como og:image / twitter:image cuando la página no define
-    // una propia. Ruta relativa a /public.
-    'default_image' => '/img/logo-mr-lana.png',
-    'default_image_width' => 508,
-    'default_image_height' => 192,
+    // una propia. Ruta relativa a /public. 1200x630 (tamaño recomendado por
+    // Facebook/WhatsApp/Twitter para que la previsualización se vea completa,
+    // sin recortes raros). Recortada del hero real del home (Slider-1).
+    'default_image' => '/img/og-mr-lana.jpg',
+    'default_image_width' => 1200,
+    'default_image_height' => 630,
+    'default_image_alt' => 'Mr. Lana',
 
     // Datos de la organización para el JSON-LD (schema.org/FinancialService)
     // que se imprime en todas las páginas.
@@ -59,9 +62,9 @@ return [
 
         'home' => [
             'path' => '/',
-            'title' => 'Mr. Lana | Créditos rápidos y accesibles en México',
-            'description' => 'Mr. Lana ofrece créditos rápidos, claros y accesibles para negocios, empleados y emprendedores en México. Solicita hoy y recibe respuesta en minutos.',
-            'keywords' => 'mr lana, créditos rápidos, préstamos en méxico, microcréditos, nano créditos, crédito semanal',
+            'title' => 'Mr. Lana',
+            'description' => 'Crédito semanal para tu negocio, para lo que quieras y Crédito Comadres para emprendedoras. Solicita en minutos y recibe respuesta rápida.',
+            'keywords' => 'mr lana, crédito semanal, crédito para negocio, impulsa tu negocio, impulsa.t, crédito comadres, préstamos en méxico, microcréditos',
         ],
 
         'impulsaNegocio' => [
