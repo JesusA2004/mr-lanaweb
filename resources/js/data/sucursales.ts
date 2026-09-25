@@ -50,6 +50,16 @@ export const branches: Branch[] = [
         mapUrl: 'https://maps.app.goo.gl/rE1GePkFLR8mbA4FA',
     },
     {
+        id: 'ixtlahuaca',
+        zone: 'Centro',
+        name: 'Sucursal Ixtlahuaca',
+        city: 'Ixtlahuaca',
+        state: 'Estado de México',
+        address: 'Av. Gustavo Baz Prada y Av. de la Mujer #406, Int. 1, Col. San Pedro, Ixtlahuaca, Edo. Méx., C.P. 50740',
+        phones: ['712 688 1615'],
+        mapUrl: 'https://maps.app.goo.gl/H35SoKkWDMLuUM4V7',
+    },
+    {
         id: 'cordoba',
         zone: 'Golfo',
         name: 'Sucursal Córdoba',
@@ -68,6 +78,15 @@ export const branches: Branch[] = [
         address: 'Oriente 6, #851, Int. 10 y 11, Esq. Sur 17, Col. Centro, Orizaba, Veracruz, C.P. 94300',
         phones: ['272 341 4129'],
         mapUrl: 'https://maps.app.goo.gl/KBUX777EuuYXca39A',
+    },
+    {
+        id: 'huamantla',
+        zone: 'Golfo',
+        name: 'Sucursal Huamantla',
+        city: 'Huamantla',
+        state: 'Tlaxcala',
+        address: 'C. Morelos Oriente #311, Local 15, Col. Centro, Huamantla, Tlaxcala, C.P. 90500',
+        mapUrl: 'https://maps.app.goo.gl/KXG2YbupuGQCgy8UA',
     },
     {
         id: 'tlaxcala',

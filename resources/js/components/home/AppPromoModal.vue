@@ -9,36 +9,38 @@
     // lista fija. Así, agregar/quitar popup-04, popup-05, etc. (png,
     // jpg, jpeg o webp) no requiere tocar este componente.
     const popups = ref<string[]>([])
+    // Orientación de cada popup: los horizontales se muestran más grandes en desktop
+    const landscapePopups = ref<boolean[]>([])
     const currentPopup = ref(0)
 
     const POPUP_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp']
     const MAX_POPUP_SLOTS = 12 // límite de seguridad, no un total fijo
 
-    function imageExists(url: string): Promise<boolean> {
+    type PopupInfo = { url: string; landscape: boolean }
+
+    function loadImage(url: string): Promise<PopupInfo | null> {
         return new Promise((resolve) => {
             const img = new Image()
-            img.onload = () => resolve(true)
-            img.onerror = () => resolve(false)
+            img.onload = () => resolve({ url, landscape: img.naturalWidth > img.naturalHeight })
+            img.onerror = () => resolve(null)
             img.src = url
         })
     }
 
-    async function findPopupUrl(slotNumber: string): Promise<string | null> {
+    async function findPopup(slotNumber: string): Promise<PopupInfo | null> {
         const candidates = POPUP_EXTENSIONS.map((ext) => `/img/popup-${slotNumber}.${ext}`)
-        const results = await Promise.all(
-            candidates.map(async (url) => ((await imageExists(url)) ? url : null)),
-        )
-        return results.find((url): url is string => url !== null) ?? null
+        const results = await Promise.all(candidates.map(loadImage))
+        return results.find((info): info is PopupInfo => info !== null) ?? null
     }
 
-    async function detectPopups(): Promise<string[]> {
-        const found: string[] = []
+    async function detectPopups(): Promise<PopupInfo[]> {
+        const found: PopupInfo[] = []
 
         for (let i = 1; i <= MAX_POPUP_SLOTS; i++) {
             const slotNumber = String(i).padStart(2, '0')
-            const url = await findPopupUrl(slotNumber)
-            if (!url) break // ya no hay popup-XX consecutivo: fin de la lista
-            found.push(url)
+            const info = await findPopup(slotNumber)
+            if (!info) break // ya no hay popup-XX consecutivo: fin de la lista
+            found.push(info)
         }
 
         return found
@@ -67,7 +69,9 @@
     }
 
     onMounted(async () => {
-        popups.value = await detectPopups()
+        const found = await detectPopups()
+        popups.value = found.map((p) => p.url)
+        landscapePopups.value = found.map((p) => p.landscape)
 
         // Si no hay ningún popup-XX en /img, no se muestra nada
         if (popups.value.length === 0) return
@@ -115,7 +119,8 @@
                     leave-to-class="opacity-0 translate-y-2 scale-[0.98]">
                         <div v-if="open" class="relative w-fit max-w-[min(680px,100%)]
                         rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10
-                        bg-transparent max-h-[88dvh] sm:max-h-[90dvh]">
+                        bg-transparent max-h-[88dvh] sm:max-h-[90dvh]"
+                        :class="landscapePopups[currentPopup] ? 'md:max-w-[min(1400px,94vw)]' : ''">
                             <!-- Botón cerrar (flotante) -->
                             <button type="button" class="absolute right-2 top-2
                             sm:right-3 sm:top-3 z-20 inline-flex h-9 w-9 sm:h-10 sm:w-10
@@ -141,6 +146,9 @@
                                     class="block w-auto h-auto max-w-full
                                     max-h-[calc(88dvh-36px)] sm:max-h-[calc(90dvh-36px)]
                                     object-contain select-none"
+                                    :class="landscapePopups[currentPopup]
+                                        ? 'md:w-[min(1400px,94vw)]'
+                                        : ''"
                                     draggable="false"/>
                                 </Transition>
 
