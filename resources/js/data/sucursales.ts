@@ -45,9 +45,9 @@ export const branches: Branch[] = [
         name: 'Sucursal Atlixco',
         city: 'Atlixco',
         state: 'Puebla',
-        address: 'Blvd. Niños Héroes #908-B, Col. Revolución, Atlixco, Puebla, C.P. 74270',
+        address: 'C. 9 Sur #507, Int. 7, Col. Centro, Atlixco, Puebla, C.P. 74200',
         phones: ['222 944 6532'],
-        mapUrl: 'https://maps.app.goo.gl/rE1GePkFLR8mbA4FA',
+        mapUrl: 'https://maps.app.goo.gl/EKNu6heS4gfP5zc99',
     },
     {
         id: 'ixtlahuaca',
