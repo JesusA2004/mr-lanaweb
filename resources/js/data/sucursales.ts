@@ -1,13 +1,13 @@
 export type Branch = {
-    id: string
-    zone: 'Centro' | 'Golfo' | 'Norte' | 'Bajio' | 'Sureste' | 'Occidente'
-    name: string
-    city: string
-    state: string
-    address: string
-    phones?: string[]
-    mapUrl?: string
-}
+    id: string;
+    zone: 'Centro' | 'Golfo' | 'Norte' | 'Bajio' | 'Sureste' | 'Occidente';
+    name: string;
+    city: string;
+    state: string;
+    address: string;
+    phones?: string[];
+    mapUrl?: string;
+};
 
 export const zones = [
     { key: 'Centro', label: 'Zona Centro' },
@@ -16,7 +16,7 @@ export const zones = [
     { key: 'Bajio', label: 'Zona Bajío' },
     { key: 'Sureste', label: 'Zona Sureste' },
     { key: 'Occidente', label: 'Zona Occidente' },
-] as const
+] as const;
 
 export const branches: Branch[] = [
     {
@@ -125,8 +125,8 @@ export const branches: Branch[] = [
         name: 'Sucursal Tula',
         city: 'Tula de Allende',
         state: 'Hidalgo',
-        address: 'Boulevard Tula Iturbe #100, Col. Villas del Salitre, Tula de Allende, Hidalgo.',
+        address: 'Calle 7 de agosto #300, Int. 8, Col. San Lorenzo, C.P. 42803, Tula de Allende, Hidalgo.',
         phones: ['773 732 2376'],
-        mapUrl: 'https://maps.app.goo.gl/QbUPbTrijP26TS14A?g_st=aw',
+        mapUrl: 'https://maps.app.goo.gl/gRQBRtLvKePJQLnY9',
     },
-]
+];
