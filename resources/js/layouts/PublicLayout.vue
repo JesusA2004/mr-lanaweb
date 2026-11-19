@@ -4,7 +4,7 @@
     import Navbar from '@/components/navigation/Navbar.vue'
     import Footer from '@/components/navigation/Footer.vue'
     import VacanciesHub from '@/components/vacancies/VacanciesHub.vue'
-    import WhaticketWidget from '@/components/integrations/WhaticketWidget.vue'
+    import ChatManagerWidget from '@/components/integrations/ChatManagerWidget.vue'
 
     const SWAL_KEY = '__active_swal__'
 
@@ -64,7 +64,7 @@
 
 <template>
     <div class="min-h-screen bg-white text-slate-900">
-        <WhaticketWidget />
+        <ChatManagerWidget />
 
         <Navbar @openVacancies="openVacancies" />
 
